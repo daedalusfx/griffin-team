@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GriffinATM - پنل مدیریت معاملات پیشرفته برای MT5</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Vazirmatn -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* اعمال فونت وزیرمتن به کل صفحه */
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            scroll-behavior: smooth;
+        }
+        /* استایل سفارشی برای گرادینت پس‌زمینه */
+        .gradient-bg {
+            background-color: #0f172a;
+            background-image: radial-gradient(circle at 1px 1px, #374151 1px, transparent 0);
+            background-size: 25px 25px;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-300">
+
+    <!-- Header -->
+    <header class="bg-slate-900/70 backdrop-blur-lg sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <!-- لوگو -->
+                <svg class="w-10 h-10 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                <h1 class="text-2xl font-bold text-white">GriffinATM</h1>
+            </div>
+            <div class="hidden md:flex items-center space-x-8 space-x-reverse">
+                <a href="#features" class="hover:text-indigo-400 transition-colors">ویژگی‌ها</a>
+                <a href="#setup" class="hover:text-indigo-400 transition-colors">راهنمای نصب</a>
+                <a href="#faq" class="hover:text-indigo-400 transition-colors">سوالات متداول</a>
+            </div>
+            <a href="https://github.com/YOUR_USERNAME/GriffinATM" target="_blank" class="hidden md:block bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 px-5 rounded-lg transition-colors">
+                دانلود از گیت‌هاب
+            </a>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="gradient-bg pt-20 pb-32 text-center">
+            <div class="container mx-auto px-6">
+                <img src="./assets/logo.jpg" alt="لوگوی GriffinATM" class="w-48 h-48 mx-auto mb-6">
+                <h2 class="text-4xl md:text-6xl font-black text-white mb-4">
+                 مدیریت پیشرفته معاملات با گریفین
+                </h2>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto text-slate-400 mb-8">
+                    GriffinATM یک پنل مدیریتی پیشرفته برای متاتریدر ۵ است که با ترکیب یک رابط کاربری مدرن و موتور قدرتمند MQL5، کنترل کامل معاملات را به شما می‌دهد.
+                </p>
+                <div class="flex justify-center gap-4">
+                    <a href="https://github.com/YOUR_USERNAME/GriffinATM/releases/latest" target="_blank" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 px-8 rounded-lg transition-colors text-lg">
+                        دانلود آخرین نسخه
+                    </a>
+                    <a href="#features" class="bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 px-8 rounded-lg transition-colors text-lg">
+                        آشنایی با ویژگی‌ها
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="py-20 bg-slate-800">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h3 class="text-4xl font-bold text-white">ویژگی‌های کلیدی</h3>
+                    <p class="text-slate-400 mt-2">ابزارهایی که برای مدیریت حرفه‌ای معاملات نیاز دارید.</p>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Feature 1 -->
+                    <div class="bg-slate-900 p-8 rounded-xl border border-slate-700">
+                        <div class="text-indigo-400 mb-4">
+                            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                        </div>
+                        <h4 class="text-2xl font-bold text-white mb-2">داشبورد زنده</h4>
+                        <p class="text-slate-400">تمام معاملات باز خود را به صورت لحظه‌ای مشاهده کرده و سود و زیان کل را دنبال کنید.</p>
+                    </div>
+                    <!-- Feature 2 -->
+                    <div class="bg-slate-900 p-8 rounded-xl border border-slate-700">
+                        <div class="text-indigo-400 mb-4">
+                            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                        </div>
+                        <h4 class="text-2xl font-bold text-white mb-2">مدیریت پیشرفته</h4>
+                        <p class="text-slate-400">بستن سریع معاملات، ریسک-فری کردن و بازگرداندن حد ضرر تنها با یک کلیک.</p>
+                    </div>
+                    <!-- Feature 3 -->
+                    <div class="bg-slate-900 p-8 rounded-xl border border-slate-700">
+                        <div class="text-indigo-400 mb-4">
+                            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        </div>
+                        <h4 class="text-2xl font-bold text-white mb-2">مدیریت خودکار (ATM)</h4>
+                        <p class="text-slate-400">قوانین خودکار برای مدیریت معاملات بر اساس درصدی از سود هدف تنظیم کنید.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Architecture Section -->
+        <section class="py-20">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h3 class="text-4xl font-bold text-white">معماری هوشمند</h3>
+                    <p class="text-slate-400 mt-2">ساختار سه لایه برای عملکرد پایدار و بدون وقفه.</p>
+                </div>
+                <div class="flex flex-col md:flex-row items-center justify-center gap-8 text-center">
+                    <!-- Layer 1: UI -->
+                    <div class="bg-slate-800 p-6 rounded-xl w-full md:w-1/4">
+                        <h4 class="text-xl font-bold text-indigo-400 mb-2">۱. رابط کاربری</h4>
+                        <p class="text-sm">یک برنامه دسکتاپ مدرن ساخته شده با React و Electron برای کنترل کامل.</p>
+                    </div>
+                    <div class="text-white text-2xl font-bold">→</div>
+                    <!-- Layer 2: Server -->
+                    <div class="bg-slate-800 p-6 rounded-xl w-full md:w-1/4">
+                        <h4 class="text-xl font-bold text-indigo-400 mb-2">۲. سرور میانی</h4>
+                        <p class="text-sm">یک سرور Node.js که دستورات را دریافت و در یک صف پایدار مدیریت می‌کند.</p>
+                    </div>
+                    <div class="text-white text-2xl font-bold">→</div>
+                    <!-- Layer 3: Expert -->
+                    <div class="bg-slate-800 p-6 rounded-xl w-full md:w-1/4">
+                        <h4 class="text-xl font-bold text-indigo-400 mb-2">۳. اکسپرت MQL5</h4>
+                        <p class="text-sm">موتور اجرایی روی متاتریدر که دستورات را اجرا و بازخورد را ارسال می‌کند.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Setup Guide Section -->
+        <section id="setup" class="py-20 bg-slate-800">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h3 class="text-4xl font-bold text-white">راهنمای نصب و راه‌اندازی</h3>
+                    <p class="text-slate-400 mt-2">در چند قدم ساده، GriffinATM را آماده استفاده کنید.</p>
+                </div>
+                <div class="max-w-4xl mx-auto bg-slate-900 p-8 rounded-xl border border-slate-700">
+                    <ol class="space-y-6 list-decimal list-inside text-lg">
+                        <li>
+                            <strong class="text-white">دانلود پروژه:</strong>
+                            ابتدا آخرین نسخه برنامه را از صفحه <a href="https://github.com/YOUR_USERNAME/GriffinATM/releases" target="_blank" class="text-indigo-400 hover:underline">Releases گیت‌هاب</a> دانلود کنید.
+                        </li>
+                        <li>
+                            <strong class="text-white">نصب رابط کاربری:</strong>
+                            فایل نصب (مثلاً `GriffinATM-Setup.exe`) را اجرا کرده و مراحل نصب را دنبال کنید. پس از اتمام، برنامه را اجرا کنید.
+                        </li>
+                        <li>
+                            <strong class="text-white">کپی کردن فایل اکسپرت:</strong>
+                            فایل اکسپرت (`GriffinATM.ex5`) را که در کنار فایل نصبی قرار دارد، در پوشه `Experts` متاتریدر ۵ خود کپی کنید. مسیر معمولاً به این صورت است:
+                            <code class="block bg-slate-700 text-sm p-3 rounded-md mt-2 text-left" dir="ltr">File > Open Data Folder > MQL5 > Experts</code>
+                        </li>
+                        <li>
+                            <strong class="text-white">فعال‌سازی در متاتریدر:</strong>
+                            در متاتریدر، از منوی `Tools > Options` به تب `Expert Advisors` بروید و تیک گزینه `Allow WebRequest for listed URL` را بزنید. سپس آدرس سرور را اضافه کنید:
+                            <code class="block bg-slate-700 text-sm p-3 rounded-md mt-2 text-left" dir="ltr">http://127.0.0.1:5000</code>
+                        </li>
+                        <li>
+                            <strong class="text-white">اجرای اکسپرت:</strong>
+                             در پنل `Navigator` متاتریدر، اکسپرت `GriffinATM` را پیدا کرده و روی چارت مورد نظر خود بکشید (Drag & Drop). مطمئن شوید که تیک `Allow Algo Trading` در بالای متاتریدر روشن باشد.
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <!-- Risk Warning Section -->
+        <section class="py-20">
+            <div class="container mx-auto px-6">
+                <div class="bg-amber-900/20 border border-amber-500 text-amber-200 p-8 rounded-xl max-w-4xl mx-auto text-center">
+                    <svg class="w-16 h-16 mx-auto mb-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                    <h3 class="text-3xl font-bold text-white mb-3">⚠️ هشدار ریسک و سلب مسئولیت</h3>
+                    <p class="text-lg mb-4">
+                        معامله در بازارهای مالی با ریسک قابل توجهی همراه است. این نرم‌افزار تنها یک ابزار کمکی است و توسعه‌دهنده هیچ مسئولیتی در قبال سود یا زیان شما ندارد.
+                    </p>
+                    <p class="text-lg font-bold text-white">
+                        **هشدار جدی:** قبل از استفاده روی حساب واقعی، شما موظف هستید که برنامه را به طور کامل روی یک حساب آزمایشی (Demo) تست کنید.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section id="faq" class="py-20 bg-slate-800">
+            <div class="container mx-auto px-6 max-w-4xl">
+                <div class="text-center mb-12">
+                    <h3 class="text-4xl font-bold text-white">سوالات متداول</h3>
+                </div>
+                <div class="space-y-4">
+                    <details class="bg-slate-900 p-6 rounded-lg group">
+                        <summary class="flex justify-between items-center font-bold text-white cursor-pointer">
+                            آیا این برنامه رایگان است؟
+                            <svg class="w-5 h-5 transform group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </summary>
+                        <p class="text-slate-400 mt-4">
+                            بله، GriffinATM تحت لایسنس GNU GPL v3.0 منتشر شده و استفاده از آن کاملاً رایگان است.
+                        </p>
+                    </details>
+                    <details class="bg-slate-900 p-6 rounded-lg group">
+                        <summary class="flex justify-between items-center font-bold text-white cursor-pointer">
+                            روی چه پلتفرم‌هایی کار می‌کند؟
+                            <svg class="w-5 h-5 transform group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </summary>
+                        <p class="text-slate-400 mt-4">
+                            این پروژه در حال حاضر فقط برای پلتفرم متاتریدر ۵ (MT5) طراحی شده است.
+                        </p>
+                    </details>
+                    <details class="bg-slate-900 p-6 rounded-lg group">
+                        <summary class="flex justify-between items-center font-bold text-white cursor-pointer">
+                            چطور می‌توانم در پروژه مشارکت کنم؟
+                            <svg class="w-5 h-5 transform group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </summary>
+                        <p class="text-slate-400 mt-4">
+                            شما می‌توانید از طریق صفحه گیت‌هاب پروژه با گزارش باگ، ارائه پیشنهاد یا ارسال Pull Request در توسعه GriffinATM مشارکت کنید.
+                        </p>
+                    </details>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 border-t border-slate-800">
+        <div class="container mx-auto px-6 py-8 text-center text-slate-400">
+            <p>&copy; 2024 GriffinATM. منتشر شده تحت لایسنس GPL v3.0.</p>
+            <p class="mt-2">
+                <a href="https://github.com/YOUR_USERNAME/GriffinATM" target="_blank" class="hover:text-indigo-400 transition-colors">مشاهده در گیت‌هاب</a>
+            </p>
+        </div>
+    </footer>
+
+</body>
+</html>

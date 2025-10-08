@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مستندات پروژه Griffin</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- کتابخانه برای نمایش بهتر کدهایلایت کد -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css">
+    
+    <style>
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Vazirmatn', sans-serif; background-color: #111827; color: #d1d5db; }
+        h1, h2, h3 { font-weight: 800; color: #fff; border-bottom: 1px solid #374151; padding-bottom: 0.5rem; }
+        h2 { margin-top: 3rem; }
+        h3 { margin-top: 2rem; font-size: 1.25rem; border-bottom: none; }
+        a { color: #38bdf8; transition: color 0.2s; }
+        a:hover { color: #7dd3fc; }
+        code { background-color: #374151; padding: 0.2rem 0.4rem; border-radius: 0.25rem; font-family: monospace; }
+        pre[class*="language-"] { background: #1f2937; border: 1px solid #374151; }
+        .sidebar { position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+        .sidebar a { display: block; padding: 0.5rem 1rem; border-right: 2px solid transparent; }
+        .sidebar a.active { border-right-color: #38bdf8; color: #fff; font-weight: 600; }
+        .content-section { min-height: 100vh; } /* برای هایلایت صحیح در اسکرول */
+    </style>
+</head>
+<body class="bg-gray-900">
+
+    <div class="flex">
+        <!-- Sidebar -->
+        <aside class="w-64 flex-shrink-0 bg-gray-900 p-4 sidebar hidden lg:block">
+            <h2 class="text-xl font-bold text-white mb-6 border-none mt-0">فهرست مطالب</h2>
+            <nav id="table-of-contents">
+                <a href="#introduction">مقدمه</a>
+                <a href="#architecture">معماری سیستم</a>
+                <a href="#algorithms">الگوریتم‌ها و معیارها</a>
+                <a href="#setup">نصب و راه‌اندازی</a>
+                <a href="#api-reference">مستندات API</a>
+                <a href="#dashboard-guide">راهنمای داشبورد</a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-grow p-6 sm:p-10 lg:p-12">
+            
+            <!-- Introduction Section -->
+            <section id="introduction" class="content-section">
+                <div class="text-center mb-12">
+                    <h1 class="text-5xl font-extrabold text-sky-400">مستندات پروژه Griffin</h1>
+                    <p class="mt-4 text-lg text-gray-400">یک موتور تحلیلی پیشرفته برای ارزیابی بی‌درنگ کیفیت کارگزاران در بازارهای مالی</p>
+                </div>
+                
+                <h2 class="mb-4">Griffin چیست؟</h2>
+                <p class="text-lg leading-relaxed">
+                    موتور تحلیلی Griffin یک سیستم جامع و ماژولار است که برای نظارت، ارزیابی و امتیازدهی به کیفیت داده‌های دریافتی از کارگزاران (بروکرها) طراحی شده است. در دنیای معاملات الگوریتمی و دستی که هر میلی‌ثانیه و هر پیپ اهمیت دارد، کیفیت فید قیمت می‌تواند تفاوت بین سود و زیان باشد. Griffin با تحلیل بی‌درنگ معیارهای کلیدی، این شفافیت را برای معامله‌گران فراهم می‌کند.
+                </p>
+
+                <h3 class="mt-8">چرا Griffin اهمیت دارد؟</h3>
+                <ul class="list-disc list-inside space-y-2 mt-4 text-lg">
+                    <li><strong>شناسایی دستکاری:</strong> تشخیص الگوهای غیرطبیعی که ممکن است نشان‌دهنده داده‌های مصنوعی یا دستکاری شده باشد.</li>
+                    <li><strong>ارزیابی کیفیت اجرا:</strong> سنجش انصاف کارگزار در اجرای معاملات از طریق تحلیل لغزش قیمت (Slippage).</li>
+                    <li><strong>تشخیص مشکلات فنی:</strong> شناسایی گلیچ‌های قیمت، فریز شدن فید و تأخیرهای بالا در شبکه.</li>
+                    <li><strong>تصمیم‌گیری آگاهانه:</strong> ارائه یک امتیاز کیفیت جامع و قابل فهم برای مقایسه عینی کارگزاران.</li>
+                </ul>
+            </section>
+
+            <!-- Architecture Section -->
+            <section id="architecture" class="content-section">
+                <h2 class="mb-4">معماری سیستم</h2>
+                <p>پروژه Griffin با یک معماری ماژولار و مبتنی بر FastAPI در پایتون ساخته شده است. این ساختار، توسعه و نگهداری سیستم را ساده کرده و هر بخش وظیفه مشخصی دارد.</p>
+                <img src="https://placehold.co/800x400/1f2937/7dd3fc?text=Data+Flow+Diagram" alt="نمودار جریان داده" class="my-8 rounded-lg mx-auto">
+                
+                <div class="grid md:grid-cols-2 gap-6 mt-6">
+                    <div class="bg-gray-800 p-4 rounded-lg">
+                        <h3 class="mt-0">main.py (ارکستراتور)</h3>
+                        <p>قلب سیستم که سرور FastAPI را اجرا کرده و حلقه اصلی تحلیل (`analysis_loop`) را مدیریت می‌کند. این ماژول وظیفه هماهنگی بین سایر بخش‌ها را بر عهده دارد.</p>
+                    </div>
+                    <div class="bg-gray-800 p-4 rounded-lg">
+                        <h3 class="mt-0">state_manager.py (مدیر وضعیت)</h3>
+                        <p>مسئول مدیریت وضعیت و داده‌های هر کارگزار. این ماژول داده‌های ورودی را دریافت و در ساختارهای داده‌ای بهینه (مانند `deque`) ذخیره می‌کند.</p>
+                    </div>
+                    <div class="bg-gray-800 p-4 rounded-lg">
+                        <h3 class="mt-0">analysis_engine.py (موتور تحلیل)</h3>
+                        <p>شامل توابع اصلی برای محاسبه KPIهای خام است. تحلیل‌هایی مانند شناسایی گلیچ، همبستگی قیمت، و پایداری فید در این بخش انجام می‌شود.</p>
+                    </div>
+                    <div class="bg-gray-800 p-4 rounded-lg">
+                        <h3 class="mt-0">scoring_engine.py (موتور امتیازدهی)</h3>
+                        <p>این ماژول KPIهای خام را به امتیازهای نرمال‌شده تبدیل کرده و با استفاده از وزن‌های تعریف‌شده، امتیاز نهایی کیفیت را محاسبه می‌کند.</p>
+                    </div>
+                     <div class="bg-gray-800 p-4 rounded-lg">
+                        <h3 class="mt-0">config.py (فایل پیکربندی)</h3>
+                        <p>تمام پارامترها و آستانه‌های قابل تنظیم، مانند وزن معیارها و آستانه تشخیص فریز شدن فید، در این فایل مرکزی تعریف شده‌اند.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Algorithms Section -->
+            <section id="algorithms" class="content-section">
+                <h2 class="mb-4">الگوریتم‌ها و معیارهای کلیدی</h2>
+                <p>امتیاز نهایی کیفیت از ترکیب وزنی چندین معیار کلیدی به دست می‌آید. در ادامه، هر معیار به تفصیل شرح داده می‌شود.</p>
+
+                <h3>امتیاز اصالت داده (Authenticity Score)</h3>
+                <p>این معیار بررسی می‌کند که آیا فید قیمت واقعی و طبیعی است یا خیر.</p>
+                <ul class="list-decimal list-inside space-y-2 mt-4">
+                    <li><strong>همبستگی با رهبر (Correlation):</strong> سیستم به صورت خودکار یک "کارگزار رهبر" (معمولاً با بیشترین تعداد تیک) را انتخاب می‌کند. سپس، سری زمانی قیمت دیگر کارگزاران با رهبر مقایسه شده و ضریب همبستگی آن‌ها محاسبه می‌شود. همبستگی نزدیک به ۱ نشان‌دهنده اصالت است.</li>
+                    <li><strong>تحلیل توزیع تیک‌ها (Shapiro-Wilk Test):</strong> یک فید طبیعی دارای فواصل زمانی نامنظم بین تیک‌هاست. این سیستم از آزمون آماری شاپیرو-ویلک برای ارزیابی نرمال بودن توزیع این فواصل استفاده می‌کند. p-value پایین می‌تواند نشانه‌ای از یک الگوی مصنوعی باشد.</li>
+                </ul>
+
+                <h3>امتیاز یکپارچگی داده (Integrity Score)</h3>
+                <p>این معیار به شناسایی و جریمه کردن گلیچ‌ها (Price Glitches) یا پرش‌های قیمتی غیرعادی می‌پردازد.</p>
+                <ul class="list-decimal list-inside space-y-2 mt-4">
+                    <li><strong>شناسایی گلیچ بالقوه:</strong> هر تیک جدید با میانگین و انحراف معیار تیک‌های اخیر مقایسه می‌شود. اگر تغییر قیمت از یک آستانه دینامیک فراتر رود، به عنوان "گلیچ بالقوه" نشانه‌گذاری می‌شود.</li>
+                    <li><strong>تأیید گلیچ:</strong> گلیچ‌های بالقوه با قیمت کارگزار رهبر در یک پنجره زمانی کوتاه مقایسه می‌شوند. اگر انحراف قیمت از میانگین قیمت رهبر زیاد باشد، گلیچ تأیید شده و یک امتیاز منفی به کارگزار اختصاص می‌یابد.</li>
+                    <li><strong>زوال جریمه (Penalty Decay):</strong> امتیاز جریمه به مرور زمان کاهش می‌یابد تا یک گلیچ تا ابد روی امتیاز کارگزار تأثیر منفی نگذارد.</li>
+                </ul>
+
+                <h3>امتیاز کیفیت اجرا (Execution Score)</h3>
+                <p>این معیار انصاف کارگزار در اجرای معاملات را از طریق تحلیل لغزش قیمت (Slippage) می‌سنجد.</p>
+                <ul class="list-decimal list-inside space-y-2 mt-4">
+                    <li><strong>عدم تقارن لغزش (Asymmetric Slippage):</strong> سیستم میانگین لغزش‌های مثبت (به نفع مشتری) و منفی (به ضرر مشتری) را محاسبه می‌کند. اگر لغزش‌های منفی به طور سیستماتیک بزرگ‌تر از لغزش‌های مثبت باشند، این نشانه یک رفتار غیرمنصفانه است و امتیاز کیفیت اجرای کارگزار کاهش می‌یابد.</li>
+                </ul>
+                
+                <h3>تحلیل زمانی (Timeframe Analysis)</h3>
+                <p>این قابلیت جدید به شما اجازه می‌دهد عملکرد یک کارگزار را در بازه‌های زمانی مختلف ارزیابی کنید. سیستم میانگین امتیاز کیفیت را در بازه‌های ۱۵ دقیقه، ۳۰ دقیقه، ۱ ساعت، ۴ ساعت و ۸ ساعت گذشته محاسبه و نمایش می‌دهد.</p>
+            </section>
+
+            <!-- Setup Section -->
+            <section id="setup" class="content-section">
+                <h2 class="mb-4">نصب و راه‌اندازی</h2>
+                <p>برای استفاده از پروژه Griffin، باید دو بخش بک‌اند (سرور پایتون) و فرانت‌اند (اکسپرت متاتریدر) را راه‌اندازی کنید.</p>
+
+                <h3>۱. راه‌اندازی بک‌اند (سرور پایتون)</h3>
+                <ol class="list-decimal list-inside space-y-4 mt-4">
+                    <li>
+                        <strong>پیش‌نیازها:</strong> مطمئن شوید پایتون نسخه 3.8 یا بالاتر روی سیستم شما نصب است.
+                    </li>
+                    <li>
+                        <strong>نصب وابستگی‌ها:</strong> یک فایل `requirements.txt` با محتوای زیر ایجاد کرده و سپس دستور `pip install -r requirements.txt` را اجرا کنید.
+                        <pre><code class="language-text">fastapi
+uvicorn[standard]
+numpy
+pandas
+scipy</code></pre>
+                    </li>
+                    <li>
+                        <strong>اجرای سرور:</strong> در پوشه اصلی پروژه، دستور زیر را در ترمینال اجرا کنید.
+                        <pre><code class="language-bash">uvicorn main:app --host 127.0.0.1 --port 5000 --reload</code></pre>
+                        <p class="mt-2">پرچم `--reload` باعث می‌شود سرور با هر تغییر در کد به صورت خودکار مجدداً راه‌اندازی شود که برای توسعه بسیار مفید است.</p>
+                    </li>
+                </ol>
+
+                <h3>۲. راه‌اندازی فرانت‌اند (اکسپرت MQL5)</h3>
+                <ol class="list-decimal list-inside space-y-4 mt-4">
+                    <li>
+                        <strong>نصب اکسپرت:</strong> فایل `GriffinTickSender.mq5` را در پوشه `MQL5/Experts` در محل نصب متاتریدر خود کپی کنید.
+                    </li>
+                    <li>
+                        <strong>پیکربندی:</strong> اکسپرت را روی چارت مورد نظر خود بکشید. در پنجره تنظیمات، آدرس سرور پایتون خود را در فیلد `InpServerUrl` وارد کنید (مثلاً `http://127.0.0.1:5000`).
+                    </li>
+                    <li>
+                        <strong>فعال‌سازی WebRequest:</strong>
+                        <p>این مرحله بسیار مهم است. در متاتریدر به منوی `Tools > Options` بروید. در تب `Expert Advisors`، گزینه `Allow WebRequest for listed URL` را فعال کرده و آدرس سرور خود را به لیست اضافه کنید.</p>
+                        <img src="https://i.stack.imgur.com/K35Q2.png" alt="تنظیمات WebRequest در متاتریدر" class="my-4 rounded-lg">
+                    </li>
+                    <li>
+                        <strong>فعال‌سازی AutoTrading:</strong> روی دکمه `Algo Trading` در نوار ابزار متاتریدر کلیک کنید تا سبز شود.
+                    </li>
+                </ol>
+            </section>
+
+            <!-- API Reference Section -->
+            <section id="api-reference" class="content-section">
+                <h2 class="mb-4">مستندات API</h2>
+                <p>سرور Griffin از طریق یک API ساده مبتنی بر HTTP داده‌ها را دریافت و نتایج را ارائه می‌دهد.</p>
+
+                <h3>Endpoints دریافت داده</h3>
+                <div class="space-y-6">
+                    <div>
+                        <h4><code class="text-base">POST /tick</code></h4>
+                        <p>برای ارسال هر تیک قیمت جدید استفاده می‌شود.</p>
+                        <p><strong>فرمت پیام:</strong> `BROKER,SYMBOL,TIMESTAMP_MSC,BID,ASK`</p>
+                        <p><strong>مثال:</strong> `Errante,EURUSD,1672531200123,1.05123,1.05125`</p>
+                    </div>
+                    <div>
+                        <h4><code class="text-base">POST /slippage_test</code></h4>
+                        <p>برای ارسال نتایج تست لغزش شبیه‌سازی شده.</p>
+                        <p><strong>فرمت پیام:</strong> `BROKER,SYMBOL,TIMESTAMP_MSC,ORDER_TYPE,PRICE,VOLUME`</p>
+                        <p><strong>مثال:</strong> `Errante,EURUSD,1672531200123,BUY,1.05125,0.01`</p>
+                    </div>
+                    <div>
+                        <h4><code class="text-base">POST /latency_test</code></h4>
+                        <p>برای ارسال پینگ و اندازه‌گیری تأخیر.</p>
+                        <p><strong>فرمت پیام:</strong> `BROKER,SYMBOL,CLIENT_SEND_TIME_MSC`</p>
+                        <p><strong>مثال:</strong> `Errante,EURUSD,9876543210`</p>
+                    </div>
+                </div>
+
+                <h3 class="mt-8">Endpoint دریافت نتایج</h3>
+                <div>
+                    <h4><code class="text-base">GET /api/live_analysis</code></h4>
+                    <p>این Endpoint نتایج کامل تحلیل را به صورت یک شیء JSON برمی‌گرداند. ساختار پاسخ به شکل زیر است:</p>
+                    <pre><code class="language-json">{
+  "EURUSD": {
+    "Errante Trading LLC": {
+      "broker_name": "Errante Trading LLC",
+      "is_leader": true,
+      "quality_score": 92.5,
+      "score_integrity": 100.0,
+      "score_authenticity": 95.8,
+      "score_execution": 88.1,
+      "score_feed_stability": 100.0,
+      "score_history": [90.1, 91.3, 92.5, ...],
+      "timeframe_averages": {
+        "15m": 91.7,
+        "30m": 90.5,
+        "1h": 89.9,
+        "4h": 85.1,
+        "8h": 82.4
+      },
+      "verified_glitches_log": [
+        { "time_str": "14:30:05", "bid": 1.05100, "severity": 15.2 }
+      ],
+      // ... and other raw KPIs
+    },
+    // ... other brokers
+  },
+  // ... other symbols
+}</code></pre>
+                </div>
+            </section>
+            
+            <!-- Dashboard Guide Section -->
+            <section id="dashboard-guide" class="content-section">
+                <h2 class="mb-4">راهنمای داشبورد</h2>
+                <p>داشبورد نهایی Griffin یک نمای مینیمال و داده-محور برای تحلیل سریع فراهم می‌کند. در ادامه به معرفی بخش‌های مختلف آن می‌پردازیم.</p>
+                <img src="https://i.imgur.com/your-dashboard-image.png" onerror="this.onerror=null;this.src='https://placehold.co/800x450/1f2937/7dd3fc?text=Final+Dashboard+Screenshot';" alt="نمایی از داشبورد نهایی" class="my-8 rounded-lg mx-auto">
+                <ul class="list-disc list-inside space-y-2 mt-4 text-lg">
+                    <li><strong>امتیاز نهایی:</strong> بزرگترین عدد در هر کارت، امتیاز کیفیت جامع کارگزار است. عدد بالاتر بهتر است.</li>
+                    <li><strong>تب نمای زنده:</strong> امتیازات لحظه‌ای برای معیارهای کلیدی مانند یکپارچگی، اصالت، اجرا و پایداری را نمایش می‌دهد.</li>
+                    <li><strong>تب تحلیل زمانی:</strong> با کلیک روی این تب، میانگین امتیاز کیفیت کارگزار در بازه‌های زمانی مختلف نمایش داده می‌شود. این بخش به شما کمک می‌کند تا پایداری عملکرد کارگزار را در طول زمان بسنجید.</li>
+                    <li><strong>نشانگر رهبر (👑):</strong> این آیکون در کنار نام کارگزاری نمایش داده می‌شود که در حال حاضر به عنوان "رهبر بازار" برای تحلیل همبستگی استفاده می‌شود.</li>
+                </ul>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script>
+        // Simple Intersection Observer for active sidebar link
+        const sections = document.querySelectorAll('.content-section');
+        const navLinks = document.querySelectorAll('#table-of-contents a');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href').substring(1) === entry.target.id) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }, { threshold: 0.5 });
+
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>
