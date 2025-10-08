@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>راهنمای کاربر - Griffin Guard</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header>
+        <nav>
+            <div class="logo">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L3 5V11C3 16.55 6.84 21.74 12 23C17.16 21.74 21 16.55 21 11V5L12 2ZM12 4.03L19 6.22V11C19 15.5 15.82 19.58 12 20.93C8.18 19.58 5 15.5 5 11V6.22L12 4.03Z" fill="currentColor"/></svg>
+                <span>Griffin Guard</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">صفحه اصلی</a></li>
+                <li><a href="guide.html" class="active">راهنمای کاربر</a></li>
+                <li><a href="technical.html">مستندات فنی</a></li>
+                <li><a href="doc.html">مستندات عمومی</a></li>
+
+            </ul>
+            <a href="https://github.com/daedalusfx/griffin-guard" class="nav-button">دریافت از گیت‌هاب</a>
+            <div class="hamburger">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="page-main">
+        <div class="page-title">
+            <h1>راهنمای کاربر</h1>
+            <p>آموزش قدم به قدم نصب، تنظیم و استفاده از تمام قابلیت‌های گریفین گارد.</p>
+        </div>
+
+        <div class="content-wrapper">
+            <aside class="sidebar">
+                <ul>
+                    <li><a href="#installation">نصب و راه‌اندازی</a></li>
+                    <li><a href="#main-panel">پنل اصلی معاملات</a></li>
+                    <li><a href="#market-execution">بخش Market Execution</a></li>
+                    <li><a href="#pending-order">بخش Pending Order</a></li>
+                    <li><a href="#stairway-entry">استراتژی Stairway Entry</a></li>
+                    <li><a href="#display-canvas">پنل نمایش اطلاعات</a></li>
+                    <li><a href="#prop-guardian">محافظ پراپ فرم</a></li>
+                    <li><a href="#inputs">تنظیمات ورودی (Inputs)</a></li>
+                </ul>
+            </aside>
+            <article class="page-content">
+                <section id="installation">
+                    <h2>نصب و راه‌اندازی</h2>
+                    <p>۱. ابتدا فایل‌های پروژه را از گیت‌هاب دانلود کنید.</p>
+                    <p>۲. نرم‌افزار MetaTrader 5 را باز کرده و از منوی File گزینه Open Data Folder را انتخاب کنید.</p>
+                    <p>۳. وارد پوشه `MQL5/Experts` شوید.</p>
+                    <p>۴. یک پوشه جدید به نام `GriffinGuard` بسازید و تمام فایل‌های `.mq5` و `.mqh` را در آن کپی کنید.</p>
+                    <p>۵. به MetaTrader برگشته، در پنجره Navigator روی Experts راست کلیک کرده و Refresh را بزنید.</p>
+                    <p>۶. اکسپرت Griffin Guard اکنون آماده است تا آن را روی چارت خود بکشید.</p>
+                </section>
+
+                <section id="main-panel">
+                    <h2>پنل اصلی معاملات</h2>
+                    <p>پنل اصلی مرکز فرمان شماست و از سه بخش مجزا تشکیل شده است.</p>
+                    <img src="./assets/main-panel.png" alt="تصویر پنل اصلی" class="content-image">
+                </section>
+
+                <section id="market-execution">
+                    <h3>بخش Market Execution</h3>
+                    <p>برای ورود سریع به معامله با قیمت فعلی بازار:</p>
+                    <ul>
+                        <li><strong>دکمه Buy/Sell:</strong> با کلیک روی این دکمه‌ها، خطوط حد ضرر (قرمز) و حد سود (سبز) روی چارت ظاهر می‌شوند.</li>
+                        <li><strong>فیلد Risk:</strong> درصد ریسک مورد نظر خود را وارد کنید یا از دکمه‌های ریسک ثابت (مثلاً 0.5%, 1%, 2%) استفاده نمایید.</li>
+                        <li><strong>لیبل وضعیت:</strong> این لیبل به شما بازخورد لحظه‌ای می‌دهد (مثلاً "Ready" یا "Lot Size Too Small").</li>
+                        <li><strong>دکمه Execute:</strong> پس از تنظیم خطوط و اطمینان از وضعیت "Ready"، با کلیک روی این دکمه معامله شما اجرا می‌شود.</li>
+                    </ul>
+                </section>
+                
+                <section id="pending-order">
+                    <h3>بخش Pending Order</h3>
+                    <p>برای تنظیم سفارشات شرطی (Limit/Stop):</p>
+                    <ul>
+                        <li><strong>دکمه Buy/Sell:</strong> با کلیک روی این دکمه‌ها، خط ورود (سفید)، حد ضرر و حد سود روی چارت ظاهر می‌شوند.</li>
+                        <li><strong>جابجایی خطوط:</strong> خط ورود را به قیمت مورد نظر خود بکشید. نوع سفارش (Limit یا Stop) به صورت خودکار بر اساس موقعیت خط نسبت به قیمت فعلی تعیین می‌شود.</li>
+                        <li><strong>دکمه Place:</strong> پس از تنظیم تمام خطوط، با کلیک روی این دکمه سفارش شما ثبت می‌گردد.</li>
+                    </ul>
+                </section>
+
+                <section id="stairway-entry">
+                    <h3>استراتژی Stairway Entry</h3>
+                    <p>این یک استراتژی منحصربه‌فرد برای ورود به معامله در پولبک پس از شکست یک سطح کلیدی است:</p>
+                    <ul>
+                        <li><strong>Arm Buy/Sell:</strong> با کلیک روی این دکمه‌ها، دو خط روی چارت ظاهر می‌شود: خط شکست (نارنجی) و خط ورود به پولبک (سفید).</li>
+                        <li><strong>تنظیم خطوط:</strong> خط شکست را روی سطح مقاومت/حمایت و خط ورود را در محلی که انتظار پولبک دارید، قرار دهید.</li>
+                        <li><strong>عملکرد خودکار:</strong> پس از شکسته‌شدن خط نارنجی، اکسپرت به صورت خودکار یک سفارش لیمیت روی خط سفید قرار می‌دهد تا شما را در بهترین قیمت وارد معامله کند.</li>
+                    </ul>
+                </section>
+
+                <section id="display-canvas">
+                    <h2>پنل نمایش اطلاعات</h2>
+                    <p>این پنل یک داشبورد کامل از وضعیت حساب و معامله‌ی در حال تنظیم شماست.</p>
+                    <img src="./assets/canvas.png" alt="تصویر پنل نمایش اطلاعات" class="content-image">
+                    <ul>
+                        <li><strong>بخش Setup:</strong> نمایش ریسک به دلار، حجم لات محاسبه‌شده و سود احتمالی.</li>
+                        <li><strong>بخش Details:</strong> نمایش قیمت دقیق خطوط ورود، حد ضرر و حد سود.</li>
+                        <li><strong>بخش Live:</strong> اگر معامله باز داشته باشید، سود/ضرر لحظه‌ای، ریسک کل و نسبت R:R زنده را نمایش می‌دهد.</li>
+                    </ul>
+                </section>
+                
+                <section id="prop-guardian">
+                    <h3>محافظ پراپ فرم</h3>
+                    <p>این بخش که در پنل اطلاعات نمایش داده می‌شود، مانند یک نگهبان از حساب شما محافظت می‌کند:</p>
+                    <ul>
+                        <li><strong>Daily Drawdown:</strong> نوار پیشرفت ضرر روزانه شما را نشان می‌دهد. با نزدیک شدن به حد مجاز، رنگ آن به نارنجی و سپس قرمز تغییر می‌کند.</li>
+                        <li><strong>Max Drawdown:</strong> نوار پیشرفت حداکثر ضرر کلی مجاز را نمایش می‌دهد.</li>
+                        <li><strong>عملکرد:</strong> اگر معامله‌ای که می‌خواهید باز کنید، قوانین پراپ را نقض کند، گریفین گارد به صورت خودکار جلوی آن را می‌گیرد.</li>
+                    </ul>
+                </section>
+                
+                <section id="inputs">
+                    <h2>تنظیمات ورودی (Inputs)</h2>
+                    <p>شما می‌توانید تمام جنبه‌های گریفین گارد را از طریق پنجره تنظیمات ورودی شخصی‌سازی کنید. مهم‌ترین تنظیمات عبارتند از:</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>پارامتر</th>
+                                <th>توضیح</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>InpRiskPreset1/2/3</td>
+                                <td>مقادیر درصدی برای سه دکمه ریسک ثابت را مشخص می‌کند.</td>
+                            </tr>
+                            <tr>
+                                <td>InpTPMode</td>
+                                <td>حالت حد سود را تعیین می‌کند: دستی (Manual) یا بر اساس نسبت ریسک به ریوارد (RR_RATIO).</td>
+                            </tr>
+                            <tr>
+                                <td>InpTP_RR_Value</td>
+                                <td>اگر حالت R:R فعال باشد، مقدار آن را مشخص می‌کند (مثلاً 2.0 برای 1:2).</td>
+                            </tr>
+                            <tr>
+                                <td>InpEnablePropRules</td>
+                                <td>محافظ پراپ فرم را فعال یا غیرفعال می‌کند.</td>
+                            </tr>
+                            <tr>
+                                <td>InpMaxDailyDrawdownPercent</td>
+                                <td>حداکثر ضرر مجاز روزانه به درصد.</td>
+                            </tr>
+                             <tr>
+                                <td>InpMaxOverallDrawdownPercent</td>
+                                <td>حداکثر ضرر مجاز کلی به درصد.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+            </article>
+        </div>
+    </main>
+
+    <footer>
+        <p>ساخته شده با ❤️ برای جامعه متن‌باز. © 2025 Griffin Guard Project</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مستندات فنی - Griffin Guard</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header>
+        <nav>
+            <div class="logo">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L3 5V11C3 16.55 6.84 21.74 12 23C17.16 21.74 21 16.55 21 11V5L12 2ZM12 4.03L19 6.22V11C19 15.5 15.82 19.58 12 20.93C8.18 19.58 5 15.5 5 11V6.22L12 4.03Z" fill="currentColor"/></svg>
+                <span>Griffin Guard</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">صفحه اصلی</a></li>
+                <li><a href="guide.html">راهنمای کاربر</a></li>
+                <li><a href="technical.html" class="active">مستندات فنی</a></li>
+                <li><a href="doc.html">مستندات عمومی</a></li>
+
+            </ul>
+            <a href="https://github.com/daedalusfx/griffin-guard" class="nav-button">دریافت از گیت‌هاب</a>
+            <div class="hamburger">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="page-main">
+        <div class="page-title">
+            <h1>مستندات فنی</h1>
+            <p>نگاهی عمیق به معماری کد، کلاس‌های اصلی و منطق داخلی گریفین گارد.</p>
+        </div>
+
+        <div class="content-wrapper">
+            <aside class="sidebar">
+                <ul>
+                    <li><a href="#philosophy">فلسفه طراحی</a></li>
+                    <li><a href="#architecture">معماری فایل‌ها</a></li>
+                    <li><a href="#panel-dialog">کلاس CPanelDialog</a></li>
+                    <li><a href="#display-canvas">کلاس CDisplayCanvas</a></li>
+                    <li><a href="#state-management">مدیریت وضعیت</a></li>
+                    <li><a href="#license">لایسنس و مشارکت</a></li>
+                </ul>
+            </aside>
+            <article class="page-content">
+                <section id="philosophy">
+                    <h2>فلسفه طراحی</h2>
+                    <p>گریفین گارد با دو اصل کلیدی طراحی شده است: **ماژولار بودن** و **برنامه‌نویسی شیءگرا (OOP)**. هدف اصلی، ایجاد کدی تمیز، قابل نگهداری و قابل توسعه بوده است. هر بخش از منطق برنامه در فایل هدر (`.mqh`) مخصوص به خود قرار دارد تا از وابستگی‌های پیچیده جلوگیری شود.</p>
+                </section>
+
+                <section id="architecture">
+                    <h2>معماری فایل‌ها</h2>
+                    <p>پروژه از چندین فایل هدر تشکیل شده که هر کدام مسئولیت مشخصی دارند:</p>
+                    <ul>
+                        <li><code>griffin-guard.mq5</code>: فایل اصلی و نقطه شروع اکسپرت. مسئولیت مقداردهی اولیه، مدیریت رویدادهای اصلی (`OnInit`, `OnTick`) و اتصال ماژول‌ها به یکدیگر را بر عهده دارد.</li>
+                        <li><code>Defines.mqh</code>: محل تعریف تمام ورودی‌های (`input`) اکسپرت، `enum` ها، `define` ها و متغیرهای سراسری.</li>
+                        <li><code>PanelDialog.mqh</code>: یک کلاس قدرتمند که از کتابخانه استاندارد `CAppDialog` ارث‌بری کرده و تمام جنبه‌های پنل اصلی (ایجاد کنترل‌ها، مدیریت رویدادها و وضعیت UI) را مدیریت می‌کند.</li>
+                        <li><code>DisplayCanvas.mqh</code>: کلاسی که مسئولیت تمام عملیات ترسیم روی پنل نمایش اطلاعات را با استفاده از کتابخانه `CCanvas` بر عهده دارد.</li>
+                        <li><code>SharedLogic.mqh</code>: شامل توابع مشترکی است که در بخش‌های مختلف برنامه استفاده می‌شوند، مانند `CalculateLotSize` و `IsTradeRequestSafe`.</li>
+                        <li><code>Lines.mqh</code>: توابع مربوط به ایجاد، حذف و مدیریت لیبل‌های متصل به خطوط معاملاتی در این فایل قرار دارند.</li>
+                        <li><code>MarketExecution.mqh</code>, <code>PendingExecution.mqh</code>, <code>StairwayExecution.mqh</code>: هر کدام از این فایل‌ها منطق خالص مربوط به یکی از سه استراتژی معاملاتی را در خود جای داده‌اند.</li>
+                        <li><code>StateManager.mqh</code>: مسئولیت ذخیره و بازیابی وضعیت اکسپرت (مانند قیمت خطوط در حالت پلکانی) در یک فایل باینری (`.dat`) را بر عهده دارد.</li>
+                    </ul>
+                </section>
+
+                <section id="panel-dialog">
+                    <h2>کلاس CPanelDialog</h2>
+                    <p>این کلاس، مغز متفکر رابط کاربری است. این کلاس با ارث‌بری از `CAppDialog`، از یک ماشین وضعیت (State Machine) داخلی برای مدیریت حالت‌های مختلف برنامه (مانند `STATE_IDLE`, `STATE_PREP_MARKET_BUY`) استفاده می‌کند. تمام رویدادهای کلیک روی دکمه‌ها از طریق `EVENT_MAP` به توابع مربوطه متصل شده‌اند، که این امر کد را بسیار تمیز و خوانا می‌کند.</p>
+<pre><code class="language-cpp">
+// نمونه‌ای از نقشه رویداد در PanelDialog.mqh
+EVENT_MAP_BEGIN(CPanelDialog)
+    ON_EVENT(ON_CLICK, m_btn_prep_market_buy, OnClickPrepMarketBuy)
+    ON_EVENT(ON_CLICK, m_btn_execute_market, OnClickExecuteMarket)
+    // ...
+EVENT_MAP_END(CAppDialog)
+</code></pre>
+                </section>
+                
+                <section id="display-canvas">
+                    <h2>کلاس CDisplayCanvas</h2>
+                    <p>این کلاس به طور کامل از منطق اصلی برنامه جدا شده است. وظیفه آن این است که داده‌های خام را از تابع `UpdateDisplayData` دریافت کرده و آن‌ها را به شکل گرافیکی و زیبا روی بوم نقاشی (`CCanvas`) ترسیم کند. این جداسازی باعث می‌شود که در آینده بتوان به راحتی ظاهر داشبورد را بدون تغییر در منطق اصلی برنامه، عوض کرد.</p>
+                </section>
+
+                <section id="state-management">
+                    <h2>مدیریت وضعیت</h2>
+                    <p>یکی از چالش‌های اصلی، حفظ وضعیت اکسپرت پس از ری‌استارت متاتریدر بود. این مشکل با استفاده از `StateManager.mqh` حل شده است. در تابع `OnDeinit`، وضعیت فعلی و قیمت‌های مهم خطوط در یک فایل باینری (`.dat`) ذخیره می‌شوند. سپس در تابع `OnInit`، این مقادیر از فایل خوانده شده و تمام اشیاء گرافیکی و حالت‌های داخلی برنامه به وضعیت قبلی خود بازگردانده می‌شوند.</p>
+                </section>
+
+                <section id="license">
+                    <h2>لایسنس و مشارکت</h2>
+                    <p>گریفین گارد تحت لایسنس **GNU General Public License v3.0** منتشر شده است. این به شما اجازه می‌دهد که کد را بررسی کنید، آن را برای نیازهای خود تغییر دهید و حتی نسخه‌های بهبودیافته خود را با دیگران به اشتراک بگذارید (به شرطی که آن‌ها نیز تحت همین لایسنس منتشر شوند).</p>
+                    <p>ما از مشارکت شما در این پروژه استقبال می‌کنیم. اگر ایده‌ای برای بهبود دارید یا باگی پیدا کرده‌اید، لطفاً آن را در بخش Issues صفحه گیت‌هاب پروژه مطرح کنید.</p>
+                </section>
+            </article>
+        </div>
+    </main>
+
+    <footer>
+        <p>ساخته شده با ❤️ برای جامعه متن‌باز. © 2025 Griffin Guard Project</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
