@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>حمایت از پروژه Griffin Guard - ابزاری رایگان برای جامعه معامله‌گران</title>
+    <title>درباره گریفین - فلسفه ما و ابزارهای معاملاتی</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -16,148 +16,137 @@
     <style>
         body {
             font-family: 'Vazirmatn', sans-serif;
-            background-color: #0f172a; /* slate-900 */
-            color: #cbd5e1; /* slate-300 */
+            background-color: #020617; /* slate-950 */
+            color: #e2e8f0; /* slate-200 */
         }
         .gradient-text {
-            background: linear-gradient(to left, #f59e0b, #fbbf24);
+            background: linear-gradient(to left, #c084fc, #818cf8);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
         .glass-card {
-            background: rgba(30, 41, 59, 0.6);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(51, 65, 85, 0.5);
-            transition: all 0.3s ease;
+            background: rgba(15, 23, 42, 0.5); /* slate-900 with opacity */
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(51, 65, 85, 0.5); /* slate-700 with opacity */
         }
-        .glass-card:hover {
-             border-color: rgba(251, 191, 36, 0.4);
-             transform: translateY(-5px);
+        .icon-bg {
+            background: radial-gradient(circle, rgba(79, 70, 229, 0.15) 0%, rgba(79, 70, 229, 0) 70%);
         }
-        .btn-copy {
-            transition: all 0.2s ease;
+        .btn-secondary {
+             background-color: rgba(71, 85, 105, 0.2);
+             border: 1px solid rgba(71, 85, 105, 0.5);
+             transition: all 0.3s ease;
+        }
+        .btn-secondary:hover {
+            background-color: rgba(71, 85, 105, 0.4);
+            border-color: #a78bfa;
         }
     </style>
 </head>
-<body class="antialiased leading-relaxed">
+<body class="antialiased">
 
-    <main class="container mx-auto px-6 py-16 md:py-24 text-center">
-
-        <!-- بخش اول: مقدمه و قلاب احساسی -->
-        <div class="max-w-4xl mx-auto">
-            
-            <h1 class="text-4xl md:text-5xl font-extrabold text-white leading-tight mb-4">
-                هر خط کد، با <span class="gradient-text">عشق و اشتیاق</span> نوشته شده است
-            </h1>
-            <p class="text-lg md:text-xl text-slate-400 mb-8">
-                اکسپرت Griffin Guard حاصل صدها ساعت تلاش، تحقیق و توسعه است که به صورت کاملاً **رایگان و اپن سورس** در اختیار جامعه معامله‌گران قرار گرفته. هدف من از ابتدا، خلق ابزاری قدرتمند و در دسترس برای همه بوده است؛ ابزاری که به شما در مسیر موفقیت کمک کند، بدون هیچ هزینه یا محدودیت.
-            </p>
-            <p class="text-lg md:text-xl text-slate-400 mb-12">
-                این پروژه با انرژی و حمایت جامعه زنده است. اگر Griffin Guard برای شما مفید بوده و در مسیر معاملاتی‌تان ارزشی خلق کرده، حمایت شما، هرچند کوچک، بزرگ‌ترین انگیزه برای ادامه این راه خواهد بود.
-            </p>
-        </div>
-
-        <!-- بخش دوم: چرایی حمایت (شفاف‌سازی) -->
-        <div class="max-w-4xl mx-auto mb-16">
-            <h2 class="text-3xl font-bold text-white mb-6">حمایت شما صرف چه چیزی می‌شود؟</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-right">
-                <div class="bg-slate-800/50 p-6 rounded-lg">
-                    <h3 class="font-bold text-amber-400 mb-2">توسعه و ویژگی‌های جدید</h3>
-                    <p class="text-slate-400 text-sm">امکان اختصاص زمان بیشتر برای افزودن قابلیت‌هایی که شما درخواست می‌کنید و بهبود مداوم اکسپرت.</p>
-                </div>
-                <div class="bg-slate-800/50 p-6 rounded-lg">
-                    <h3 class="font-bold text-amber-400 mb-2">رایگان نگه‌داشتن پروژه</h3>
-                    <p class="text-slate-400 text-sm">تضمین می‌کند که Griffin Guard همیشه رایگان و بدون هیچ‌گونه تبلیغات یا نسخه پولی باقی بماند.</p>
-                </div>
-                <div class="bg-slate-800/50 p-6 rounded-lg">
-                    <h3 class="font-bold text-amber-400 mb-2">پوشش هزینه‌ها</h3>
-                    <p class="text-slate-400 text-sm">کمک به پوشش هزینه‌های جانبی مانند سرور، وب‌سایت و ابزارهای توسعه.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- بخش سوم: کارت‌های حمایت مالی (Call to Action) -->
-        <div>
-            <h2 class="text-3xl font-bold text-white mb-8">راهی برای دمیدن انرژی در این پروژه</h2>
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
-                
-                <!-- کارت بیت‌کوین (BTC) -->
-                <div class="glass-card p-6 rounded-2xl flex flex-col items-center">
-                    <img src="https://placehold.co/80x80/0F172A/FBBF24?text=BTC" alt="آیکون بیت‌کوین" class="w-20 h-20 mb-4 rounded-full">
-                    <h3 class="text-2xl font-bold text-white mb-2">Bitcoin (BTC)</h3>
-                    <p class="text-slate-400 mb-4 text-sm">شبکه Bitcoin</p>
-                    <img src="https://placehold.co/200x200/FFFFFF/000000?text=QR+Code+BTC" alt="QR Code آدرس بیت‌کوین" class="rounded-lg mb-4 border-4 border-slate-700">
-                    <div class="w-full bg-slate-900/70 p-3 rounded-lg text-center break-words mb-4">
-                        <span id="btc-address" class="text-xs font-mono text-slate-300">bc1qevp2cj5wra0y2p0h56uxxkycz32un0rakyhrzf</span>
-                    </div>
-                    <button data-address-id="btc-address" class="btn-copy w-full bg-slate-700 hover:bg-amber-500 hover:text-slate-900 text-white font-semibold py-3 rounded-lg">
-                        کپی کردن آدرس
-                    </button>
-                </div>
-
-                <!-- کارت تتر (USDT) -->
-                <div class="glass-card p-6 rounded-2xl flex flex-col items-center">
-                    <img src="https://placehold.co/80x80/0F172A/26A17B?text=USDT" alt="آیکون تتر" class="w-20 h-20 mb-4 rounded-full">
-                    <h3 class="text-2xl font-bold text-white mb-2">Tether (USDT)</h3>
-                    <p class="text-slate-400 mb-4 text-sm">شبکه TRC20 (Tron)</p>
-                    <img src="https://placehold.co/200x200/FFFFFF/000000?text=QR+Code+USDT" alt="QR Code آدرس تتر" class="rounded-lg mb-4 border-4 border-slate-700">
-                    <div class="w-full bg-slate-900/70 p-3 rounded-lg text-center break-words mb-4">
-                        <span id="usdt-address" class="text-xs font-mono text-slate-300">TGXnvfdUsh8S8K1Ew3nzsaf525n6reMAcJ</span>
-                    </div>
-                    <button data-address-id="usdt-address" class="btn-copy w-full bg-slate-700 hover:bg-amber-500 hover:text-slate-900 text-white font-semibold py-3 rounded-lg">
-                        کپی کردن آدرس
-                    </button>
-                </div>
-
-
-            </div>
-        </div>
-
-        <!-- بخش چهارم: قدردانی نهایی -->
-        <div class="max-w-3xl mx-auto mt-20">
-            <h2 class="text-3xl font-bold text-white mb-4">ما با هم این مسیر را می‌سازیم</h2>
-            <p class="text-lg text-slate-400">
-                از شما برای اینکه بخشی از این سفر هستید، بی‌نهایت سپاسگزارم. هر حمایتی، پیامی از اعتماد و دلگرمی است که به من نشان می‌دهد در این مسیر تنها نیستم. بیایید با هم بهترین ابزار را برای جامعه معامله‌گری بسازیم.
-            </p>
-        </div>
+    <!-- Hero Section -->
+    <main class="container mx-auto px-6 py-20 md:py-32 text-center">
+        
+        <h1 class="text-4xl md:text-6xl font-extrabold text-white leading-tight mb-4">
+            گریفین: فراتر از یک ابزار، <span class="gradient-text">یک فلسفه</span>
+        </h1>
+        <p class="max-w-3xl mx-auto text-lg md:text-xl text-slate-400 mb-10">
+            ما باور داریم که بهترین ابزارها، آن‌هایی هستند که با شفافیت، آزادی و قدرت جامعه ساخته می‌شوند. مجموعه گریفین بر پایه همین اصول بنا شده است تا به معامله‌گران در سراسر جهان قدرت ببخشد.
+        </p>
     </main>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const copyButtons = document.querySelectorAll('.btn-copy');
+    <!-- Our Philosophy Section -->
+    <section class="py-20 bg-slate-900/50">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16 max-w-3xl mx-auto">
+                
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">با افتخار، الهام‌گرفته از فلسفه گنو/لینوکس</h2>
+                <p class="text-slate-400">
+                    روح گریفین از دنیای نرم‌افزارهای آزاد و اپن سورس سرچشمه می‌گیرد. ما به جهانی باور داریم که در آن دانش و ابزار باید به صورت آزادانه در دسترس همگان باشد تا نوآوری شکوفا شود.
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Card 1: Freedom -->
+                <div class="glass-card p-8 rounded-2xl text-center icon-bg">
+                    <h3 class="text-2xl font-bold text-white mb-3">آزادی</h3>
+                    <p class="text-slate-400">تمام ابزارهای اصلی گریفین رایگان هستند و رایگان باقی خواهند ماند. بدون هیچ هزینه پنهان، محدودیت یا قفل. شما آزادید که از آن‌ها استفاده کنید، آن‌ها را مطالعه کنید و برای نیازهای خود تغییرشان دهید.</p>
+                </div>
+                <!-- Card 2: Transparency -->
+                <div class="glass-card p-8 rounded-2xl text-center icon-bg">
+                    <h3 class="text-2xl font-bold text-white mb-3">شفافیت</h3>
+                    <p class="text-slate-400">کد منبع باز (Open Source) به این معناست که شما دقیقاً می‌دانید هر ابزار چگونه کار می‌کند. هیچ جعبه سیاهی وجود ندارد. این شفافیت، اعتماد و امنیت را برای شما به ارمغان می‌آ آورد.</p>
+                </div>
+                <!-- Card 3: Community -->
+                <div class="glass-card p-8 rounded-2xl text-center icon-bg">
+                    <h3 class="text-2xl font-bold text-white mb-3">مشارکت</h3>
+                    <p class="text-slate-400">گریفین توسط جامعه‌اش رشد می‌کند. هر گزارش باگ، هر پیشنهاد برای قابلیت جدید و هر مشارکت در کد، به بهبود این مجموعه برای همه کمک می‌کند. این یک پروژه از جامعه برای جامعه است.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-            copyButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const addressId = button.getAttribute('data-address-id');
-                    const addressSpan = document.getElementById(addressId);
-                    const address = addressSpan.innerText;
+    <!-- Our Products Section -->
+    <section class="py-20">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-white">مجموعه ابزارهای گریفین</h2>
+                <p class="text-slate-400 mt-2">ابزارهایی دقیق و قدرتمند برای هر مرحله از سفر معاملاتی شما.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Product 1: Griffin Guard EA -->
+                <div class="glass-card p-6 rounded-xl overflow-hidden">
+                    <div class="p-4">
+                        <h3 class="text-xl font-bold text-white mb-2">Griffin Guard EA</h3>
+                        <p class="text-slate-400 text-sm mb-4">نگهبان هوشمند حساب شما. این اکسپرت مدیریت ریسک، قوانین پراپ و اجرای معامله را در یک پنل قدرتمند و شهودی یکپارچه می‌کند.</p>
+                        <a href="index.html" class="font-semibold text-violet-400 hover:text-violet-300 transition">بیشتر بدانید &rarr;</a>
+                    </div>
+                </div>
+                <!-- Product 2: Griffin Analytics (Coming Soon) -->
+                <div class="glass-card p-6 rounded-xl overflow-hidden relative">
+                     <div class="absolute top-4 right-4 bg-amber-500/10 text-amber-400 text-xs font-semibold px-3 py-1 rounded-full">به زودی</div>
+                    <div class="p-4 opacity-60">
+                        <h3 class="text-xl font-bold text-white mb-2">Griffin Analytics</h3>
+                        <p class="text-slate-400 text-sm mb-4">یک داشبورد تحلیلی پیشرفته برای بررسی عمیق عملکرد معاملاتی، شناسایی نقاط قوت و ضعف و بهینه‌سازی استراتژی شما.</p>
+                        <span class="font-semibold text-slate-500">در حال توسعه...</span>
+                    </div>
+                </div>
+                <!-- Product 3: Griffin Connector (Coming Soon) -->
+                <div class="glass-card p-6 rounded-xl overflow-hidden relative">
+                    <div class="absolute top-4 right-4 bg-amber-500/10 text-amber-400 text-xs font-semibold px-3 py-1 rounded-full">به زودی</div>
+                    <div class="p-4 opacity-60">
+                        <h3 class="text-xl font-bold text-white mb-2">Griffin Connector</h3>
+                        <p class="text-slate-400 text-sm mb-4">پلی برای اتصال متاتریدر به پلتفرم‌های دیگر. سیگنال‌ها را از TradingView دریافت کنید یا معاملات خود را با دیگران به اشتراک بگذارید.</p>
+                        <span class="font-semibold text-slate-500">در حال توسعه...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-                    // Create a temporary textarea to copy the text
-                    const tempTextArea = document.createElement('textarea');
-                    tempTextArea.value = address;
-                    document.body.appendChild(tempTextArea);
-                    tempTextArea.select();
-                    
-                    try {
-                        document.execCommand('copy');
-                        const originalText = button.innerHTML;
-                        button.innerHTML = '✓ کپی شد!';
-                        button.classList.add('bg-green-500', 'text-white');
-                        
-                        setTimeout(() => {
-                            button.innerHTML = originalText;
-                            button.classList.remove('bg-green-500', 'text-white');
-                        }, 2000);
+    <!-- Powered By Section -->
+    <section class="py-20 bg-slate-900/50">
+        <div class="container mx-auto px-6 text-center max-w-3xl">
+            
+            <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
+                با افتخار، قدرت‌گرفته از <span class="gradient-text">@Three3D_Forex</span>
+            </h2>
+            <p class="text-slate-400 text-lg">
+                مجموعه گریفین بر شانه‌های غول‌ها ایستاده است. معماری فنی، خلاقیت و تخصص عمیق مجموعه <a href="#" target="_blank" rel="noopener noreferrer" class="font-bold text-violet-400 hover:underline">@Three3D_Forex</a>، سنگ بنای اصلی این پروژه بوده و الهام‌بخش ما در ساخت ابزارهایی با بالاترین استاندارد کیفیت و نوآوری است. ما از این همکاری و حمایت ارزشمند بی‌نهایت سپاسگزاریم.
+            </p>
+        </div>
+    </section>
 
-                    } catch (err) {
-                        console.error('Failed to copy text: ', err);
-                        alert('خطا در کپی کردن آدرس. لطفاً به صورت دستی کپی کنید.');
-                    }
+    <!-- Footer -->
+    <footer class="py-10">
+        <div class="container mx-auto px-6 text-center text-slate-500">
+            <p>مجموعه گریفین | ساخته شده با عشق برای جامعه معامله‌گران</p>
+            <div class="mt-4">
+                <a href="index.html" class="hover:text-violet-400 transition mx-3">Griffin Guard</a>
+                <a href="donate.html" class="hover:text-violet-400 transition mx-3">حمایت از پروژه</a>
+            </div>
+        </div>
+    </footer>
 
-                    document.body.removeChild(tempTextArea);
-                });
-            });
-        });
-    </script>
 </body>
 </html>
