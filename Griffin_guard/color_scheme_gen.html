@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MT5 Panel Color Generator</title>
+    <!-- Load Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for the preview panel */
+        .preview-panel {
+            background-color: #1e222b;
+            border: 1px solid #374151;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .preview-card {
+            background-color: #303443;
+            border-radius: 0.375rem;
+            padding: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+        .preview-title {
+            font-weight: bold;
+            color: #e5e7eb;
+            margin-bottom: 0.5rem;
+        }
+        .preview-label {
+            color: #9ca3af;
+            font-size: 0.875rem;
+        }
+        .preview-value {
+            color: #ffffff;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        .progress-bar {
+            height: 0.25rem;
+            border-radius: 0.125rem;
+            background-color: #4b5563;
+            margin-top: 0.25rem;
+        }
+        .progress-fill {
+            height: 100%;
+            border-radius: 0.125rem;
+        }
+        .status-footer {
+            background-color: #374151;
+            padding: 0.5rem;
+            border-top: 1px solid #4b5563;
+            text-align: center;
+            color: #fbbf24;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white p-6">
+
+    <div class="max-w-6xl mx-auto">
+
+        <!-- Header -->
+        <h1 class="text-3xl font-bold mb-6 text-center">🎨 MT5 Panel Color Generator</h1>
+
+        <!-- Instructions -->
+        <div class="bg-blue-900/20 p-4 rounded-lg mb-6">
+            <p class="mb-2"><strong>How to use:</strong></p>
+            <ol class="list-decimal list-inside space-y-1">
+                <li>Select colors for your panel using the color pickers below.</li>
+                <li>See the live preview on the right side update in real-time.</li>
+                <li>Copy the generated MQL5 code and paste it into your <code>Defines.mqh</code> file.</li>
+            </ol>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+            <!-- Color Pickers Column -->
+            <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                <h2 class="text-xl font-semibold mb-4">🎨 Color Palette</h2>
+
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <label class="text-sm font-medium">Panel Background:</label>
+                        <input type="color" id="inpPanelBg" value="#1e222b" class="w-10 h-10 border-none rounded cursor-pointer">
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <label class="text-sm font-medium">Sub Panel:</label>
+                        <input type="color" id="inpSubPanel" value="#303443" class="w-10 h-10 border-none rounded cursor-pointer">
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <label class="text-sm font-medium">Text:</label>
+                        <input type="color" id="inpText" value="#e5e7eb" class="w-10 h-10 border-none rounded cursor-pointer">
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <label class="text-sm font-medium">Buy Button:</label>
+                        <input type="color" id="inpBuyBtn" value="#1e90ff" class="w-10 h-10 border-none rounded cursor-pointer">
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <label class="text-sm font-medium">Sell Button:</label>
+                        <input type="color" id="inpSellBtn" value="#ff4500" class="w-10 h-10 border-none rounded cursor-pointer">
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <label class="text-sm font-medium">Execute Buy:</label>
+                        <input type="color" id="inpExecBuy" value="#00bfff" class="w-10 h-10 border-none rounded cursor-pointer">
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <label class="text-sm font-medium">Execute Sell:</label>
+                        <input type="color" id="inpExecSell" value="#ff0000" class="w-10 h-10 border-none rounded cursor-pointer">
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <label class="text-sm font-medium">Safe Color:</label>
+                        <input type="color" id="inpSafe" value="#84e495" class="w-10 h-10 border-none rounded cursor-pointer">
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <label class="text-sm font-medium">Warning Color:</label>
+                        <input type="color" id="inpWarning" value="#fbbf24" class="w-10 h-10 border-none rounded cursor-pointer">
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <label class="text-sm font-medium">Danger Color:</label>
+                        <input type="color" id="inpDanger" value="#f87171" class="w-10 h-10 border-none rounded cursor-pointer">
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <label class="text-sm font-medium">Border:</label>
+                        <input type="color" id="inpBorder" value="#4b5563" class="w-10 h-10 border-none rounded cursor-pointer">
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <label class="text-sm font-medium">Progress Bar:</label>
+                        <input type="color" id="inpProgressBg" value="#556581" class="w-10 h-10 border-none rounded cursor-pointer">
+                    </div>
+                </div>
+
+                <button onclick="generateCode()" class="mt-6 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition duration-200">
+                    Generate MQL Code
+                </button>
+            </div>
+
+            <!-- Live Preview Column -->
+            <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                <h2 class="text-xl font-semibold mb-4">👁️ Live Preview</h2>
+                <div id="livePreview" class="preview-panel">
+                    <!-- Trade Setup Card -->
+                    <div class="preview-card">
+                        <div class="preview-title">Trade Setup</div>
+                        <div class="flex justify-between mb-2">
+                            <span class="preview-label">Risk</span>
+                            <span class="preview-value" id="previewRisk">91.85</span>
+                        </div>
+                        <div class="flex justify-between mb-2">
+                            <span class="preview-label">Lot Size</span>
+                            <span class="preview-value" id="previewLot">0.08</span>
+                        </div>
+                        <div class="flex justify-between mb-2">
+                            <span class="preview-label">Reward</span>
+                            <span class="preview-value" id="previewReward">183.69</span>
+                        </div>
+                        <div class="flex justify-between mt-3 pt-2 border-t border-gray-700">
+                            <span class="preview-label">Entry:</span>
+                            <span class="preview-value" id="previewEntry">3468.44</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="preview-label">Stop Loss:</span>
+                            <span class="preview-value" id="previewSL">3459.67</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="preview-label">Take Profit:</span>
+                            <span class="preview-value" id="previewTP">3481.98</span>
+                        </div>
+                    </div>
+
+                    <!-- Prop Rules Card -->
+                    <div class="preview-card">
+                        <div class="preview-title">Prop Rules</div>
+                        <div class="flex justify-between mb-1">
+                            <span class="preview-label">Daily Drawdown</span>
+                            <span class="preview-value" id="previewDaily">USD 459.23 left</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="previewDailyBar" style="width: 40%; background-color: #84e495;"></div>
+                        </div>
+                        <div class="flex justify-between mt-2 mb-1">
+                            <span class="preview-label">Max Drawdown</span>
+                            <span class="preview-value" id="previewMax">USD 587.59 left</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="previewMaxBar" style="width: 20%; background-color: #84e495;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Status Footer -->
+                    <div class="status-footer" id="previewStatus">
+                        R/R: 1:1.78 | Ready
+                    </div>
+                </div>
+            </div>
+
+            <!-- Output Code Column -->
+            <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                <h2 class="text-xl font-semibold mb-4">📋 Generated MQL Code</h2>
+                <textarea id="outputCode" readonly rows="20" class="w-full p-3 bg-gray-900 text-green-400 border border-gray-700 rounded-lg resize-none font-mono text-sm"></textarea>
+                <div class="flex space-x-2 mt-4">
+                    <button onclick="copyCode()" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition duration-200">
+                        Copy Code
+                    </button>
+                    <button onclick="downloadFile()" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded transition duration-200">
+                        Download File
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        // Function to convert HEX to MQL C'rrr,ggg,bbb' format
+        function hexToMQLColor(hex) {
+            let r = parseInt(hex.substring(1, 3), 16);
+            let g = parseInt(hex.substring(3, 5), 16);
+            let b = parseInt(hex.substring(5, 7), 16);
+            return `C'${r},${g},${b}'`;
+        }
+
+        // Function to update the live preview
+        function updatePreview() {
+            const colors = {
+                panelBg: document.getElementById('inpPanelBg').value,
+                subPanel: document.getElementById('inpSubPanel').value,
+                text: document.getElementById('inpText').value,
+                buyBtn: document.getElementById('inpBuyBtn').value,
+                sellBtn: document.getElementById('inpSellBtn').value,
+                execBuy: document.getElementById('inpExecBuy').value,
+                execSell: document.getElementById('inpExecSell').value,
+                safe: document.getElementById('inpSafe').value,
+                warning: document.getElementById('inpWarning').value,
+                danger: document.getElementById('inpDanger').value,
+                border: document.getElementById('inpBorder').value,
+                progressBg: document.getElementById('inpProgressBg').value,
+            };
+
+            // Update main panel background
+            document.getElementById('livePreview').style.backgroundColor = colors.panelBg;
+
+            // Update card backgrounds
+            const cards = document.querySelectorAll('.preview-card');
+            cards.forEach(card => {
+                card.style.backgroundColor = colors.subPanel;
+            });
+
+            // Update text color
+            const texts = document.querySelectorAll('.preview-title, .preview-label, .preview-value');
+            texts.forEach(text => {
+                text.style.color = colors.text;
+            });
+
+            // Update status footer
+            document.getElementById('previewStatus').style.backgroundColor = colors.border;
+            document.getElementById('previewStatus').style.color = colors.warning;
+
+            // Update progress bars
+            document.getElementById('previewDailyBar').style.backgroundColor = colors.safe;
+            document.getElementById('previewMaxBar').style.backgroundColor = colors.safe;
+            document.querySelector('.progress-bar').style.backgroundColor = colors.border;
+
+            // You can add more dynamic updates here if needed
+        }
+
+        // Function to generate the MQL code
+        function generateCode() {
+            const colors = {
+                inpPanelBg: document.getElementById('inpPanelBg').value,
+                inpSubPanel: document.getElementById('inpSubPanel').value,
+                inpText: document.getElementById('inpText').value,
+                inpBuyBtn: document.getElementById('inpBuyBtn').value,
+                inpSellBtn: document.getElementById('inpSellBtn').value,
+                inpExecBuy: document.getElementById('inpExecBuy').value,
+                inpExecSell: document.getElementById('inpExecSell').value,
+                inpSafe: document.getElementById('inpSafe').value,
+                inpWarning: document.getElementById('inpWarning').value,
+                inpDanger: document.getElementById('inpDanger').value,
+                inpBorder: document.getElementById('inpBorder').value,
+                inpProgressBg: document.getElementById('inpProgressBg').value,
+                // Add other colors as needed
+            };
+
+            // Generate the MQL code string
+            const mqlCode = `//-----------------------------//
+//         Panel Colors        //
+//-----------------------------//
+input group "Panel Color Scheme"
+input color InpPanelBackgroundColor = ${hexToMQLColor(colors.inpPanelBg)};
+input color InpSubPanelColor        = ${hexToMQLColor(colors.inpSubPanel)};
+input color InpTextColor            = ${hexToMQLColor(colors.inpText)};
+input color InpBuyButtonColor       = ${hexToMQLColor(colors.inpBuyBtn)};
+input color InpSellButtonColor      = ${hexToMQLColor(colors.inpSellBtn)};
+input color InpExecuteBuyColor      = ${hexToMQLColor(colors.inpExecBuy)};
+input color InpExecuteSellColor     = ${hexToMQLColor(colors.inpExecSell)};
+input color InpOrderButtonColor     = ${hexToMQLColor(colors.inpBuyBtn)}; // Example: Reuse Buy button color
+input color InpCancelButtonColor    = ${hexToMQLColor(colors.inpWarning)}; // Example: Use Warning color
+input color InpDisabledButtonColor  = ${hexToMQLColor(colors.inpBorder)}; // Example: Use Border color
+input color InpActivePresetColor    = ${hexToMQLColor(colors.inpSafe)}; // Example: Use Safe color
+
+input color InpInputBgColor         = C'255,255,255';
+input color InpInputBorderColor     = C'211,211,211';
+
+//-----------------------------//
+//       Display Colors        //
+//-----------------------------//
+input group "Display Color Scheme"
+input color InpModernUIPanelBg       = ${hexToMQLColor(colors.inpPanelBg)}; // Same as main panel
+input color InpModernUITextPrimary   = ${hexToMQLColor(colors.inpText)};
+input color InpModernUITextSecondary = C'156,163,175'; // Keep this consistent
+input color InpModernUITitle         = C'75,150,250'; // Keep this consistent for contrast
+input color InpModernUIBorder        = ${hexToMQLColor(colors.inpBorder)};
+input color InpModernUIProgressBg    = ${hexToMQLColor(colors.inpProgressBg)};
+input color InpSafeColor             = ${hexToMQLColor(colors.inpSafe)};
+input color InpWarningColor          = ${hexToMQLColor(colors.inpWarning)};
+input color InpDangerColor           = ${hexToMQLColor(colors.inpDanger)};`;
+
+            // Set the code in the textarea
+            document.getElementById('outputCode').value = mqlCode;
+
+            // Update the preview
+            updatePreview();
+        }
+
+        // Function to copy the code to clipboard
+        function copyCode() {
+            const code = document.getElementById('outputCode').value;
+            navigator.clipboard.writeText(code).then(() => {
+                alert('✅ Code copied to clipboard!');
+            }).catch(err => {
+                alert('❌ Failed to copy code: ' + err);
+            });
+        }
+
+        // Function to download the code as a file
+        function downloadFile() {
+            const code = document.getElementById('outputCode').value;
+            if (!code) {
+                alert('Please generate the code first.');
+                return;
+            }
+            const blob = new Blob([code], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'Defines_CustomColor.mqh';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set up event listeners for color changes
+            document.querySelectorAll('input[type="color"]').forEach(input => {
+                input.addEventListener('input', generateCode);
+            });
+
+            // Generate initial code and preview
+            generateCode();
+        });
+
+    </script>
+
+</body>
+</html>
+
