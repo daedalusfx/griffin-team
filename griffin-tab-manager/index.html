@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Griffin Tab Manager</title>
+    
+    <!-- Framer Motion (for animations) -->
+    <script src="https://unpkg.com/framer-motion@11.0.3/dist/framer-motion.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Vazirmatn Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Vazirmatn', 'sans-serif']
+                    }
+                }
+            },
+            darkMode: 'class'
+        }
+    </script>
+
+    <style>
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transition: all 0.3s ease;
+        }
+        .language-selector {
+            background-color: #1f2937;
+            border: 1px solid #374151;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .language-selector:hover {
+            background-color: #374151;
+            transform: translateY(-2px); /* Add subtle hover animation */
+        }
+        .language-dropdown {
+            background-color: #1f2937;
+            border: 1px solid #374151;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            margin-top: 0.5rem;
+            min-width: 160px;
+            z-index: 50; /* Ensure dropdown is above other elements */
+        }
+        .language-option {
+            padding: 0.75rem 1rem;
+            text-align: right;
+            width: 100%;
+            text-align: start;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .language-option:hover {
+            background-color: #374151;
+        }
+        .mock-tab {
+            transition: all 0.2s ease;
+        }
+        .mock-tab:hover {
+            background-color: #374151;
+        }
+        .active-tab {
+            background-color: #fbbf24;
+            color: #1f2937;
+        }
+        .feature-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease; /* Added transition for smoother hover */
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+        }
+        .code-block {
+            direction: ltr;
+            text-align: left;
+            background-color: #111827;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            overflow-x: auto;
+        }
+        .code-comment { color: #6b7280; }
+        .code-keyword { color: #3b82f6; }
+        .code-string { color: #10b981; }
+        .code-boolean { color: #ef4444; }
+        .rtl-content {
+            direction: rtl;
+            text-align: right;
+        }
+        .ltr-content {
+            direction: ltr;
+            text-align: left;
+        }
+
+        /* --- OS Detection Styles --- */
+        /* Default styles for download buttons (Windows) */
+        .download-btn {
+            transition: all 0.3s ease;
+            /* Maintain original Tailwind classes */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        /* Windows user - Highlight Windows button */
+        .os-windows .download-windows {
+            color: #1f2937; /* text-gray-900 */
+            background-color: #fbbf24; /* bg-yellow-400 */
+            box-shadow: 0 4px 6px rgba(251, 191, 36, 0.3); /* Subtle yellow shadow */
+        }
+        .os-windows .download-windows:hover {
+            background-color: #fcd34d; /* hover:bg-yellow-300 */
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(251, 191, 36, 0.4);
+        }
+        .os-windows .download-linux {
+            color: #d1d5db; /* text-gray-400 */
+            background-color: #374151; /* bg-gray-700 */
+        }
+        .os-windows .download-linux:hover {
+            background-color: #4b5563; /* hover:bg-gray-600 */
+        }
+
+        /* Linux user - Highlight Linux button */
+        .os-linux .download-linux {
+            color: white; /* text-white */
+            background-color: #4f46e5; /* bg-indigo-600 */
+            box-shadow: 0 4px 6px rgba(79, 70, 229, 0.3); /* Subtle indigo shadow */
+        }
+        .os-linux .download-linux:hover {
+            background-color: #4338ca; /* hover:bg-indigo-700 */
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(79, 70, 229, 0.4);
+        }
+        .os-linux .download-windows {
+            color: #d1d5db; /* text-gray-400 */
+            background-color: #374151; /* bg-gray-700 */
+        }
+        .os-linux .download-windows:hover {
+            background-color: #4b5563; /* hover:bg-gray-600 */
+        }
+
+        /* Mac user - Highlight Mac button (or treat similarly to Linux if no Mac-specific) */
+        .os-mac .download-windows {
+            color: #d1d5db; /* text-gray-400 */
+            background-color: #374151; /* bg-gray-700 */
+        }
+        .os-mac .download-windows:hover {
+            background-color: #4b5563; /* hover:bg-gray-600 */
+        }
+        .os-mac .download-linux {
+            color: white; /* text-white */
+            background-color: #4f46e5; /* bg-indigo-600 */
+            box-shadow: 0 4px 6px rgba(79, 70, 229, 0.3); /* Subtle indigo shadow */
+        }
+        .os-mac .download-linux:hover {
+            background-color: #4338ca; /* hover:bg-indigo-700 */
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(79, 70, 229, 0.4);
+        }
+
+        /* Other OS or undetected */
+        .os-other .download-windows {
+            color: #1f2937; /* text-gray-900 */
+            background-color: #fbbf24; /* bg-yellow-400 */
+        }
+        .os-other .download-windows:hover {
+            background-color: #fcd34d; /* hover:bg-yellow-300 */
+        }
+        .os-other .download-linux {
+            color: white; /* text-white */
+            background-color: #4f46e5; /* bg-indigo-600 */
+        }
+        .os-other .download-linux:hover {
+            background-color: #4338ca; /* hover:bg-indigo-700 */
+        }
+
+        /* Animation classes */
+        .animate-fade-in-up {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        .animate-fade-in-scale {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body class="bg-gray-950 text-gray-100 font-sans leading-7">
+    <script>
+        // Initialize Framer Motion scope (optional, for complex interactions)
+        const scope = { current: null };
+    </script>
+
+    <!-- ==== Header ==== -->
+    <header class="container mx-auto px-6 py-6">
+        <nav class="flex justify-between items-center">
+            <div class="text-2xl font-bold text-yellow-400">
+                Griffin Manager
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <!-- Language Selector -->
+                <div class="relative" id="languageSelectorContainer">
+                    <button id="languageButton" class="language-selector">
+                        <span id="currentLanguageName">English</span>
+                        <i class="fas fa-chevron-down text-xs"></i>
+                    </button>
+                    <div id="languageDropdown" class="language-dropdown absolute hidden">
+                        <button class="language-option" data-lang="en">English</button>
+                        <button class="language-option" data-lang="fa">فارسی</button>
+                        <button class="language-option" data-lang="ckb">کوردی</button>
+                        <button class="language-option" data-lang="ar">العربية</button>
+                        <button class="language-option" data-lang="az">Azərbaycanca</button>
+                        <button class="language-option" data-lang="tr">Türkçe</button>
+                    </div>
+                </div>
+
+                <a href="https://github.com/YOUR_USERNAME/griffin-tab-manager" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-800 transition-colors">
+                    <i class="fa-brands fa-github fa-lg"></i>
+                    <span id="githubText">View on GitHub</span>
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- ==== Hero Section ==== -->
+    <main class="container mx-auto px-6 pt-24 pb-16 text-center">
+        <h1 class="text-4xl md:text-6xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-500 mb-6 animate-fade-in-up" id="heroTitle" style="opacity: 0;">
+            Professional Chart Management.<br>Without Limits.
+        </h1>
+        <p class="mt-6 text-lg md:text-xl max-w-2xl mx-auto text-gray-300 mb-10 animate-fade-in-up" id="heroDescription" style="opacity: 0; transition-delay: 0.1s;">
+            Griffin is a free and open-source (GPLv3) Electron-based tool that allows you to permanently manage chart tabs (like TradingView).
+        </p>
+        
+        <!-- Download Buttons -->
+        <div class="mt-4 flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="https://github.com/YOUR_USERNAME/griffin-tab-manager/releases/latest/download/Griffin-Setup.exe" target="_blank" class="download-btn download-windows px-6 py-3 rounded-lg font-semibold text-gray-900 bg-yellow-400 shadow-lg mb-4 sm:mb-0" id="downloadWindows">
+                <i class="fa-brands fa-windows fa-lg"></i>
+                <span id="downloadWindowsText">Download for Windows</span>
+            </a>
+            <a href="https://github.com/YOUR_USERNAME/griffin-tab-manager/releases/latest/download/Griffin.AppImage" target="_blank" class="download-btn download-linux px-6 py-3 rounded-lg font-semibold text-white bg-gray-800" id="downloadLinux">
+                <i class="fa-brands fa-linux fa-lg"></i>
+                <span id="downloadLinuxText">Download for Linux</span>
+            </a>
+        </div>
+
+        <!-- Mock UI -->
+        <div class="mt-20 max-w-4xl mx-auto animate-fade-in-scale" style="opacity: 0; transition-delay: 0.2s;">
+            <div class="w-full h-auto rounded-xl shadow-2xl bg-gray-900 border border-gray-700">
+                <div class="h-12 flex items-center px-4 border-b border-gray-700">
+                    <div class="flex gap-2">
+                        <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    </div>
+                    <div class="flex-1 flex items-end h-full px-4 gap-1">
+                        <div class="mock-tab px-4 py-2 h-full flex items-center text-sm font-medium active-tab rounded-t-lg">
+                            <i class="fa-solid fa-chart-line ml-2"></i>
+                            <span id="chartEur">EUR/USD Chart</span>
+                        </div>
+                        <div class="mock-tab px-4 py-2 h-[85%] flex items-center text-sm text-gray-400 hover:bg-gray-800 rounded-t-lg">
+                            <i class="fa-solid fa-chart-line ml-2"></i>
+                            <span id="chartBtc">BTC/USDT Chart</span>
+                        </div>
+                        <div class="mock-tab px-4 py-2 h-[85%] flex items-center text-sm text-gray-400 hover:bg-gray-800 rounded-t-lg">
+                            <i class="fa-solid fa-plus"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="h-64 md:h-96 flex items-center justify-center">
+                    <p class="text-gray-500" id="chartPlaceholder">
+                        [Your chart content loads here]
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ==== Features Section ==== -->
+    <section class="py-20 bg-gray-900">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl font-bold text-center mb-12 animate-fade-in-up" id="featuresTitle" style="opacity: 0;">
+                Key Features
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="feature-card bg-gray-800 p-6 rounded-lg shadow-lg animate-fade-in-up" style="opacity: 0; transition-delay: 0.1s;">
+                    <div class="w-12 h-12 flex items-center justify-center rounded-full bg-yellow-400 text-gray-900 mb-4">
+                        <i class="fa-solid fa-layer-group fa-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2" id="feature1Title">
+                        Persistent Tab Management
+                    </h3>
+                    <p class="text-gray-300" id="feature1Desc">
+                        Tabs and their order are saved in memory and fully restored when reopening the application.
+                    </p>
+                </div>
+                <!-- Feature 2 -->
+                <div class="feature-card bg-gray-800 p-6 rounded-lg shadow-lg animate-fade-in-up" style="opacity: 0; transition-delay: 0.2s;">
+                    <div class="w-12 h-12 flex items-center justify-center rounded-full bg-yellow-400 text-gray-900 mb-4">
+                        <i class="fa-solid fa-list-check fa-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2" id="feature2Title">
+                        Saved Charts List
+                    </h3>
+                    <p class="text-gray-300" id="feature2Desc">
+                        Save, edit, and manage your favorite charts (with title and URL) in the sidebar.
+                    </p>
+                </div>
+                <!-- Feature 3 -->
+                <div class="feature-card bg-gray-800 p-6 rounded-lg shadow-lg animate-fade-in-up" style="opacity: 0; transition-delay: 0.3s;">
+                    <div class="w-12 h-12 flex items-center justify-center rounded-full bg-yellow-400 text-gray-900 mb-4">
+                        <i class="fa-solid fa-trash-can-arrow-up fa-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2" id="feature3Title">
+                        Trash and Recovery
+                    </h3>
+                    <p class="text-gray-300" id="feature3Desc">
+                        Closed tabs are moved to the trash and can be restored at any time.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==== Stealth Mode Section ==== -->
+    <section class="py-24">
+        <div class="container mx-auto px-6">
+            <div class="text-center max-w-3xl mx-auto">
+                <span class="text-sm font-semibold text-yellow-400 uppercase animate-fade-in-up" id="stealthTag" style="opacity: 0;">
+                    Exclusive Feature
+                </span>
+                <h2 class="text-3xl md:text-4xl font-bold text-white mt-2 animate-fade-in-up" id="stealthTitle" style="opacity: 0; transition-delay: 0.1s;">
+                    Introducing Stealth Mode: Bypass Restrictions
+                </h2>
+                <p class="text-lg text-gray-300 mt-4 animate-fade-in-up" id="stealthDesc" style="opacity: 0; transition-delay: 0.2s;">
+                    Many websites (like TradingView) block Electron-based tools. Griffin is designed to appear like a standard Chrome browser.
+                </p>
+            </div>
+            <div class="mt-12 bg-gray-900 rounded-lg p-6 border border-gray-700 max-w-2xl mx-auto shadow-xl animate-fade-in-scale" style="opacity: 0; transition-delay: 0.3s;">
+                <pre class="code-block">
+<span class="code-comment">// lib/preload/preload.ts (Stealth Patch)</span>
+
+<span class="code-keyword">if</span> (navigator.webdriver) {
+  Object.defineProperty(navigator, <span class="code-string">'webdriver'</span>, {
+    <span class="code-keyword">get</span>: () => <span class="code-boolean">false</span>,
+  });
+  <span class="code-comment">// Stealth: navigator.webdriver patched.</span>
+}
+
+<span class="code-comment">// lib/main/app.ts (User-Agent Spoofing)</span>
+<span class="code-comment">// ... Electron's User-Agent is replaced with Chrome's ...</span>
+details.requestHeaders[<span class="code-string">'User-Agent'</span>] = selectedIdentity.ua;
+</pre>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==== License & CTA Section ==== -->
+    <section class="py-20 bg-gray-900">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-3xl font-bold text-white animate-fade-in-up" id="licenseTitle" style="opacity: 0;">
+                Free, Open Source, and Ready for You.
+            </h2>
+            <p class="text-lg text-gray-300 mt-4 max-w-xl mx-auto animate-fade-in-up" id="licenseDesc" style="opacity: 0; transition-delay: 0.1s;">
+                This project is released under the powerful <a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank" class="text-yellow-400 font-medium underline hover:text-yellow-300">GPLv3</a> license. This means it will always remain free, and you are free to contribute, modify, and distribute it.
+            </p>
+            <a href="https://github.com/YOUR_USERNAME/griffin-tab-manager/releases" target="_blank" class="mt-8 inline-block px-8 py-4 rounded-lg text-lg font-semibold text-gray-900 bg-yellow-400 hover:bg-yellow-300 transition-colors shadow-lg animate-fade-in-scale" id="viewReleases" style="opacity: 0; transition-delay: 0.2s;">
+                <i class="fa-solid fa-download mr-2"></i>
+                <span id="viewReleasesText">View All Releases</span>
+            </a>
+        </div>
+    </section>
+
+    <!-- ==== Footer ==== -->
+    <footer class="container mx-auto px-6 py-8 text-center text-gray-500">
+        <p id="footerText1" class="animate-fade-in-up" style="opacity: 0; transition-delay: 0.3s;">
+            Made with ❤️ and love for the open-source world.
+        </p>
+        <p class="mt-2 text-sm" id="footerText2" class="animate-fade-in-up" style="opacity: 0; transition-delay: 0.4s;">
+            License: GNU General Public License v3.0
+        </p>
+    </footer>
+
+    <script>
+        // Translation data (same as before)
+        const translations = {
+            en: {
+                currentLanguageName: "English",
+                githubText: "View on GitHub",
+                heroTitle: "Professional Chart Management.<br>Without Limits.",
+                heroDescription: "Griffin is a free and open-source (GPLv3) Electron-based tool that allows you to permanently manage chart tabs (like TradingView).",
+                downloadWindowsText: "Download for Windows",
+                downloadLinuxText: "Download for Linux",
+                chartEur: "EUR/USD Chart",
+                chartBtc: "BTC/USDT Chart",
+                chartPlaceholder: "[Your chart content loads here]",
+                featuresTitle: "Key Features",
+                feature1Title: "Persistent Tab Management",
+                feature1Desc: "Tabs and their order are saved in memory and fully restored when reopening the application.",
+                feature2Title: "Saved Charts List",
+                feature2Desc: "Save, edit, and manage your favorite charts (with title and URL) in the sidebar.",
+                feature3Title: "Trash and Recovery",
+                feature3Desc: "Closed tabs are moved to the trash and can be restored at any time.",
+                stealthTag: "Exclusive Feature",
+                stealthTitle: "Introducing Stealth Mode: Bypass Restrictions",
+                stealthDesc: "Many websites (like TradingView) block Electron-based tools. Griffin is designed to appear like a standard Chrome browser.",
+                licenseTitle: "Free, Open Source, and Ready for You.",
+                licenseDesc: "This project is released under the powerful <a href='https://www.gnu.org/licenses/gpl-3.0.html' target='_blank' class='text-yellow-400 font-medium underline hover:text-yellow-300'>GPLv3</a> license. This means it will always remain free, and you are free to contribute, modify, and distribute it.",
+                viewReleasesText: "View All Releases",
+                footerText1: "Made with ❤️ and love for the open-source world.",
+                footerText2: "License: GNU General Public License v3.0"
+            },
+            fa: {
+                currentLanguageName: "فارسی",
+                githubText: "مشاهده در گیت‌هاب",
+                heroTitle: "مدیریت حرفه‌ای چارت‌ها.<br>بدون محدودیت.",
+                heroDescription: "گریفین یک ابزار رایگان و اپن‌سورس (GPLv3) مبتنی بر الکترون است که به شما اجازه می‌دهد تب‌های چارت (مانند TradingView) را به صورت دائمی مدیریت کنید.",
+                downloadWindowsText: "دانلود برای ویندوز",
+                downloadLinuxText: "دانلود برای لینوکس",
+                chartEur: "چارت EUR/USD",
+                chartBtc: "چارت BTC/USDT",
+                chartPlaceholder: "[محتوای چارت شما اینجا بارگیری می‌شود]",
+                featuresTitle: "ویژگی‌های کلیدی",
+                feature1Title: "مدیریت تب پایدار",
+                feature1Desc: "تب‌ها و ترتیب آن‌ها در حافظه ذخیره شده و با باز کردن مجدد برنامه، به طور کامل بازیابی می‌شوند.",
+                feature2Title: "لیست چارت‌های ذخیره شده",
+                feature2Desc: "چارت‌های مورد علاقه خود را (با عنوان و URL) در سایدبار ذخیره، ویرایش و مدیریت کنید.",
+                feature3Title: "سطل زباله و بازیابی",
+                feature3Desc: "تب‌های بسته شده به سطل زباله منتقل می‌شوند و هر زمان که بخواهید قابل بازیابی هستند.",
+                stealthTag: "ویژگی انحصاری",
+                stealthTitle: "معرفی حالت Stealth: عبور از محدودیت‌ها",
+                stealthDesc: "بسیاری از وب‌سایت‌ها (مانند TradingView) دسترسی ابزارهای مبتنی بر الکترون را مسدود می‌کنند. گریفین طوری طراحی شده که شبیه یک مرورگر کروم استاندارد به نظر برسد.",
+                licenseTitle: "رایگان، اپن‌سورس، و آماده برای شما.",
+                licenseDesc: "این پروژه تحت لایسنس قدرتمند <a href='https://www.gnu.org/licenses/gpl-3.0.html' target='_blank' class='text-yellow-400 font-medium underline hover:text-yellow-300'>GPLv3</a> منتشر شده است. به این معنی که همیشه رایگان خواهد ماند و شما در مشارکت، تغییر و توزیع آن آزاد هستید.",
+                viewReleasesText: "مشاهده همه ریلیزها",
+                footerText1: "ساخته شده با ❤️ و عشق به دنیای اپن سورس.",
+                footerText2: "لایسنس: GNU General Public License v3.0"
+            },
+            az: {
+                currentLanguageName: "Azərbaycanca",
+                githubText: "GitHub-da baxın",
+                heroTitle: "Peşəkar Çart İdarəetməsi.<br>Məhdudiyyətsiz.",
+                heroDescription: "Griffin, TradingView kimi çart vərəqlərini daimi idarə etməyə imkan verən pulsuz və açıq mənbəli (GPLv3) Electron əsaslı alətdir.",
+                downloadWindowsText: "Windows üçün yükləyin",
+                downloadLinuxText: "Linux üçün yükləyin",
+                chartEur: "EUR/USD Çartı",
+                chartBtc: "BTC/USDT Çartı",
+                chartPlaceholder: "[Çart məzmununuz burada yüklənir]",
+                featuresTitle: "Əsas Xüsusiyyətlər",
+                feature1Title: "Davamlı Vərəq İdarəetməsi",
+                feature1Desc: "Vərəqlər və onların sırası yaddaşda saxlanılır və tətbiqi yenidən açdıqda tamamilə bərpa olunur.",
+                feature2Title: "Saxlanılan Çartlar Siyahısı",
+                feature2Desc: "Sevimli çartlarınızı (başlıq və URL ilə) yan panelə saxlayın, redaktə edin və idarə edin.",
+                feature3Title: "Zibil Qutusu və Bərpa",
+                feature3Desc: "Bağlanan vərəqlər zibil qutusuna köçürülür və istənilən vaxt bərpa edilə bilər.",
+                stealthTag: "Eksklüziv Xüsusiyyət",
+                stealthTitle: "Stealth Rejimini təqdim edirik: Məhdudiyyətləri keçin",
+                stealthDesc: "TradingView kimi çoxsaylı veb saytlar Electron əsaslı alətlərə mane olur. Griffin standart Chrome brauzer kimi görünmək üçün nəzərdə tutulub.",
+                licenseTitle: "Pulsuz, Açıq Mənbə və Sizə Hazırdır.",
+                licenseDesc: "Bu layihə güclü <a href='https://www.gnu.org/licenses/gpl-3.0.html' target='_blank' class='text-yellow-400 font-medium underline hover:text-yellow-300'>GPLv3</a> lisenziyası altında buraxılıb. Bu o deməkdir ki, həmişə pulsuz qalacaq və siz ona töhfə verməkdə, dəyişdirməkdə və paylamaqda azadsınız.",
+                viewReleasesText: "Bütün Buraxılışlara Baxın",
+                footerText1: "Açıq mənbə dünyasına olan sevgi və ❤️ ilə yaradılıb.",
+                footerText2: "Lisenziya: GNU Ümumi İctimai Lisenziyası v3.0"
+            },
+            tr: {
+                currentLanguageName: "Türkçe",
+                githubText: "GitHub'da Görüntüle",
+                heroTitle: "Profesyonel Grafik Yönetimi.<br>Sınırsız.",
+                heroDescription: "Griffin, TradingView gibi grafik sekmelerini kalıcı olarak yönetmenize izin veren ücretsiz ve açık kaynaklı (GPLv3) Electron tabanlı bir araçtır.",
+                downloadWindowsText: "Windows için İndir",
+                downloadLinuxText: "Linux için İndir",
+                chartEur: "EUR/USD Grafiği",
+                chartBtc: "BTC/USDT Grafiği",
+                chartPlaceholder: "[Grafik içeriğiniz burada yüklenir]",
+                featuresTitle: "Temel Özellikler",
+                feature1Title: "Kalıcı Sekme Yönetimi",
+                feature1Desc: "Sekmeler ve sıraları bellekte saklanır ve uygulamayı yeniden açtığınızda tamamen geri yüklenir.",
+                feature2Title: "Kaydedilen Grafikler Listesi",
+                feature2Desc: "Favori grafiklerinizi (başlık ve URL ile) kenar çubuğunda kaydedin, düzenleyin ve yönetin.",
+                feature3Title: "Çöp Kutusu ve Kurtarma",
+                feature3Desc: "Kapatılan sekmeler çöp kutusuna taşınır ve istediğiniz zaman geri yüklenebilir.",
+                stealthTag: "Özel Özellik",
+                stealthTitle: "Stealth Modunu Tanıtıyoruz: Kısıtlamaları Aşın",
+                stealthDesc: "TradingView gibi birçok web sitesi Electron tabanlı araçlara engel olur. Griffin, standart bir Chrome tarayıcısı gibi görünmek için tasarlanmıştır.",
+                licenseTitle: "Ücretsiz, Açık Kaynak ve Sizin için Hazır.",
+                licenseDesc: "Bu proje güçlü <a href='https://www.gnu.org/licenses/gpl-3.0.html' target='_blank' class='text-yellow-400 font-medium underline hover:text-yellow-300'>GPLv3</a> lisansı altında yayınlanmıştır. Bu, her zaman ücretsiz kalacağı ve katkıda bulunma, değiştirme ve dağıtma konusunda özgür olacağınız anlamına gelir.",
+                viewReleasesText: "Tüm Sürümleri Görüntüle",
+                footerText1: "Açık kaynak dünyasına olan sevgi ve ❤️ ile yapıldı.",
+                footerText2: "Lisans: GNU Genel Kamu Lisansı v3.0"
+            },
+            ckb: {
+                currentLanguageName: "کوردی",
+                githubText: "لە گیت‌هەب ببینە",
+                heroTitle: "بەڕێوەبردنی چارتی پیشەگەر.<br>بێ سنوور.",
+                heroDescription: "گریفین ئامرازێکی سەربەخۆ و کراوە (GPLv3) بە پشتبەستن بە Electronە کە ڕێگەت پێدەدات بە شێوەیەکی هەمیشەیی تابەکانی چارت (وەکوو TradingView) بەڕێوەببەیت.",
+                downloadWindowsText: "بۆ ویندۆنز دابگرە",
+                downloadLinuxText: "بۆ لینوکس دابگرە",
+                chartEur: "چارتی EUR/USD",
+                chartBtc: "چارتی BTC/USDT",
+                chartPlaceholder: "[ناوەڕۆکی چارتی تۆ لێرە دابەزێنرێت]",
+                featuresTitle: "تایبەتمەندییە سەرەکییەکان",
+                feature1Title: "بەڕێوەبردنی تابی بەردەوام",
+                feature1Desc: "تابەکان و ڕیزبەندییەکانیان لە بیرگە هەڵدەگیرێن و کاتێک دووبارە بەرنامەکە دەکەیتەوە بە تەواوی دەگەڕێنەوە.",
+                feature2Title: "لیستی چارتە هەڵبژێردراوەکان",
+                feature2Desc: "چارتە دڵخوازەکانت (بە سەردێڕ و URL) لە سایدبار هەڵبگرە، دەستکاری و بەڕێوەببە.",
+                feature3Title: "کوشت و گەڕانەوە",
+                feature3Desc: "تابەکانی داخراو دەچنە کوشت و هەر کاتێک خوازیت دەتوانیت گەڕێنیتەوە.",
+                stealthTag: "تایبەتمەندی تایبەت",
+                stealthTitle: "دۆخی ستیلث دەستپێدەکات: سنووردارییەکان دەبڕیت",
+                stealthDesc: "زۆر لە ماڵپەڕەکان (وەکوو TradingView) ڕێگە لە ئامرازەکانی بە پشتبەستن بە Electron ناگرن. گریفین وەکوو ڕاوێژگەرێکی Chromeی سەرەکی دەردەکەوێت.",
+                licenseTitle: "بەخۆڕایی، کراوە، و ئامادەیە بۆ تۆ.",
+                licenseDesc: "ئەم پڕۆژەیە لەژێر مۆڵەتی بەهێزی <a href='https://www.gnu.org/licenses/gpl-3.0.html' target='_blank' class='text-yellow-400 font-medium underline hover:text-yellow-300'>GPLv3</a> دەرچووە. ئەمە مانای ئەوەیە هەمیشە بەخۆڕایی دەمێنێتەوە، و ئازادیت هەیە بۆ بەشداریکردن، دەستکاریکردن و بڵاوکردنەوە.",
+                viewReleasesText: "هەموو دەرچووانەکان ببینە",
+                footerText1: "بە ❤️ و خۆشەویستی بۆ جیهانی کراوە دروست کراوە.",
+                footerText2: "مۆڵەت: مۆڵەتی گشتی گشتی گنو v3.0"
+            },
+            ar: {
+                currentLanguageName: "العربية",
+                githubText: "عرض على GitHub",
+                heroTitle: "إدارة الرسوم البيانية الاحترافية.<br>بدون حدود.",
+                heroDescription: "جريفين هو أداة مجانية ومفتوحة المصدر (GPLv3) مبنية على Electron تتيح لك إدارة علامات تبويب الرسوم البيانية (مثل TradingView) بشكل دائم.",
+                downloadWindowsText: "تنزيل لويندوز",
+                downloadLinuxText: "تنزيل لينكس",
+                chartEur: "رسم EUR/USD البياني",
+                chartBtc: "رسم BTC/USDT البياني",
+                chartPlaceholder: "[يتم تحميل محتوى الرسم البياني الخاص بك هنا]",
+                featuresTitle: "الميزات الرئيسية",
+                feature1Title: "إدارة علامات التبويب الدائمة",
+                feature1Desc: "يتم حفظ علامات التبويب وتسلسلها في الذاكرة وتُستعاد بالكامل عند إعادة فتح التطبيق.",
+                feature2Title: "قائمة الرسوم البيانية المحفوظة",
+                feature2Desc: "احفظ وحرّر وأدر الرسوم البيانية المفضلة لديك (مع العنوان ورابط URL) في الشريط الجانبي.",
+                feature3Title: "سلة المهملات والاسترداد",
+                feature3Desc: "تُنقل علامات التبويب المغلقة إلى سلة المهملات ويمكن استعادتها في أي وقت.",
+                stealthTag: "ميزة حصرية",
+                stealthTitle: "تقديم وضع التخفي: تجاوز القيود",
+                stealthDesc: "تحظر العديد من مواقع الويب (مثل TradingView) الأدوات المبنية على Electron. تم تصميم جريفين ليظهر كمتصفح كروم قياسي.",
+                licenseTitle: "مجاني، مفتوح المصدر، وجاهز لك.",
+                licenseDesc: "يتم إصدار هذا المشروع بموجب ترخيص <a href='https://www.gnu.org/licenses/gpl-3.0.html' target='_blank' class='text-yellow-400 font-medium underline hover:text-yellow-300'>GPLv3</a> القوي. هذا يعني أنه سيبقى دائمًا مجانيًا، ولديك الحرية في المساهمة وتعديل وتوزيعه.",
+                viewReleasesText: "عرض جميع الإصدارات",
+                footerText1: "صُنع بـ ❤️ وحب لعالم المصادر المفتوحة.",
+                footerText2: "الترخيص: رخصة جنو العمومية العامة الإصدار 3.0"
+            }
+        };
+
+        // DOM elements for translations
+        const elements = {
+            currentLanguageName: document.getElementById('currentLanguageName'),
+            githubText: document.getElementById('githubText'),
+            heroTitle: document.getElementById('heroTitle'),
+            heroDescription: document.getElementById('heroDescription'),
+            downloadWindowsText: document.getElementById('downloadWindowsText'),
+            downloadLinuxText: document.getElementById('downloadLinuxText'),
+            chartEur: document.getElementById('chartEur'),
+            chartBtc: document.getElementById('chartBtc'),
+            chartPlaceholder: document.getElementById('chartPlaceholder'),
+            featuresTitle: document.getElementById('featuresTitle'),
+            feature1Title: document.getElementById('feature1Title'),
+            feature1Desc: document.getElementById('feature1Desc'),
+            feature2Title: document.getElementById('feature2Title'),
+            feature2Desc: document.getElementById('feature2Desc'),
+            feature3Title: document.getElementById('feature3Title'),
+            feature3Desc: document.getElementById('feature3Desc'),
+            stealthTag: document.getElementById('stealthTag'),
+            stealthTitle: document.getElementById('stealthTitle'),
+            stealthDesc: document.getElementById('stealthDesc'),
+            licenseTitle: document.getElementById('licenseTitle'),
+            licenseDesc: document.getElementById('licenseDesc'),
+            viewReleasesText: document.getElementById('viewReleasesText'),
+            footerText1: document.getElementById('footerText1'),
+            footerText2: document.getElementById('footerText2')
+        };
+
+        let currentLang = 'en';
+
+        // Detect browser language and set default
+        function detectBrowserLanguage() {
+            const userLang = (navigator.language || navigator.userLanguage).split('-')[0];
+            const supportedLangs = ['en', 'fa', 'ckb', 'ar', 'az', 'tr'];
+            return supportedLangs.includes(userLang) ? userLang : 'en';
+        }
+
+        // Initialize language
+        function initLanguage() {
+            const savedLang = localStorage.getItem('griffinLang');
+            currentLang = savedLang || detectBrowserLanguage();
+            updateLanguage(currentLang);
+        }
+
+        // Update language
+        function updateLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('griffinLang', lang);
+            
+            // Update all text elements
+            Object.keys(elements).forEach(key => {
+                if (translations[lang][key]) {
+                    elements[key].innerHTML = translations[lang][key];
+                }
+            });
+            
+            // Update direction
+            const html = document.documentElement;
+            if (['fa', 'ar', 'ckb'].includes(lang)) {
+                html.setAttribute('lang', lang);
+                html.setAttribute('dir', 'rtl');
+                document.body.classList.add('rtl-content');
+                document.body.classList.remove('ltr-content');
+                
+                // Move language selector to right in RTL
+                const container = document.getElementById('languageSelectorContainer');
+                container.parentElement.style.justifyContent = 'flex-end';
+            } else {
+                html.setAttribute('lang', lang);
+                html.setAttribute('dir', 'ltr');
+                document.body.classList.add('ltr-content');
+                document.body.classList.remove('rtl-content');
+                
+                // Keep language selector on left in LTR
+                const container = document.getElementById('languageSelectorContainer');
+                container.parentElement.style.justifyContent = 'flex-start';
+            }
+            
+            // Close dropdown
+            document.getElementById('languageDropdown').classList.add('hidden');
+        }
+
+        // Toggle dropdown
+        document.getElementById('languageButton').addEventListener('click', () => {
+            const dropdown = document.getElementById('languageDropdown');
+            dropdown.classList.toggle('hidden');
+        });
+
+        // Handle language selection
+        document.querySelectorAll('.language-option').forEach(button => {
+            button.addEventListener('click', () => {
+                const lang = button.getAttribute('data-lang');
+                updateLanguage(lang);
+            });
+        });
+
+        // Close dropdown on outside click
+        document.addEventListener('click', (e) => {
+            const button = document.getElementById('languageButton');
+            const dropdown = document.getElementById('languageDropdown');
+            if (!button.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.classList.add('hidden');
+            }
+        });
+
+        // --- OS Detection ---
+        function detectOS() {
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+            if (userAgent.indexOf("Win") !== -1) {
+                return "windows";
+            }
+            if (userAgent.indexOf("Linux") !== -1) {
+                return "linux";
+            }
+            if (userAgent.indexOf("Mac") !== -1) {
+                return "mac";
+            }
+            return "other";
+        }
+
+        function applyOSClass() {
+            const os = detectOS();
+            const body = document.body;
+            body.classList.remove("os-windows", "os-linux", "os-mac", "os-other");
+            body.classList.add(`os-${os}`);
+            console.log("OS Detected:", os); // For debugging
+        }
+
+        // --- Animation Trigger ---
+        function triggerAnimations() {
+            // Select all elements with animation classes
+            const animatedElements = document.querySelectorAll('.animate-fade-in-up, .animate-fade-in-scale');
+            animatedElements.forEach(el => {
+                // Calculate delay from style attribute
+                const delay = parseFloat(el.style.transitionDelay || 0) * 1000; // Convert to milliseconds
+
+                // Trigger the animation after a delay
+                setTimeout(() => {
+                    // Remove the initial hidden state
+                    el.style.opacity = '1';
+                    el.style.transform = 'none'; // Reset transform
+                    // Add the animation class from Tailwind/Framer Motion if needed
+                    // For simplicity, CSS handles the animation via transition
+                }, delay);
+            });
+        }
+
+        // Initialize everything when the DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            initLanguage();
+            applyOSClass();
+            triggerAnimations(); // Trigger animations after everything is set up
+        });
+
+    </script>
+</body>
+</html>
+
