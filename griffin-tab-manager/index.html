@@ -343,6 +343,45 @@
                         Closed tabs are moved to the trash and can be restored at any time.
                     </p>
                 </div>
+
+
+
+
+    <div class="feature-card bg-gray-800 p-6 rounded-lg shadow-lg animate-fade-in-up" style="opacity: 0; transition-delay: 0.4s;">
+        <div class="w-12 h-12 flex items-center justify-center rounded-full bg-yellow-400 text-gray-900 mb-4">
+            <i class="fa-solid fa-microchip fa-xl"></i>
+        </div>
+        <h3 class="text-xl font-semibold mb-2" id="feature4Title">
+            Smart Memory Saver
+        </h3>
+        <p class="text-gray-300" id="feature4Desc">
+            Auto-hibernation releases RAM from inactive tabs, keeping your PC fast even with 50+ charts.
+        </p>
+    </div>
+
+    <div class="feature-card bg-gray-800 p-6 rounded-lg shadow-lg animate-fade-in-up" style="opacity: 0; transition-delay: 0.5s;">
+        <div class="w-12 h-12 flex items-center justify-center rounded-full bg-yellow-400 text-gray-900 mb-4">
+            <i class="fa-solid fa-table-columns fa-xl"></i>
+        </div>
+        <h3 class="text-xl font-semibold mb-2" id="feature5Title">
+            Multi-View Dashboard
+        </h3>
+        <p class="text-gray-300" id="feature5Desc">
+            Monitor multiple markets simultaneously in a single tab with a customizable grid layout.
+        </p>
+    </div>
+
+    <div class="feature-card bg-gray-800 p-6 rounded-lg shadow-lg animate-fade-in-up" style="opacity: 0; transition-delay: 0.6s;">
+        <div class="w-12 h-12 flex items-center justify-center rounded-full bg-yellow-400 text-gray-900 mb-4">
+            <i class="fa-solid fa-palette fa-xl"></i>
+        </div>
+        <h3 class="text-xl font-semibold mb-2" id="feature6Title">
+            Advanced Organization
+        </h3>
+        <p class="text-gray-300" id="feature6Desc">
+            Group tabs by color, bulk import URLs, and manage your workspace via the settings tab.
+        </p>
+    </div>
             </div>
         </div>
     </section>
@@ -408,164 +447,201 @@ details.requestHeaders[<span class="code-string">'User-Agent'</span>] = selected
 
     <script>
         // Translation data (same as before)
+
         const translations = {
-            en: {
-                currentLanguageName: "English",
-                githubText: "View on GitHub",
-                heroTitle: "Professional Chart Management.<br>Without Limits.",
-                heroDescription: "Griffin is a free and open-source (GPLv3) Electron-based tool that allows you to permanently manage chart tabs (like TradingView).",
-                downloadWindowsText: "Download for Windows",
-                downloadLinuxText: "Download for Linux",
-                chartEur: "EUR/USD Chart",
-                chartBtc: "BTC/USDT Chart",
-                chartPlaceholder: "[Your chart content loads here]",
-                featuresTitle: "Key Features",
-                feature1Title: "Persistent Tab Management",
-                feature1Desc: "Tabs and their order are saved in memory and fully restored when reopening the application.",
-                feature2Title: "Saved Charts List",
-                feature2Desc: "Save, edit, and manage your favorite charts (with title and URL) in the sidebar.",
-                feature3Title: "Trash and Recovery",
-                feature3Desc: "Closed tabs are moved to the trash and can be restored at any time.",
-                stealthTag: "Exclusive Feature",
-                stealthTitle: "Introducing Stealth Mode: Bypass Restrictions",
-                stealthDesc: "Many websites (like TradingView) block Electron-based tools. Griffin is designed to appear like a standard Chrome browser.",
-                licenseTitle: "Free, Open Source, and Ready for You.",
-                licenseDesc: "This project is released under the powerful <a href='https://www.gnu.org/licenses/gpl-3.0.html' target='_blank' class='text-yellow-400 font-medium underline hover:text-yellow-300'>GPLv3</a> license. This means it will always remain free, and you are free to contribute, modify, and distribute it.",
-                viewReleasesText: "View All Releases",
-                footerText1: "Made with ❤️ and love for the open-source world.",
-                footerText2: "License: GNU General Public License v3.0"
-            },
-            fa: {
-                currentLanguageName: "فارسی",
-                githubText: "مشاهده در گیت‌هاب",
-                heroTitle: "مدیریت حرفه‌ای چارت‌ها.<br>بدون محدودیت.",
-                heroDescription: "گریفین یک ابزار رایگان و اپن‌سورس (GPLv3) مبتنی بر الکترون است که به شما اجازه می‌دهد تب‌های چارت (مانند TradingView) را به صورت دائمی مدیریت کنید.",
-                downloadWindowsText: "دانلود برای ویندوز",
-                downloadLinuxText: "دانلود برای لینوکس",
-                chartEur: "چارت EUR/USD",
-                chartBtc: "چارت BTC/USDT",
-                chartPlaceholder: "[محتوای چارت شما اینجا بارگیری می‌شود]",
-                featuresTitle: "ویژگی‌های کلیدی",
-                feature1Title: "مدیریت تب پایدار",
-                feature1Desc: "تب‌ها و ترتیب آن‌ها در حافظه ذخیره شده و با باز کردن مجدد برنامه، به طور کامل بازیابی می‌شوند.",
-                feature2Title: "لیست چارت‌های ذخیره شده",
-                feature2Desc: "چارت‌های مورد علاقه خود را (با عنوان و URL) در سایدبار ذخیره، ویرایش و مدیریت کنید.",
-                feature3Title: "سطل زباله و بازیابی",
-                feature3Desc: "تب‌های بسته شده به سطل زباله منتقل می‌شوند و هر زمان که بخواهید قابل بازیابی هستند.",
-                stealthTag: "ویژگی انحصاری",
-                stealthTitle: "معرفی حالت Stealth: عبور از محدودیت‌ها",
-                stealthDesc: "بسیاری از وب‌سایت‌ها (مانند TradingView) دسترسی ابزارهای مبتنی بر الکترون را مسدود می‌کنند. گریفین طوری طراحی شده که شبیه یک مرورگر کروم استاندارد به نظر برسد.",
-                licenseTitle: "رایگان، اپن‌سورس، و آماده برای شما.",
-                licenseDesc: "این پروژه تحت لایسنس قدرتمند <a href='https://www.gnu.org/licenses/gpl-3.0.html' target='_blank' class='text-yellow-400 font-medium underline hover:text-yellow-300'>GPLv3</a> منتشر شده است. به این معنی که همیشه رایگان خواهد ماند و شما در مشارکت، تغییر و توزیع آن آزاد هستید.",
-                viewReleasesText: "مشاهده همه ریلیزها",
-                footerText1: "ساخته شده با ❤️ و عشق به دنیای اپن سورس.",
-                footerText2: "لایسنس: GNU General Public License v3.0"
-            },
-            az: {
-                currentLanguageName: "Azərbaycanca",
-                githubText: "GitHub-da baxın",
-                heroTitle: "Peşəkar Çart İdarəetməsi.<br>Məhdudiyyətsiz.",
-                heroDescription: "Griffin, TradingView kimi çart vərəqlərini daimi idarə etməyə imkan verən pulsuz və açıq mənbəli (GPLv3) Electron əsaslı alətdir.",
-                downloadWindowsText: "Windows üçün yükləyin",
-                downloadLinuxText: "Linux üçün yükləyin",
-                chartEur: "EUR/USD Çartı",
-                chartBtc: "BTC/USDT Çartı",
-                chartPlaceholder: "[Çart məzmununuz burada yüklənir]",
-                featuresTitle: "Əsas Xüsusiyyətlər",
-                feature1Title: "Davamlı Vərəq İdarəetməsi",
-                feature1Desc: "Vərəqlər və onların sırası yaddaşda saxlanılır və tətbiqi yenidən açdıqda tamamilə bərpa olunur.",
-                feature2Title: "Saxlanılan Çartlar Siyahısı",
-                feature2Desc: "Sevimli çartlarınızı (başlıq və URL ilə) yan panelə saxlayın, redaktə edin və idarə edin.",
-                feature3Title: "Zibil Qutusu və Bərpa",
-                feature3Desc: "Bağlanan vərəqlər zibil qutusuna köçürülür və istənilən vaxt bərpa edilə bilər.",
-                stealthTag: "Eksklüziv Xüsusiyyət",
-                stealthTitle: "Stealth Rejimini təqdim edirik: Məhdudiyyətləri keçin",
-                stealthDesc: "TradingView kimi çoxsaylı veb saytlar Electron əsaslı alətlərə mane olur. Griffin standart Chrome brauzer kimi görünmək üçün nəzərdə tutulub.",
-                licenseTitle: "Pulsuz, Açıq Mənbə və Sizə Hazırdır.",
-                licenseDesc: "Bu layihə güclü <a href='https://www.gnu.org/licenses/gpl-3.0.html' target='_blank' class='text-yellow-400 font-medium underline hover:text-yellow-300'>GPLv3</a> lisenziyası altında buraxılıb. Bu o deməkdir ki, həmişə pulsuz qalacaq və siz ona töhfə verməkdə, dəyişdirməkdə və paylamaqda azadsınız.",
-                viewReleasesText: "Bütün Buraxılışlara Baxın",
-                footerText1: "Açıq mənbə dünyasına olan sevgi və ❤️ ilə yaradılıb.",
-                footerText2: "Lisenziya: GNU Ümumi İctimai Lisenziyası v3.0"
-            },
-            tr: {
-                currentLanguageName: "Türkçe",
-                githubText: "GitHub'da Görüntüle",
-                heroTitle: "Profesyonel Grafik Yönetimi.<br>Sınırsız.",
-                heroDescription: "Griffin, TradingView gibi grafik sekmelerini kalıcı olarak yönetmenize izin veren ücretsiz ve açık kaynaklı (GPLv3) Electron tabanlı bir araçtır.",
-                downloadWindowsText: "Windows için İndir",
-                downloadLinuxText: "Linux için İndir",
-                chartEur: "EUR/USD Grafiği",
-                chartBtc: "BTC/USDT Grafiği",
-                chartPlaceholder: "[Grafik içeriğiniz burada yüklenir]",
-                featuresTitle: "Temel Özellikler",
-                feature1Title: "Kalıcı Sekme Yönetimi",
-                feature1Desc: "Sekmeler ve sıraları bellekte saklanır ve uygulamayı yeniden açtığınızda tamamen geri yüklenir.",
-                feature2Title: "Kaydedilen Grafikler Listesi",
-                feature2Desc: "Favori grafiklerinizi (başlık ve URL ile) kenar çubuğunda kaydedin, düzenleyin ve yönetin.",
-                feature3Title: "Çöp Kutusu ve Kurtarma",
-                feature3Desc: "Kapatılan sekmeler çöp kutusuna taşınır ve istediğiniz zaman geri yüklenebilir.",
-                stealthTag: "Özel Özellik",
-                stealthTitle: "Stealth Modunu Tanıtıyoruz: Kısıtlamaları Aşın",
-                stealthDesc: "TradingView gibi birçok web sitesi Electron tabanlı araçlara engel olur. Griffin, standart bir Chrome tarayıcısı gibi görünmek için tasarlanmıştır.",
-                licenseTitle: "Ücretsiz, Açık Kaynak ve Sizin için Hazır.",
-                licenseDesc: "Bu proje güçlü <a href='https://www.gnu.org/licenses/gpl-3.0.html' target='_blank' class='text-yellow-400 font-medium underline hover:text-yellow-300'>GPLv3</a> lisansı altında yayınlanmıştır. Bu, her zaman ücretsiz kalacağı ve katkıda bulunma, değiştirme ve dağıtma konusunda özgür olacağınız anlamına gelir.",
-                viewReleasesText: "Tüm Sürümleri Görüntüle",
-                footerText1: "Açık kaynak dünyasına olan sevgi ve ❤️ ile yapıldı.",
-                footerText2: "Lisans: GNU Genel Kamu Lisansı v3.0"
-            },
-            ckb: {
-                currentLanguageName: "کوردی",
-                githubText: "لە گیت‌هەب ببینە",
-                heroTitle: "بەڕێوەبردنی چارتی پیشەگەر.<br>بێ سنوور.",
-                heroDescription: "گریفین ئامرازێکی سەربەخۆ و کراوە (GPLv3) بە پشتبەستن بە Electronە کە ڕێگەت پێدەدات بە شێوەیەکی هەمیشەیی تابەکانی چارت (وەکوو TradingView) بەڕێوەببەیت.",
-                downloadWindowsText: "بۆ ویندۆنز دابگرە",
-                downloadLinuxText: "بۆ لینوکس دابگرە",
-                chartEur: "چارتی EUR/USD",
-                chartBtc: "چارتی BTC/USDT",
-                chartPlaceholder: "[ناوەڕۆکی چارتی تۆ لێرە دابەزێنرێت]",
-                featuresTitle: "تایبەتمەندییە سەرەکییەکان",
-                feature1Title: "بەڕێوەبردنی تابی بەردەوام",
-                feature1Desc: "تابەکان و ڕیزبەندییەکانیان لە بیرگە هەڵدەگیرێن و کاتێک دووبارە بەرنامەکە دەکەیتەوە بە تەواوی دەگەڕێنەوە.",
-                feature2Title: "لیستی چارتە هەڵبژێردراوەکان",
-                feature2Desc: "چارتە دڵخوازەکانت (بە سەردێڕ و URL) لە سایدبار هەڵبگرە، دەستکاری و بەڕێوەببە.",
-                feature3Title: "کوشت و گەڕانەوە",
-                feature3Desc: "تابەکانی داخراو دەچنە کوشت و هەر کاتێک خوازیت دەتوانیت گەڕێنیتەوە.",
-                stealthTag: "تایبەتمەندی تایبەت",
-                stealthTitle: "دۆخی ستیلث دەستپێدەکات: سنووردارییەکان دەبڕیت",
-                stealthDesc: "زۆر لە ماڵپەڕەکان (وەکوو TradingView) ڕێگە لە ئامرازەکانی بە پشتبەستن بە Electron ناگرن. گریفین وەکوو ڕاوێژگەرێکی Chromeی سەرەکی دەردەکەوێت.",
-                licenseTitle: "بەخۆڕایی، کراوە، و ئامادەیە بۆ تۆ.",
-                licenseDesc: "ئەم پڕۆژەیە لەژێر مۆڵەتی بەهێزی <a href='https://www.gnu.org/licenses/gpl-3.0.html' target='_blank' class='text-yellow-400 font-medium underline hover:text-yellow-300'>GPLv3</a> دەرچووە. ئەمە مانای ئەوەیە هەمیشە بەخۆڕایی دەمێنێتەوە، و ئازادیت هەیە بۆ بەشداریکردن، دەستکاریکردن و بڵاوکردنەوە.",
-                viewReleasesText: "هەموو دەرچووانەکان ببینە",
-                footerText1: "بە ❤️ و خۆشەویستی بۆ جیهانی کراوە دروست کراوە.",
-                footerText2: "مۆڵەت: مۆڵەتی گشتی گشتی گنو v3.0"
-            },
-            ar: {
-                currentLanguageName: "العربية",
-                githubText: "عرض على GitHub",
-                heroTitle: "إدارة الرسوم البيانية الاحترافية.<br>بدون حدود.",
-                heroDescription: "جريفين هو أداة مجانية ومفتوحة المصدر (GPLv3) مبنية على Electron تتيح لك إدارة علامات تبويب الرسوم البيانية (مثل TradingView) بشكل دائم.",
-                downloadWindowsText: "تنزيل لويندوز",
-                downloadLinuxText: "تنزيل لينكس",
-                chartEur: "رسم EUR/USD البياني",
-                chartBtc: "رسم BTC/USDT البياني",
-                chartPlaceholder: "[يتم تحميل محتوى الرسم البياني الخاص بك هنا]",
-                featuresTitle: "الميزات الرئيسية",
-                feature1Title: "إدارة علامات التبويب الدائمة",
-                feature1Desc: "يتم حفظ علامات التبويب وتسلسلها في الذاكرة وتُستعاد بالكامل عند إعادة فتح التطبيق.",
-                feature2Title: "قائمة الرسوم البيانية المحفوظة",
-                feature2Desc: "احفظ وحرّر وأدر الرسوم البيانية المفضلة لديك (مع العنوان ورابط URL) في الشريط الجانبي.",
-                feature3Title: "سلة المهملات والاسترداد",
-                feature3Desc: "تُنقل علامات التبويب المغلقة إلى سلة المهملات ويمكن استعادتها في أي وقت.",
-                stealthTag: "ميزة حصرية",
-                stealthTitle: "تقديم وضع التخفي: تجاوز القيود",
-                stealthDesc: "تحظر العديد من مواقع الويب (مثل TradingView) الأدوات المبنية على Electron. تم تصميم جريفين ليظهر كمتصفح كروم قياسي.",
-                licenseTitle: "مجاني، مفتوح المصدر، وجاهز لك.",
-                licenseDesc: "يتم إصدار هذا المشروع بموجب ترخيص <a href='https://www.gnu.org/licenses/gpl-3.0.html' target='_blank' class='text-yellow-400 font-medium underline hover:text-yellow-300'>GPLv3</a> القوي. هذا يعني أنه سيبقى دائمًا مجانيًا، ولديك الحرية في المساهمة وتعديل وتوزيعه.",
-                viewReleasesText: "عرض جميع الإصدارات",
-                footerText1: "صُنع بـ ❤️ وحب لعالم المصادر المفتوحة.",
-                footerText2: "الترخيص: رخصة جنو العمومية العامة الإصدار 3.0"
-            }
-        };
+    en: {
+        currentLanguageName: "English",
+        githubText: "View on GitHub",
+        heroTitle: "Professional Chart Management.<br>Without Limits.",
+        heroDescription: "Griffin is a free and open-source (GPLv3) Electron-based tool that allows you to permanently manage chart tabs (like TradingView).",
+        downloadWindowsText: "Download for Windows",
+        downloadLinuxText: "Download for Linux",
+        chartEur: "EUR/USD Chart",
+        chartBtc: "BTC/USDT Chart",
+        chartPlaceholder: "[Your chart content loads here]",
+        featuresTitle: "Key Features",
+        feature1Title: "Persistent Tab Management",
+        feature1Desc: "Tabs and their order are saved in memory and fully restored when reopening the application.",
+        feature2Title: "Saved Charts List",
+        feature2Desc: "Save, edit, and manage your favorite charts (with title and URL) in the sidebar.",
+        feature3Title: "Trash and Recovery",
+        feature3Desc: "Closed tabs are moved to the trash and can be restored at any time.",
+        feature4Title: "Smart Memory Saver",
+        feature4Desc: "Auto-hibernation releases RAM from inactive tabs, keeping your PC fast even with 50+ charts.",
+        feature5Title: "Multi-View Dashboard",
+        feature5Desc: "Monitor multiple markets simultaneously in a single tab with a customizable grid layout.",
+        feature6Title: "Advanced Organization",
+        feature6Desc: "Group tabs by color, bulk import URLs, and manage your workspace via the settings tab.",
+        stealthTag: "Exclusive Feature",
+        stealthTitle: "Introducing Stealth Mode: Bypass Restrictions",
+        stealthDesc: "Many websites (like TradingView) block Electron-based tools. Griffin is designed to appear like a standard Chrome browser.",
+        licenseTitle: "Free, Open Source, and Ready for You.",
+        licenseDesc: "This project is released under the powerful <a href='https://www.gnu.org/licenses/gpl-3.0.html' target='_blank' class='text-yellow-400 font-medium underline hover:text-yellow-300'>GPLv3</a> license. This means it will always remain free, and you are free to contribute, modify, and distribute it.",
+        viewReleasesText: "View All Releases",
+        footerText1: "Made with ❤️ and love for the open-source world.",
+        footerText2: "License: GNU General Public License v3.0"
+    },
+    fa: {
+        currentLanguageName: "فارسی",
+        githubText: "مشاهده در گیت‌هاب",
+        heroTitle: "مدیریت حرفه‌ای چارت‌ها.<br>بدون محدودیت.",
+        heroDescription: "گریفین یک ابزار رایگان و اپن‌سورس (GPLv3) مبتنی بر الکترون است که به شما اجازه می‌دهد تب‌های چارت (مانند TradingView) را به صورت دائمی مدیریت کنید.",
+        downloadWindowsText: "دانلود برای ویندوز",
+        downloadLinuxText: "دانلود برای لینوکس",
+        chartEur: "چارت EUR/USD",
+        chartBtc: "چارت BTC/USDT",
+        chartPlaceholder: "[محتوای چارت شما اینجا بارگیری می‌شود]",
+        featuresTitle: "ویژگی‌های کلیدی",
+        feature1Title: "مدیریت تب پایدار",
+        feature1Desc: "تب‌ها و ترتیب آن‌ها در حافظه ذخیره شده و با باز کردن مجدد برنامه، به طور کامل بازیابی می‌شوند.",
+        feature2Title: "لیست چارت‌های ذخیره شده",
+        feature2Desc: "چارت‌های مورد علاقه خود را (با عنوان و URL) در سایدبار ذخیره، ویرایش و مدیریت کنید.",
+        feature3Title: "سطل زباله و بازیابی",
+        feature3Desc: "تب‌های بسته شده به سطل زباله منتقل می‌شوند و هر زمان که بخواهید قابل بازیابی هستند.",
+        feature4Title: "مدیریت هوشمند حافظه",
+        feature4Desc: "قابلیت خواب زمستانی با آزادسازی رم تب‌های غیرفعال، سرعت سیستم را حتی با ۵۰ تب حفظ می‌کند.",
+        feature5Title: "داشبورد چند‌نمایی",
+        feature5Desc: "چندین بازار را همزمان در یک تب با چیدمان شبکه‌ای (Grid) قابل تنظیم رصد کنید.",
+        feature6Title: "سازماندهی پیشرفته",
+        feature6Desc: "تب‌ها را رنگ‌بندی کنید، لینک‌ها را گروهی وارد کنید و تنظیمات را از طریق تب اختصاصی مدیریت کنید.",
+        stealthTag: "ویژگی انحصاری",
+        stealthTitle: "معرفی حالت Stealth: عبور از محدودیت‌ها",
+        stealthDesc: "بسیاری از وب‌سایت‌ها (مانند TradingView) دسترسی ابزارهای مبتنی بر الکترون را مسدود می‌کنند. گریفین طوری طراحی شده که شبیه یک مرورگر کروم استاندارد به نظر برسد.",
+        licenseTitle: "رایگان، اپن‌سورس، و آماده برای شما.",
+        licenseDesc: "این پروژه تحت لایسنس قدرتمند <a href='https://www.gnu.org/licenses/gpl-3.0.html' target='_blank' class='text-yellow-400 font-medium underline hover:text-yellow-300'>GPLv3</a> منتشر شده است. به این معنی که همیشه رایگان خواهد ماند و شما در مشارکت، تغییر و توزیع آن آزاد هستید.",
+        viewReleasesText: "مشاهده همه ریلیزها",
+        footerText1: "ساخته شده با ❤️ و عشق به دنیای اپن سورس.",
+        footerText2: "لایسنس: GNU General Public License v3.0"
+    },
+    az: {
+        currentLanguageName: "Azərbaycanca",
+        githubText: "GitHub-da baxın",
+        heroTitle: "Peşəkar Çart İdarəetməsi.<br>Məhdudiyyətsiz.",
+        heroDescription: "Griffin, TradingView kimi çart vərəqlərini daimi idarə etməyə imkan verən pulsuz və açıq mənbəli (GPLv3) Electron əsaslı alətdir.",
+        downloadWindowsText: "Windows üçün yükləyin",
+        downloadLinuxText: "Linux üçün yükləyin",
+        chartEur: "EUR/USD Çartı",
+        chartBtc: "BTC/USDT Çartı",
+        chartPlaceholder: "[Çart məzmununuz burada yüklənir]",
+        featuresTitle: "Əsas Xüsusiyyətlər",
+        feature1Title: "Davamlı Vərəq İdarəetməsi",
+        feature1Desc: "Vərəqlər və onların sırası yaddaşda saxlanılır və tətbiqi yenidən açdıqda tamamilə bərpa olunur.",
+        feature2Title: "Saxlanılan Çartlar Siyahısı",
+        feature2Desc: "Sevimli çartlarınızı (başlıq və URL ilə) yan panelə saxlayın, redaktə edin və idarə edin.",
+        feature3Title: "Zibil Qutusu və Bərpa",
+        feature3Desc: "Bağlanan vərəqlər zibil qutusuna köçürülür və istənilən vaxt bərpa edilə bilər.",
+        feature4Title: "Ağıllı Yaddaş Qoruyucu",
+        feature4Desc: "Avtomatik yuxu rejimi qeyri-aktiv vərəqlərdən RAM-ı azad edərək kompüterinizi sürətli saxlayır.",
+        feature5Title: "Çox Görünüşlü Panel",
+        feature5Desc: "Bir vərəqdə fərdiləşdirilə bilən şəbəkə düzümü ilə birdən çox bazarı eyni vaxtda izləyin.",
+        feature6Title: "Təkmil Təşkilat",
+        feature6Desc: "Vərəqləri rəngə görə qruplaşdırın, URL-ləri toplu idxal edin və iş sahənizi idarə edin.",
+        stealthTag: "Eksklüziv Xüsusiyyət",
+        stealthTitle: "Stealth Rejimini təqdim edirik: Məhdudiyyətləri keçin",
+        stealthDesc: "TradingView kimi çoxsaylı veb saytlar Electron əsaslı alətlərə mane olur. Griffin standart Chrome brauzer kimi görünmək üçün nəzərdə tutulub.",
+        licenseTitle: "Pulsuz, Açıq Mənbə və Sizə Hazırdır.",
+        licenseDesc: "Bu layihə güclü <a href='https://www.gnu.org/licenses/gpl-3.0.html' target='_blank' class='text-yellow-400 font-medium underline hover:text-yellow-300'>GPLv3</a> lisenziyası altında buraxılıb. Bu o deməkdir ki, həmişə pulsuz qalacaq və siz ona töhfə verməkdə, dəyişdirməkdə və paylamaqda azadsınız.",
+        viewReleasesText: "Bütün Buraxılışlara Baxın",
+        footerText1: "Açıq mənbə dünyasına olan sevgi və ❤️ ilə yaradılıb.",
+        footerText2: "Lisenziya: GNU Ümumi İctimai Lisenziyası v3.0"
+    },
+    tr: {
+        currentLanguageName: "Türkçe",
+        githubText: "GitHub'da Görüntüle",
+        heroTitle: "Profesyonel Grafik Yönetimi.<br>Sınırsız.",
+        heroDescription: "Griffin, TradingView gibi grafik sekmelerini kalıcı olarak yönetmenize izin veren ücretsiz ve açık kaynaklı (GPLv3) Electron tabanlı bir araçtır.",
+        downloadWindowsText: "Windows için İndir",
+        downloadLinuxText: "Linux için İndir",
+        chartEur: "EUR/USD Grafiği",
+        chartBtc: "BTC/USDT Grafiği",
+        chartPlaceholder: "[Grafik içeriğiniz burada yüklenir]",
+        featuresTitle: "Temel Özellikler",
+        feature1Title: "Kalıcı Sekme Yönetimi",
+        feature1Desc: "Sekmeler ve sıraları bellekte saklanır ve uygulamayı yeniden açtığınızda tamamen geri yüklenir.",
+        feature2Title: "Kaydedilen Grafikler Listesi",
+        feature2Desc: "Favori grafiklerinizi (başlık ve URL ile) kenar çubuğunda kaydedin, düzenleyin ve yönetin.",
+        feature3Title: "Çöp Kutusu ve Kurtarma",
+        feature3Desc: "Kapatılan sekmeler çöp kutusuna taşınır ve istediğiniz zaman geri yüklenebilir.",
+        feature4Title: "Akıllı Bellek Tasarrufu",
+        feature4Desc: "Otomatik hazırda bekletme, aktif olmayan sekmelerden RAM'i serbest bırakarak bilgisayarınızı hızlandırır.",
+        feature5Title: "Çoklu Görünüm Paneli",
+        feature5Desc: "Özelleştirilebilir ızgara düzeni ile tek bir sekmede birden fazla piyasayı aynı anda izleyin.",
+        feature6Title: "Gelişmiş Organizasyon",
+        feature6Desc: "Sekmeleri renge göre gruplayın, URL'leri toplu içe aktarın ve çalışma alanınızı ayarlar sekmesinden yönetin.",
+        stealthTag: "Özel Özellik",
+        stealthTitle: "Stealth Modunu Tanıtıyoruz: Kısıtlamaları Aşın",
+        stealthDesc: "TradingView gibi birçok web sitesi Electron tabanlı araçlara engel olur. Griffin, standart bir Chrome tarayıcısı gibi görünmek için tasarlanmıştır.",
+        licenseTitle: "Ücretsiz, Açık Kaynak ve Sizin için Hazır.",
+        licenseDesc: "Bu proje güçlü <a href='https://www.gnu.org/licenses/gpl-3.0.html' target='_blank' class='text-yellow-400 font-medium underline hover:text-yellow-300'>GPLv3</a> lisansı altında yayınlanmıştır. Bu, her zaman ücretsiz kalacağı ve katkıda bulunma, değiştirme ve dağıtma konusunda özgür olacağınız anlamına gelir.",
+        viewReleasesText: "Tüm Sürümleri Görüntüle",
+        footerText1: "Açık kaynak dünyasına olan sevgi ve ❤️ ile yapıldı.",
+        footerText2: "Lisans: GNU Genel Kamu Lisansı v3.0"
+    },
+    ckb: {
+        currentLanguageName: "کوردی",
+        githubText: "لە گیت‌هەب ببینە",
+        heroTitle: "بەڕێوەبردنی چارتی پیشەگەر.<br>بێ سنوور.",
+        heroDescription: "گریفین ئامرازێکی سەربەخۆ و کراوە (GPLv3) بە پشتبەستن بە Electronە کە ڕێگەت پێدەدات بە شێوەیەکی هەمیشەیی تابەکانی چارت (وەکوو TradingView) بەڕێوەببەیت.",
+        downloadWindowsText: "بۆ ویندۆنز دابگرە",
+        downloadLinuxText: "بۆ لینوکس دابگرە",
+        chartEur: "چارتی EUR/USD",
+        chartBtc: "چارتی BTC/USDT",
+        chartPlaceholder: "[ناوەڕۆکی چارتی تۆ لێرە دابەزێنرێت]",
+        featuresTitle: "تایبەتمەندییە سەرەکییەکان",
+        feature1Title: "بەڕێوەبردنی تابی بەردەوام",
+        feature1Desc: "تابەکان و ڕیزبەندییەکانیان لە بیرگە هەڵدەگیرێن و کاتێک دووبارە بەرنامەکە دەکەیتەوە بە تەواوی دەگەڕێنەوە.",
+        feature2Title: "لیستی چارتە هەڵبژێردراوەکان",
+        feature2Desc: "چارتە دڵخوازەکانت (بە سەردێڕ و URL) لە سایدبار هەڵبگرە، دەستکاری و بەڕێوەببە.",
+        feature3Title: "کوشت و گەڕانەوە",
+        feature3Desc: "تابەکانی داخراو دەچنە کوشت و هەر کاتێک خوازیت دەتوانیت گەڕێنیتەوە.",
+        feature4Title: "پارێزەری بیرگەی زیرەک",
+        feature4Desc: "خەوتنی خودکار ڕام لە تابە ناچالاکەکان ئازاد دەکات و کۆمپیوتەرەکەت بە خێرایی دەهێڵێتەوە.",
+        feature5Title: "داشبۆردی فرە دیمەن",
+        feature5Desc: "چەندین بازاڕ لە یەک کاتدا لە یەک تابدا بە شێوازی تۆڕی دەستکاریکراو چاودێری بکە.",
+        feature6Title: "ڕێکخستنی پێشکەوتوو",
+        feature6Desc: "تابەکان بەپێی ڕەنگ کۆمەڵە بکە، بەکۆمەڵ لینکەکان بهێنە و شوێنی کارەکەت بەڕێوە ببە.",
+        stealthTag: "تایبەتمەندی تایبەت",
+        stealthTitle: "دۆخی ستیلث دەستپێدەکات: سنووردارییەکان دەبڕیت",
+        stealthDesc: "زۆر لە ماڵپەڕەکان (وەکوو TradingView) ڕێگە لە ئامرازەکانی بە پشتبەستن بە Electron ناگرن. گریفین وەکوو ڕاوێژگەرێکی Chromeی سەرەکی دەردەکەوێت.",
+        licenseTitle: "بەخۆڕایی، کراوە، و ئامادەیە بۆ تۆ.",
+        licenseDesc: "ئەم پڕۆژەیە لەژێر مۆڵەتی بەهێزی <a href='https://www.gnu.org/licenses/gpl-3.0.html' target='_blank' class='text-yellow-400 font-medium underline hover:text-yellow-300'>GPLv3</a> دەرچووە. ئەمە مانای ئەوەیە هەمیشە بەخۆڕایی دەمێنێتەوە، و ئازادیت هەیە بۆ بەشداریکردن، دەستکاریکردن و بڵاوکردنەوە.",
+        viewReleasesText: "هەموو دەرچووانەکان ببینە",
+        footerText1: "بە ❤️ و خۆشەویستی بۆ جیهانی کراوە دروست کراوە.",
+        footerText2: "مۆڵەت: مۆڵەتی گشتی گشتی گنو v3.0"
+    },
+    ar: {
+        currentLanguageName: "العربية",
+        githubText: "عرض على GitHub",
+        heroTitle: "إدارة الرسوم البيانية الاحترافية.<br>بدون حدود.",
+        heroDescription: "جريفين هو أداة مجانية ومفتوحة المصدر (GPLv3) مبنية على Electron تتيح لك إدارة علامات تبويب الرسوم البيانية (مثل TradingView) بشكل دائم.",
+        downloadWindowsText: "تنزيل لويندوز",
+        downloadLinuxText: "تنزيل لينكس",
+        chartEur: "رسم EUR/USD البياني",
+        chartBtc: "رسم BTC/USDT البياني",
+        chartPlaceholder: "[يتم تحميل محتوى الرسم البياني الخاص بك هنا]",
+        featuresTitle: "الميزات الرئيسية",
+        feature1Title: "إدارة علامات التبويب الدائمة",
+        feature1Desc: "يتم حفظ علامات التبويب وتسلسلها في الذاكرة وتُستعاد بالكامل عند إعادة فتح التطبيق.",
+        feature2Title: "قائمة الرسوم البيانية المحفوظة",
+        feature2Desc: "احفظ وحرّر وأدر الرسوم البيانية المفضلة لديك (مع العنوان ورابط URL) في الشريط الجانبي.",
+        feature3Title: "سلة المهملات والاسترداد",
+        feature3Desc: "تُنقل علامات التبويب المغلقة إلى سلة المهملات ويمكن استعادتها في أي وقت.",
+        feature4Title: "موفر الذاكرة الذكي",
+        feature4Desc: "يحرر وضع السبات التلقائي ذاكرة الوصول العشوائي من علامات التبويب غير النشطة، مما يحافظ على سرعة جهازك.",
+        feature5Title: "لوحة تحكم متعددة العرض",
+        feature5Desc: "راقِب أسواقًا متعددة في وقت واحد في علامة تبويب واحدة بتخطيط شبكي قابل للتخصيص.",
+        feature6Title: "تنظيم متقدم",
+        feature6Desc: "قم بتجميع علامات التبويب حسب اللون، واستيراد الروابط دفعة واحدة، وإدارة مساحة عملك عبر الإعدادات.",
+        stealthTag: "ميزة حصرية",
+        stealthTitle: "تقديم وضع التخفي: تجاوز القيود",
+        stealthDesc: "تحظر العديد من مواقع الويب (مثل TradingView) الأدوات المبنية على Electron. تم تصميم جريفين ليظهر كمتصفح كروم قياسي.",
+        licenseTitle: "مجاني، مفتوح المصدر، وجاهز لك.",
+        licenseDesc: "يتم إصدار هذا المشروع بموجب ترخيص <a href='https://www.gnu.org/licenses/gpl-3.0.html' target='_blank' class='text-yellow-400 font-medium underline hover:text-yellow-300'>GPLv3</a> القوي. هذا يعني أنه سيبقى دائمًا مجانيًا، ولديك الحرية في المساهمة وتعديل وتوزيعه.",
+        viewReleasesText: "عرض جميع الإصدارات",
+        footerText1: "صُنع بـ ❤️ وحب لعالم المصادر المفتوحة.",
+        footerText2: "الترخيص: رخصة جنو العمومية العامة الإصدار 3.0"
+    }
+};
 
         // DOM elements for translations
         const elements = {
@@ -592,7 +668,14 @@ details.requestHeaders[<span class="code-string">'User-Agent'</span>] = selected
             licenseDesc: document.getElementById('licenseDesc'),
             viewReleasesText: document.getElementById('viewReleasesText'),
             footerText1: document.getElementById('footerText1'),
-            footerText2: document.getElementById('footerText2')
+            footerText2: document.getElementById('footerText2'),
+            feature4Title: document.getElementById('feature4Title'),
+            feature4Desc: document.getElementById('feature4Desc'),
+            feature5Title: document.getElementById('feature5Title'),
+            feature5Desc: document.getElementById('feature5Desc'),
+            feature6Title: document.getElementById('feature6Title'),
+            feature6Desc: document.getElementById('feature6Desc'),
+            // -------------------------
         };
 
         let currentLang = 'en';
