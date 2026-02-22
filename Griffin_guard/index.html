@@ -4,100 +4,497 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Griffin Guard - دستیار پیشرفته معامله‌گری شما</title>
-    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { vazir: ['Vazirmatn', 'sans-serif'] },
+                    animation: {
+                        'fade-up': 'fadeUp 0.6s ease both',
+                        'pulse-dot': 'pulseDot 2s ease infinite',
+                    },
+                    keyframes: {
+                        fadeUp: {
+                            '0%': { opacity: '0', transform: 'translateY(16px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        pulseDot: {
+                            '0%,100%': { opacity: '1' },
+                            '50%': { opacity: '0.3' },
+                        },
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: 'Vazirmatn', sans-serif; background: #000; color: #fff; }
+
+        body::before {
+            content: '';
+            position: fixed; inset: 0; pointer-events: none; z-index: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+            opacity: 0.5;
+        }
+
+        .hero-grid {
+            background-image:
+                linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+            background-size: 64px 64px;
+        }
+
+        .shimmer-text {
+            background: linear-gradient(135deg, #fff 0%, #aaa 50%, #fff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .blue-text {
+            background: linear-gradient(90deg, #0070f3, #00b4d8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .grad-border-card {
+            background: linear-gradient(#0a0a0a, #0a0a0a) padding-box,
+                        linear-gradient(135deg, rgba(0,112,243,0.5), rgba(255,255,255,0.05) 50%, rgba(0,112,243,0.15)) border-box;
+            border: 1px solid transparent;
+        }
+
+        .feat-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        @media (min-width: 768px) { .feat-grid { grid-template-columns: repeat(4, 1fr); } }
+
+        .feat-card {
+            border-left: 1px solid rgba(255,255,255,0.07);
+            border-bottom: 1px solid rgba(255,255,255,0.07);
+            transition: background 0.2s;
+        }
+        .feat-card:hover { background: rgba(255,255,255,0.025); }
+
+        .nav-link { transition: color 0.15s; }
+        .nav-link:hover { color: #fff; }
+
+        .dl-card-blue { transition: all 0.2s; }
+        .dl-card-blue:hover { box-shadow: 0 0 50px rgba(0,112,243,0.12); }
+        .dl-card-gray { transition: all 0.2s; }
+        .dl-card-gray:hover { box-shadow: 0 0 50px rgba(255,255,255,0.04); }
+
+        html { scroll-behavior: smooth; }
+        #mobile-menu { display: none; }
+        #mobile-menu.open { display: block; }
+
+        .step-num {
+            width: 24px; height: 24px; border-radius: 50%;
+            background: rgba(0,112,243,0.12);
+            border: 1px solid rgba(0,112,243,0.25);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 11px; font-weight: 700; color: #0070f3;
+            flex-shrink: 0;
+        }
+    </style>
 </head>
-<body>
+<body class="font-vazir relative">
 
-    <header>
-        <nav>
-            <div class="logo">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L3 5V11C3 16.55 6.84 21.74 12 23C17.16 21.74 21 16.55 21 11V5L12 2ZM12 4.03L19 6.22V11C19 15.5 15.82 19.58 12 20.93C8.18 19.58 5 15.5 5 11V6.22L12 4.03Z" fill="currentColor"/></svg>
+    <!-- HEADER -->
+    <header class="sticky top-0 z-50 border-b border-white/[0.07] bg-black/80 backdrop-blur-xl">
+        <nav class="max-w-6xl mx-auto px-6 h-[60px] flex items-center gap-6">
+            <a href="index.html" class="flex items-center gap-2.5 font-semibold text-[15px] text-white no-underline flex-shrink-0">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 2L3 5V11C3 16.55 6.84 21.74 12 23C17.16 21.74 21 16.55 21 11V5L12 2ZM12 4.03L19 6.22V11C19 15.5 15.82 19.58 12 20.93C8.18 19.58 5 15.5 5 11V6.22L12 4.03Z" fill="currentColor"/></svg>
                 <span>Griffin Guard</span>
-            </div>
-            <ul class="nav-links">
-                <li><a href="index.html" class="active">صفحه اصلی</a></li>
-                <li><a href="guide.html">راهنمای کاربر</a></li>
-                <li><a href="technical.html">مستندات فنی</a></li>
-                <li><a href="doc.html">مستندات عمومی</a></li>
-                <li><a href="color_scheme_gen.html">سازنده پالت رنگی پنل</a></li>
+            </a>
 
+            <ul class="hidden md:flex items-center gap-0.5 flex-1 list-none m-0 p-0">
+                <li><a href="index.html" class="nav-link text-white text-[13px] px-3 py-1.5 rounded-md bg-white/[0.07] no-underline">صفحه اصلی</a></li>
+                <li><a href="guide.html" class="nav-link text-[#666] text-[13px] px-3 py-1.5 rounded-md no-underline">راهنمای کاربر</a></li>
+                <li><a href="technical.html" class="nav-link text-[#666] text-[13px] px-3 py-1.5 rounded-md no-underline">مستندات فنی</a></li>
+                <li><a href="doc.html" class="nav-link text-[#666] text-[13px] px-3 py-1.5 rounded-md no-underline">مستندات عمومی</a></li>
+                <li><a href="color_scheme_gen.html" class="nav-link text-[#666] text-[13px] px-3 py-1.5 rounded-md no-underline">سازنده پالت</a></li>
             </ul>
-            <a href="https://github.com/daedalusfx/griffin-guard" class="nav-button">دریافت از گیت‌هاب</a>
-            <div class="hamburger">
-                <div></div>
-                <div></div>
-                <div></div>
+
+            <div class="hidden md:flex items-center gap-2 flex-shrink-0">
+                <a href="https://github.com/daedalusfx/griffin-guard" target="_blank"
+                   class="nav-link text-[#666] border border-white/[0.07] text-[13px] px-3 py-1.5 rounded-md no-underline hover:border-white/15 flex items-center gap-1.5">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+                    GitHub
+                </a>
+                <a href="#download"
+                   class="flex items-center gap-1.5 bg-white text-black text-[13px] font-semibold px-4 py-1.5 rounded-md no-underline hover:bg-white/90 transition-colors">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    دانلود
+                </a>
             </div>
+
+            <button class="md:hidden flex flex-col gap-1.5 cursor-pointer p-1 mr-auto border-0 bg-transparent"
+                    onclick="document.getElementById('mobile-menu').classList.toggle('open')">
+                <div class="w-5 h-px bg-[#777]"></div>
+                <div class="w-5 h-px bg-[#777]"></div>
+                <div class="w-5 h-px bg-[#777]"></div>
+            </button>
         </nav>
+
+        <div id="mobile-menu" class="border-t border-white/[0.07] bg-black/95 px-6 py-4 space-y-1 md:hidden">
+            <a href="guide.html" class="block text-[#666] text-sm py-2 no-underline">راهنمای کاربر</a>
+            <a href="technical.html" class="block text-[#666] text-sm py-2 no-underline">مستندات فنی</a>
+            <a href="doc.html" class="block text-[#666] text-sm py-2 no-underline">مستندات عمومی</a>
+            <a href="color_scheme_gen.html" class="block text-[#666] text-sm py-2 no-underline">سازنده پالت رنگی</a>
+            <div class="pt-2 border-t border-white/[0.07]">
+                <a href="#download" class="block text-white text-sm py-2 font-semibold no-underline">⬇ دانلود</a>
+            </div>
+        </div>
     </header>
 
-    <main>
-        <!-- Hero Section -->
-        <section class="hero">
-            <div class="hero-content">
-                <h1>نگهبان حساب شما، دستیار دقیق معاملات</h1>
-                <p class="subtitle">
-                    "گریفین گارد" یک اکسپرت متن‌باز برای MQL5 است که با مدیریت ریسک پیشرفته، پنل‌های کاربری هوشمند و ویژگی‌های محافظت از حساب، به شما کمک می‌کند تا با اطمینان و دقت بیشتری معامله کنید.
+    <main class="relative z-10">
+
+        <!-- HERO -->
+        <section class="hero-grid relative overflow-hidden">
+            <div class="absolute inset-0 pointer-events-none">
+                <div class="absolute top-[-80px] left-1/2 -translate-x-1/2 w-[800px] h-[600px] rounded-full"
+                     style="background: radial-gradient(ellipse, rgba(0,112,243,0.1) 0%, transparent 65%);"></div>
+            </div>
+
+            <div class="relative max-w-6xl mx-auto px-6 pt-24 pb-20 text-center">
+
+                <!-- Badge -->
+                <div class="animate-fade-up inline-flex items-center gap-2.5 border border-white/[0.1] rounded-full px-4 py-1.5 text-[12px] text-[#666] mb-8">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399] animate-pulse-dot"></span>
+                    نسخه بتا — متن‌باز تحت GPLv3
+                    <span class="w-px h-3 bg-white/[0.1]"></span>
+                    <span class="text-[#0070f3]">MQL5</span>
+                </div>
+
+                <!-- H1 -->
+                <h1 class="animate-fade-up text-[48px] md:text-[72px] font-extrabold tracking-[-0.03em] leading-[1.06] mb-6"
+                    style="animation-delay:0.1s">
+                    <span class="shimmer-text">نگهبان حساب شما،</span><br>
+                    <span class="blue-text">دستیار دقیق معاملات</span>
+                </h1>
+
+                <!-- Subtitle -->
+                <p class="animate-fade-up text-[#666] text-[17px] max-w-[540px] mx-auto leading-[1.8] mb-10"
+                   style="animation-delay:0.2s">
+                    اکسپرت متن‌باز MQL5 برای MetaTrader 5 با مدیریت ریسک پیشرفته، محافظ پراپ فرم و سه حالت ورود هوشمند به بازار.
                 </p>
-                <div class="hero-buttons">
-                    <a href="guide.html" class="btn btn-primary">شروع سریع</a>
-                    <a href="https://github.com/daedalusfx/griffin-guard" class="btn btn-secondary">مشاهده در گیت‌هاب</a>
-                </div>
-            </div>
 
-            <div class="hero-image">
-                <!-- شما می‌توانید در اینجا یک اسکرین‌شات از پنل اکسپرت قرار دهید -->
-                <img src="./assets/panel-beta.png" alt="تصویری از پنل گریفین گارد">
-            </div>
-        </section>
-        <div class="hero-image">
-            <!-- شما می‌توانید در اینجا یک اسکرین‌شات از پنل اکسپرت قرار دهید -->
-            <img src="./assets/griffin_guard_logo.png" alt="تصویری از پنل گریفین گارد">
-        </div>
-        <!-- Features Section -->
-        <section class="features">
-            <h2>ویژگی‌های کلیدی</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="icon">🛡️</div>
-                    <h3>محافظ پراپ فرم (Prop Firm Guardian)</h3>
-                    <p>با تنظیم حداکثر ضرر روزانه و کلی، از قوانین پراپ فرم‌ها پیروی کرده و از نقض آن‌ها جلوگیری کنید. گریفین گارد به صورت خودکار معاملات پرریسک را متوقف می‌کند.</p>
+                <!-- CTA Buttons -->
+                <div class="animate-fade-up flex flex-wrap items-center justify-center gap-3 mb-16"
+                     style="animation-delay:0.3s">
+                    <a href="#download"
+                       class="flex items-center gap-2 bg-white text-black text-[14px] font-semibold px-6 py-2.5 rounded-lg no-underline hover:bg-white/90 transition-all shadow-[0_0_20px_rgba(255,255,255,0.15)]">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        دانلود رایگان
+                    </a>
+                    <a href="guide.html"
+                       class="flex items-center gap-2 border border-white/[0.12] text-white text-[14px] font-medium px-6 py-2.5 rounded-lg no-underline hover:bg-white/[0.04] hover:border-white/20 transition-all">
+                        راهنمای کاربر
+                    </a>
+                    <a href="https://github.com/daedalusfx/griffin-guard" target="_blank"
+                       class="flex items-center gap-2 text-[#555] text-[14px] px-4 py-2.5 rounded-lg no-underline hover:text-white transition-colors">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+                        GitHub
+                    </a>
                 </div>
-                <div class="feature-card">
-                    <div class="icon">🎛️</div>
-                    <h3>سه حالت ورود پیشرفته</h3>
-                    <p>با پنل‌های مجزا برای معاملات Market, Pending و استراتژی منحصربه‌فرد پلکانی (Stairway)، برای هر سناریوی بازار آماده باشید و با سرعت بالا تصمیمات خود را اجرا کنید.</p>
+
+                <!-- Panel Screenshot -->
+                <div class="animate-fade-up grad-border-card rounded-xl overflow-hidden"
+                     style="animation-delay:0.4s">
+                    <!-- fake window bar -->
+                    <div class="flex items-center gap-2 px-4 py-3 border-b border-white/[0.05] bg-[#0f0f0f]">
+                        <div class="w-2.5 h-2.5 rounded-full bg-[#ff5f57]"></div>
+                        <div class="w-2.5 h-2.5 rounded-full bg-[#febc2e]"></div>
+                        <div class="w-2.5 h-2.5 rounded-full bg-[#28c840]"></div>
+                        <div class="mr-3 text-[10px] text-[#444] font-mono">MetaTrader 5 — Griffin Guard v1.0</div>
+                    </div>
+                    <div class="images_container">
+
+
+                    <img src="./assets/Screenshot_preview.png" alt="پیش‌نمایش پنل گریفین گارد" class="w-full block"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+
+
+
+
+                        </div>
+                    <div class="hidden h-72 items-center justify-center text-[#333] text-sm gap-3 bg-[#0a0a0a]">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="m9 9 6 6m0-6-6 6"/></svg>
+                        تصویر پیش‌نمایش پنل
+                    </div>
                 </div>
-                <div class="feature-card">
-                    <div class="icon">📊</div>
-                    <h3>محاسبه ریسک و حجم در لحظه</h3>
-                    <p>ریسک خود را بر اساس درصد یا مبلغ ثابت تعریف کنید و حجم معامله را به صورت خودکار و دقیق مشاهده نمایید. با دکمه‌های ریسک ثابت، سرعت عمل خود را افزایش دهید.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="icon">💡</div>
-                    <h3>رابط کاربری هوشمند و پویا</h3>
-                    <p>تمام اطلاعات مورد نیاز، از اسپرد و ATR گرفته تا وضعیت اعتبارسنجی معامله، به صورت زنده روی پنل‌ها و لیبل‌های ثابت نمایش داده می‌شود تا همیشه یک قدم از بازار جلوتر باشید.</p>
+
+                <!-- Stats strip -->
+                <div class="mt-10 flex flex-wrap items-center justify-center gap-6 text-[13px]">
+                    <div class="flex items-center gap-2 text-[#444]">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0070f3" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        <span class="text-[#777]">محافظ پراپ فرم</span>
+                    </div>
+                    <div class="w-px h-4 bg-white/[0.06]"></div>
+                    <div class="flex items-center gap-2">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0070f3" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                        <span class="text-[#777]">محاسبه ریسک لحظه‌ای</span>
+                    </div>
+                    <div class="w-px h-4 bg-white/[0.06]"></div>
+                    <div class="flex items-center gap-2">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0070f3" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                        <span class="text-[#777]">سه حالت ورود</span>
+                    </div>
+                    <div class="w-px h-4 bg-white/[0.06]"></div>
+                    <div class="flex items-center gap-2">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0070f3" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                        <span class="text-[#777]">متن‌باز GPLv3</span>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- Open Source Section -->
-        <section class="open-source">
-            <h2>یک پروژه آزاد برای جامعه معامله‌گران</h2>
-            <p>
-                گریفین گارد با افتخار تحت لایسنس GNU GPLv3 منتشر شده است. این به معنای آن است که شما آزاد هستید تا از آن استفاده کنید، آن را تغییر دهید و دانش خود را با دیگران به اشتراک بگذارید. ما به قدرت جامعه متن‌باز ایمان داریم.
-            </p>
-            <a href="technical.html" class="btn btn-secondary">بیشتر بدانید</a>
+        <!-- FEATURES -->
+        <section class="border-t border-white/[0.07]">
+            <div class="max-w-6xl mx-auto px-6 py-20">
+                <div class="text-[11px] font-bold tracking-[0.1em] uppercase text-[#0070f3] mb-3">قابلیت‌ها</div>
+                <h2 class="text-[30px] md:text-[36px] font-bold tracking-tight mb-2">ویژگی‌های کلیدی</h2>
+                <p class="text-[#555] text-[15px] mb-12 max-w-sm">هر آنچه برای معامله‌گری حرفه‌ای نیاز دارید.</p>
+
+                <div class="feat-grid">
+                    <div class="feat-card p-7">
+                        <div class="w-10 h-10 rounded-lg bg-white/[0.04] border border-white/[0.07] flex items-center justify-center text-lg mb-5">🛡️</div>
+                        <h3 class="text-[13px] font-semibold mb-2">محافظ پراپ فرم</h3>
+                        <p class="text-[#444] text-[12px] leading-relaxed">تنظیم حداکثر ضرر روزانه و کلی. متوقف‌کردن خودکار معاملات پرریسک قبل از نقض قوانین.</p>
+                    </div>
+                    <div class="feat-card p-7">
+                        <div class="w-10 h-10 rounded-lg bg-white/[0.04] border border-white/[0.07] flex items-center justify-center text-lg mb-5">🎛️</div>
+                        <h3 class="text-[13px] font-semibold mb-2">سه حالت ورود پیشرفته</h3>
+                        <p class="text-[#444] text-[12px] leading-relaxed">Market، Pending و استراتژی منحصربه‌فرد Stairway برای ورود در پولبک پس از شکست سطح.</p>
+                    </div>
+                    <div class="feat-card p-7">
+                        <div class="w-10 h-10 rounded-lg bg-white/[0.04] border border-white/[0.07] flex items-center justify-center text-lg mb-5">📊</div>
+                        <h3 class="text-[13px] font-semibold mb-2">محاسبه ریسک در لحظه</h3>
+                        <p class="text-[#444] text-[12px] leading-relaxed">ریسک درصدی یا مبلغ ثابت. محاسبه خودکار حجم لات با دکمه‌های ریسک سریع.</p>
+                    </div>
+                    <div class="feat-card p-7">
+                        <div class="w-10 h-10 rounded-lg bg-white/[0.04] border border-white/[0.07] flex items-center justify-center text-lg mb-5">💡</div>
+                        <h3 class="text-[13px] font-semibold mb-2">رابط کاربری هوشمند</h3>
+                        <p class="text-[#444] text-[12px] leading-relaxed">اسپرد، ATR و وضعیت اعتبارسنجی به صورت زنده. مدیریت وضعیت پایدار حتی بعد از ری‌استارت.</p>
+                    </div>
+                </div>
+            </div>
         </section>
+
+        <!-- DOWNLOAD -->
+        <section id="download" class="border-t border-white/[0.07] bg-[#050505]">
+            <div class="max-w-6xl mx-auto px-6 py-20">
+
+                <div class="text-[11px] font-bold tracking-[0.1em] uppercase text-[#0070f3] mb-3">دانلود</div>
+                <h2 class="text-[30px] md:text-[36px] font-bold tracking-tight mb-3">همین الان شروع کنید</h2>
+                <p class="text-[#555] text-[15px] mb-12 max-w-lg leading-relaxed">
+                    گریفین گارد از دو بخش تشکیل شده: کتابخانه DLL اختصاصی (پیش‌نیاز اجرا) و اکسپرت متن‌باز. هر دو را دانلود کنید.
+                </p>
+
+                <!-- Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+
+                    <!-- DLL -->
+                    <div class="dl-card-blue relative bg-black border border-[#0070f3]/25 rounded-xl p-7 flex flex-col gap-5 overflow-hidden">
+                        <div class="absolute top-0 left-0 right-0 h-[2px]"
+                             style="background: linear-gradient(90deg, #0070f3, #00b4d8, #0070f3);"></div>
+
+                        <div class="flex items-start justify-between gap-3">
+                            <div>
+                                <span class="text-[10px] font-bold tracking-widest uppercase text-[#0070f3] bg-[#0070f3]/10 border border-[#0070f3]/20 rounded px-2 py-0.5">
+                                    ⚠ پیش‌نیاز
+                                </span>
+                                <h3 class="text-[18px] font-bold mt-3 mb-0.5">GriffinGuard DLL</h3>
+                                <p class="text-[#444] text-[12px]">کتابخانه اختصاصی — نسخه انحصاری</p>
+                            </div>
+                            <div class="w-11 h-11 rounded-xl bg-[#0070f3]/08 border border-[#0070f3]/20 flex items-center justify-center flex-shrink-0">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0070f3" stroke-width="1.8">
+                                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-[11px] text-[#555] bg-white/[0.03] border border-white/[0.06] rounded-full px-3 py-1">Windows x64</span>
+                            <span class="text-[11px] text-[#555] bg-white/[0.03] border border-white/[0.06] rounded-full px-3 py-1">MT5 Compatible</span>
+                            <span class="text-[11px] text-[#0070f3] bg-[#0070f3]/[0.05] border border-[#0070f3]/[0.15] rounded-full px-3 py-1">.dll</span>
+                        </div>
+
+                        <div class="border-t border-white/[0.05] pt-5">
+                            <p class="text-[#444] text-[12px] mb-4 leading-relaxed">
+                                پس از دانلود، فایل را در مسیر
+                                <code class="text-[#777] bg-white/[0.04] px-1.5 py-0.5 rounded text-[11px] font-mono">MQL5/Libraries</code>
+                                قرار دهید. سپس در تنظیمات MT5، اجرای DLL را فعال کنید.
+                            </p>
+                            <a href="https://mega.nz/file/Ss5AQABB#JQTrYyDIufwL75g2x9IgOaBQqJmozf6VJSTZRgiacKs"
+                               target="_blank"
+                               class="flex items-center justify-center gap-2 w-full bg-[#0070f3] hover:bg-[#005fd1] text-white text-[14px] font-semibold py-3 px-5 rounded-lg no-underline transition-colors">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                                دانلود DLL از Mega
+                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Expert -->
+                    <div class="dl-card-gray relative bg-black border border-white/[0.09] rounded-xl p-7 flex flex-col gap-5">
+
+                        <div class="flex items-start justify-between gap-3">
+                            <div>
+                                <span class="text-[10px] font-bold tracking-widest uppercase text-emerald-400 bg-emerald-400/10 border border-emerald-400/20 rounded px-2 py-0.5">
+                                    متن‌باز · GPLv3
+                                </span>
+                                <h3 class="text-[18px] font-bold mt-3 mb-0.5">Griffin Guard Expert</h3>
+                                <p class="text-[#444] text-[12px]">اکسپرت اصلی — فایل‌های MQ5 و MQH</p>
+                            </div>
+                            <div class="w-11 h-11 rounded-xl bg-white/[0.03] border border-white/[0.07] flex items-center justify-center flex-shrink-0">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="#888"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-[11px] text-[#555] bg-white/[0.03] border border-white/[0.06] rounded-full px-3 py-1">MQL5</span>
+                            <span class="text-[11px] text-[#555] bg-white/[0.03] border border-white/[0.06] rounded-full px-3 py-1">MetaTrader 5</span>
+                            <span class="text-[11px] text-[#555] bg-white/[0.03] border border-white/[0.06] rounded-full px-3 py-1">Source Code</span>
+                        </div>
+
+                        <div class="border-t border-white/[0.05] pt-5">
+                            <p class="text-[#444] text-[12px] mb-4 leading-relaxed">
+                                سورس کد کامل. پس از دانلود در مسیر
+                                <code class="text-[#777] bg-white/[0.04] px-1.5 py-0.5 rounded text-[11px] font-mono">MQL5/Experts/GriffinGuard</code>
+                                کپی کنید و Compile کنید.
+                            </p>
+                            <a href="https://github.com/daedalusfx/griffin-guard/releases"
+                               target="_blank"
+                               class="flex items-center justify-center gap-2 w-full bg-white/[0.05] hover:bg-white/[0.09] border border-white/[0.09] hover:border-white/[0.16] text-white text-[14px] font-semibold py-3 px-5 rounded-lg no-underline transition-all">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                                دانلود از GitHub Releases
+                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Install Steps -->
+                <div class="border border-white/[0.07] rounded-xl p-6 bg-black">
+                    <div class="text-[11px] font-bold uppercase tracking-[0.1em] text-[#444] mb-5">راهنمای نصب سریع</div>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-5">
+                        <div class="flex items-start gap-3">
+                            <div class="step-num">۱</div>
+                            <div>
+                                <div class="text-[12px] font-semibold mb-1">دانلود DLL</div>
+                                <div class="text-[#444] text-[11px] leading-relaxed">فایل DLL را از Mega دانلود کنید</div>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div class="step-num">۲</div>
+                            <div>
+                                <div class="text-[12px] font-semibold mb-1">کپی DLL</div>
+                                <div class="text-[#444] text-[11px] leading-relaxed"><code class="font-mono">MQL5/Libraries</code> قرار دهید</div>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div class="step-num">۳</div>
+                            <div>
+                                <div class="text-[12px] font-semibold mb-1">دانلود Expert</div>
+                                <div class="text-[#444] text-[11px] leading-relaxed"><code class="font-mono">MQL5/Experts</code> کپی کنید</div>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div class="step-num">۴</div>
+                            <div>
+                                <div class="text-[12px] font-semibold mb-1">Compile و اجرا</div>
+                                <div class="text-[#444] text-[11px] leading-relaxed">Refresh کرده و روی چارت بکشید</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                    <img src="./assets/griffin_guard_logo.png" alt="پیش‌نمایش پنل گریفین گارد" class="w-full block"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+
+            </div>
+        </section>
+
+
+
+
+
+        <!-- OPEN SOURCE -->
+        <section class="border-t border-white/[0.07]">
+            <div class="max-w-6xl mx-auto px-6 py-20">
+                <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+                    <div class="max-w-lg">
+                        <div class="text-[11px] font-bold tracking-[0.1em] uppercase text-[#0070f3] mb-3">متن‌باز</div>
+                        <h2 class="text-[26px] md:text-[32px] font-bold tracking-tight mb-3">یک پروژه آزاد برای جامعه معامله‌گران</h2>
+                        <p class="text-[#555] text-[14px] leading-relaxed">
+                            گریفین گارد تحت لایسنس GNU GPLv3 منتشر شده. آزادید از آن استفاده کنید، تغییر دهید و با دیگران به اشتراک بگذارید. ما به قدرت جامعه متن‌باز ایمان داریم.
+                        </p>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-3 flex-shrink-0">
+                        <a href="technical.html"
+                           class="flex items-center gap-2 border border-white/[0.09] text-white text-[13px] font-medium px-5 py-2.5 rounded-lg no-underline hover:bg-white/[0.04] transition-all">
+                            مستندات فنی
+                        </a>
+                        <a href="https://github.com/daedalusfx/griffin-guard" target="_blank"
+                           class="flex items-center gap-2 bg-white text-black text-[13px] font-semibold px-5 py-2.5 rounded-lg no-underline hover:bg-white/90 transition-all">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+                            مشاهده در GitHub
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </main>
 
-    <footer>
-        <p>ساخته شده با ❤️ برای جامعه متن‌باز. © 2025 Griffin Guard Project</p>
+    <!-- FOOTER -->
+    <footer class="border-t border-white/[0.07]">
+        <div class="max-w-6xl mx-auto px-6 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-2 text-[13px] text-[#444]">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2L3 5V11C3 16.55 6.84 21.74 12 23C17.16 21.74 21 16.55 21 11V5L12 2ZM12 4.03L19 6.22V11C19 15.5 15.82 19.58 12 20.93C8.18 19.58 5 15.5 5 11V6.22L12 4.03Z" fill="#444"/></svg>
+                <span>Griffin Guard</span>
+                <span class="text-[#2a2a2a]">·</span>
+                <span>© 2025</span>
+            </div>
+            <p class="text-[#2a2a2a] text-[12px]">ساخته شده با ❤️ برای جامعه متن‌باز · GPLv3</p>
+            <div class="flex items-center gap-5">
+                <a href="guide.html" class="text-[#444] hover:text-white text-[12px] no-underline transition-colors">راهنما</a>
+                <a href="technical.html" class="text-[#444] hover:text-white text-[12px] no-underline transition-colors">مستندات</a>
+                <a href="https://github.com/daedalusfx/griffin-guard" target="_blank" class="text-[#444] hover:text-white text-[12px] no-underline transition-colors">GitHub</a>
+            </div>
+        </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script>
+        // scroll reveal
+        const io = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.style.opacity = '1';
+                    e.target.style.transform = 'translateY(0)';
+                    io.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.08 });
+
+        document.querySelectorAll('.feat-card, .dl-card-blue, .dl-card-gray, .step-num').forEach((el, i) => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(14px)';
+            el.style.transition = `opacity 0.5s ${i * 0.07}s ease, transform 0.5s ${i * 0.07}s ease`;
+            io.observe(el);
+        });
+    </script>
 </body>
 </html>

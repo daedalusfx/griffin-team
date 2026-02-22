@@ -1,168 +1,704 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Griffin Replay Studio — سفر در زمان معاملاتی</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            primary: '#007acc',
-            up: '#26A69A',
-            down: '#EF5350',
-            sqz: {
-              high: '#FFA500',
-              mid: '#FF4444',
-              low: '#444444'
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Griffin Replay Studio — سفر در زمان معاملاتی</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { vazir: ['Vazirmatn', 'sans-serif'] },
+                    animation: {
+                        'fade-up': 'fadeUp 0.6s ease both',
+                        'pulse-dot': 'pulseDot 2s ease infinite',
+                        'float': 'float 4s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        fadeUp: {
+                            '0%': { opacity: '0', transform: 'translateY(18px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        pulseDot: {
+                            '0%,100%': { opacity: '1' },
+                            '50%': { opacity: '0.25' },
+                        },
+                        float: {
+                            '0%,100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-8px)' },
+                        }
+                    }
+                }
             }
-          }
         }
-      }
-    }
-  </script>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700&display=swap');
-    body {
-      font-family: 'Vazirmatn', sans-serif;
-    }
-    .glow {
-      box-shadow: 0 0 15px rgba(0, 122, 204, 0.4);
-    }
-  </style>
+    </script>
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: 'Vazirmatn', sans-serif; background: #000; color: #fff; }
+
+        /* noise */
+        body::before {
+            content: '';
+            position: fixed; inset: 0; pointer-events: none; z-index: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+            opacity: 0.5;
+        }
+
+        /* grid background */
+        .hero-grid {
+            background-image:
+                linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+            background-size: 64px 64px;
+        }
+
+        /* gradient text */
+        .shimmer-text {
+            background: linear-gradient(135deg, #fff 0%, #aaa 60%, #fff 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .blue-text {
+            background: linear-gradient(90deg, #0070f3, #00b4d8);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .cyan-text {
+            background: linear-gradient(90deg, #00b4d8, #06d6a0);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+
+        /* card border glow */
+        .grad-border-blue {
+            background: linear-gradient(#0a0a0a, #0a0a0a) padding-box,
+                        linear-gradient(135deg, rgba(0,112,243,0.45), rgba(255,255,255,0.05) 50%, rgba(0,180,216,0.2)) border-box;
+            border: 1px solid transparent;
+        }
+
+        /* feature grid */
+        .feat-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 14px;
+            overflow: hidden;
+        }
+        @media (min-width: 1024px) { .feat-grid { grid-template-columns: repeat(3, 1fr); } }
+
+        .feat-card {
+            border-left: 1px solid rgba(255,255,255,0.07);
+            border-bottom: 1px solid rgba(255,255,255,0.07);
+            transition: background 0.2s;
+            position: relative;
+        }
+        .feat-card:hover { background: rgba(255,255,255,0.025); }
+        .feat-card:hover .feat-icon { border-color: rgba(0,112,243,0.4); }
+
+        .feat-icon {
+            transition: border-color 0.2s;
+        }
+
+        /* nav link */
+        .nav-link { transition: color 0.15s; }
+        .nav-link:hover { color: #fff; }
+
+        /* chart mockup */
+        .candle { display: inline-block; position: relative; }
+
+        /* indicator pill */
+        .ind-pill {
+            display: inline-flex; align-items: center; gap: 5px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 100px;
+            padding: 4px 12px;
+            font-size: 11px; color: #666;
+            transition: all 0.15s;
+        }
+        .ind-pill:hover { border-color: rgba(0,112,243,0.4); color: #0070f3; }
+
+        html { scroll-behavior: smooth; }
+        #mobile-menu { display: none; }
+        #mobile-menu.open { display: block; }
+
+        /* CTA section */
+        .cta-section {
+            background: radial-gradient(ellipse at 50% 0%, rgba(0,112,243,0.08) 0%, transparent 70%);
+        }
+    </style>
 </head>
-<body class="bg-gray-900 text-gray-100">
-  <!-- Hero Section -->
-  <section class="py-20 px-6 text-center">
-    <div class="max-w-4xl mx-auto">
-      <div class="inline-block p-3 rounded-full bg-blue-900/30 mb-6">
-        <i class="fas fa-feather-alt text-blue-400 text-2xl"></i>
-      </div>
-      <h1 class="text-4xl md:text-6xl font-bold mb-6">
-        <span class="text-white">Griffin Replay Studio</span>
-      </h1>
-      <p class="text-xl md:text-2xl text-blue-300 mb-10 max-w-3xl mx-auto leading-relaxed">
-        سفر در زمان با Griffin Replay Studio<br />
-        به عقب برگردید و استراتژی‌های خود را در تایم‌های مختلف تست کنید — به‌صورت رایگان و متن‌باز.
-      </p>
-      <div class="flex flex-col sm:flex-row justify-center gap-4">
-        <a href="https://github.com/your-username/griffin-replay-studio" target="_blank"
-          class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition glow">
-          <i class="fab fa-github ml-2"></i> مشاهده در گیت‌هاب
-        </a>
-        <a href="#features"
-          class="border border-blue-500 text-blue-400 hover:bg-blue-900/30 font-bold py-3 px-8 rounded-lg transition">
-          ویژگی‌ها
-        </a>
-      </div>
-    </div>
-  </section>
+<body class="font-vazir relative">
 
-  <!-- Features -->
-  <section id="features" class="py-16 px-6 bg-gray-800/50">
-    <div class="max-w-6xl mx-auto">
-      <h2 class="text-3xl font-bold text-center mb-16">چرا از Griffin Replay Studio استفاده کنیم؟</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <!-- Feature 1 -->
-        <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 hover:border-blue-500 transition">
-          <div class="text-blue-400 text-2xl mb-4">
-            <i class="fas fa-history"></i>
-          </div>
-          <h3 class="text-xl font-bold mb-3">بازپخش تعاملی</h3>
-          <p class="text-gray-400">
-            داده‌های تاریخی را کندل به کندل مرور کنید. با فشردن Spacebar یا کلیک، پیشروی کنید.
-          </p>
-        </div>
-        <!-- Feature 2 -->
-        <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 hover:border-blue-500 transition">
-          <div class="text-green-400 text-2xl mb-4">
-            <i class="fas fa-chart-line"></i>
-          </div>
-          <h3 class="text-xl font-bold mb-3">تحلیل چندتایم‌فریمی</h3>
-          <p class="text-gray-400">
-            همزمان دو یا چند تایم‌فریم را ببینید و تصمیمات خود را در چارچوب گسترده‌تری ارزیابی کنید.
-          </p>
-        </div>
-        <!-- Feature 3 -->
-        <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 hover:border-blue-500 transition">
-          <div class="text-orange-400 text-2xl mb-4">
-            <i class="fas fa-compress-arrows-alt"></i>
-          </div>
-          <h3 class="text-xl font-bold mb-3">سیگنال‌های ولاتیلیتی</h3>
-          <p class="text-gray-400">
-            Bollinger Squeeze، TTM Momentum، MFI و ADX را در یک نگاه ببینید.
-          </p>
-        </div>
-        <!-- Feature 4 -->
-        <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 hover:border-blue-500 transition">
-          <div class="text-red-400 text-2xl mb-4">
-            <i class="fas fa-shield-alt"></i>
-          </div>
-          <h3 class="text-xl font-bold mb-3">مدیریت ریسک هوشمند</h3>
-          <p class="text-gray-400">
-            SL/TP بر اساس ATR و تشخیص برخورد درون کندل — برای شبیه‌سازی واقع‌گرایانه.
-          </p>
-        </div>
-        <!-- Feature 5 -->
-        <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 hover:border-blue-500 transition">
-          <div class="text-yellow-400 text-2xl mb-4">
-            <i class="fas fa-paint-brush"></i>
-          </div>
-          <h3 class="text-xl font-bold mb-3">ابزارهای نقاشی</h3>
-          <p class="text-gray-400">
-            خط، مستطیل و حالت مغناطیسی برای نشانه‌گذاری الگوها و سطوح.
-          </p>
-        </div>
-        <!-- Feature 6 -->
-        <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 hover:border-blue-500 transition">
-          <div class="text-purple-400 text-2xl mb-4">
-            <i class="fas fa-code"></i>
-          </div>
-          <h3 class="text-xl font-bold mb-3">متن‌باز و رایگان</h3>
-          <p class="text-gray-400">
-            تحت مجوز GPLv3 — کد شفاف، مستندشده و قابل توسعه.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
+    <!-- ══════════════════════ HEADER ══════════════════════ -->
+    <header class="sticky top-0 z-50 border-b border-white/[0.07] bg-black/80 backdrop-blur-xl">
+        <nav class="max-w-6xl mx-auto px-6 h-[60px] flex items-center gap-6">
 
-  <!-- Screenshot Placeholder -->
-  <section class="py-16 px-6">
-    <div class="max-w-6xl mx-auto text-center">
-      <h2 class="text-3xl font-bold mb-8">محیط کاربری</h2>
-      <div class="bg-gray-800 border-2 border-dashed border-gray-700 rounded-xl h-96 flex items-center justify-center text-gray-500">
-        تصویر نمایشی از Griffin Replay Studio
-      </div>
-      <p class="mt-6 text-gray-400 max-w-2xl mx-auto">
-        رابطی تاریک، تمیز و بدون هیاهو — طراحی‌شده برای تمرکز بر تحلیل، نه فریاد بازار.
-      </p>
-    </div>
-  </section>
+            <!-- Logo -->
+            <a href="#" class="flex items-center gap-2.5 font-semibold text-[15px] text-white no-underline flex-shrink-0">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" fill="none"/>
+                </svg>
+                <span>Griffin Replay Studio</span>
+            </a>
 
-  <!-- CTA -->
-  <section class="py-16 px-6 bg-gradient-to-r from-blue-900/30 to-indigo-900/30">
-    <div class="max-w-4xl mx-auto text-center">
-      <h2 class="text-3xl font-bold mb-6">آماده‌اید سفر خود را آغاز کنید؟</h2>
-      <p class="text-blue-200 mb-8">
-        Griffin Replay Studio ابزاری برای خودآگاهی، نه پیش‌بینی است.
-      </p>
-      <a href="https://github.com/your-username/griffin-replay-studio" target="_blank"
-        class="inline-block bg-white text-gray-900 font-bold py-3 px-8 rounded-lg hover:bg-gray-200 transition">
-        <i class="fab fa-github ml-2"></i> شروع به کار کنید
-      </a>
-    </div>
-  </section>
+            <!-- Links (desktop) -->
+            <ul class="hidden md:flex items-center gap-0.5 flex-1 list-none m-0 p-0">
+                <li><a href="#features" class="nav-link text-[#666] text-[13px] px-3 py-1.5 rounded-md no-underline">ویژگی‌ها</a></li>
+                <li><a href="#indicators" class="nav-link text-[#666] text-[13px] px-3 py-1.5 rounded-md no-underline">اندیکاتورها</a></li>
+                <li><a href="#interface" class="nav-link text-[#666] text-[13px] px-3 py-1.5 rounded-md no-underline">رابط کاربری</a></li>
+            </ul>
 
-  <!-- Footer -->
-  <footer class="py-10 px-6 border-t border-gray-800 text-center text-gray-500 text-sm">
-    <p>© ۲۰۲۵ Griffin Replay Studio — ابزاری متن‌باز برای آگاهی معاملاتی</p>
-    <p class="mt-2">این نرم‌افزار صرفاً برای آموزش طراحی شده و هیچ توصیه‌ی معاملاتی محسوب نمی‌شود.</p>
-  </footer>
+            <!-- Actions -->
+            <div class="hidden md:flex items-center gap-2 flex-shrink-0">
+                <a href="https://github.com/daedalusfx/griffin-replay-studio" target="_blank"
+                   class="nav-link text-[#666] border border-white/[0.07] text-[13px] px-3 py-1.5 rounded-md no-underline hover:border-white/15 flex items-center gap-1.5">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+                    GitHub
+                </a>
+                <a href="#features"
+                   class="flex items-center gap-1.5 bg-white text-black text-[13px] font-semibold px-4 py-1.5 rounded-md no-underline hover:bg-white/90 transition-colors">
+                    شروع کنید
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6" style="transform:scaleX(-1);transform-origin:center"/></svg>
+                </a>
+            </div>
+
+            <!-- Hamburger -->
+            <button class="md:hidden flex flex-col gap-1.5 cursor-pointer p-1 mr-auto border-0 bg-transparent"
+                    onclick="document.getElementById('mobile-menu').classList.toggle('open')">
+                <div class="w-5 h-px bg-[#777]"></div>
+                <div class="w-5 h-px bg-[#777]"></div>
+                <div class="w-5 h-px bg-[#777]"></div>
+            </button>
+        </nav>
+
+        <div id="mobile-menu" class="border-t border-white/[0.07] bg-black/95 px-6 py-4 space-y-1 md:hidden">
+            <a href="#features" class="block text-[#666] text-sm py-2 no-underline">ویژگی‌ها</a>
+            <a href="#indicators" class="block text-[#666] text-sm py-2 no-underline">اندیکاتورها</a>
+            <a href="#interface" class="block text-[#666] text-sm py-2 no-underline">رابط کاربری</a>
+        </div>
+    </header>
+
+    <main class="relative z-10">
+
+        <!-- ══════════════════════ HERO ══════════════════════ -->
+        <section class="hero-grid relative overflow-hidden">
+            <!-- glows -->
+            <div class="absolute inset-0 pointer-events-none overflow-hidden">
+                <div class="absolute top-[-60px] left-1/2 -translate-x-1/2 w-[900px] h-[600px] rounded-full"
+                     style="background: radial-gradient(ellipse, rgba(0,112,243,0.09) 0%, transparent 65%);"></div>
+                <div class="absolute top-[30%] right-[-5%] w-[400px] h-[400px] rounded-full"
+                     style="background: radial-gradient(ellipse, rgba(6,214,160,0.04) 0%, transparent 65%);"></div>
+            </div>
+
+            <div class="relative max-w-6xl mx-auto px-6 pt-24 pb-20">
+                <div class="text-center">
+
+                    <!-- Badge -->
+                    <div class="animate-fade-up inline-flex items-center gap-2.5 border border-white/[0.1] rounded-full px-4 py-1.5 text-[12px] text-[#666] mb-8">
+                        <span class="w-1.5 h-1.5 rounded-full bg-[#06d6a0] shadow-[0_0_8px_#06d6a0] animate-pulse-dot"></span>
+                        رایگان برای همیشه — بدون نیاز به اشتراک
+                        <span class="w-px h-3 bg-white/[0.1]"></span>
+                        <span class="text-[#0070f3]">MQL5</span>
+                    </div>
+
+                    <!-- H1 -->
+                    <h1 class="animate-fade-up text-[46px] md:text-[72px] font-extrabold tracking-[-0.03em] leading-[1.06] mb-5"
+                        style="animation-delay:0.1s">
+                        <span class="shimmer-text">سفر در زمان</span><br>
+                        <span class="cyan-text">معاملاتی</span>
+                    </h1>
+
+                    <!-- Subtitle -->
+                    <p class="animate-fade-up text-[#555] text-[17px] max-w-[580px] mx-auto leading-[1.85] mb-10"
+                       style="animation-delay:0.2s">
+                        به عقب برگردید و استراتژی‌های خود را کندل به کندل در هر تایم‌فریمی تست کنید.
+                        دسترسی نامحدود به داده‌های بازار با تمام اندیکاتورهای تکنیکال — رایگان.
+                    </p>
+
+                    <!-- CTAs -->
+                    <div class="animate-fade-up flex flex-wrap items-center justify-center gap-3 mb-16"
+                         style="animation-delay:0.3s">
+                        <a href="https://github.com/daedalusfx/griffin-replay-studio" target="_blank"
+                           class="flex items-center gap-2 bg-white text-black text-[14px] font-semibold px-6 py-2.5 rounded-lg no-underline hover:bg-white/90 transition-all shadow-[0_0_20px_rgba(255,255,255,0.12)]">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+                            مشاهده در GitHub
+                        </a>
+                        <a href="#features"
+                           class="flex items-center gap-2 border border-white/[0.12] text-white text-[14px] font-medium px-6 py-2.5 rounded-lg no-underline hover:bg-white/[0.04] hover:border-white/20 transition-all">
+                            ویژگی‌ها را ببینید
+                        </a>
+                    </div>
+
+                    <!-- Chart UI Mockup -->
+                    <div class="animate-fade-up" style="animation-delay:0.4s">
+                        <div class="grad-border-blue rounded-xl overflow-hidden text-right">
+                            <!-- window chrome -->
+                            <div class="flex items-center gap-2 px-4 py-3 border-b border-white/[0.05] bg-[#0c0c0c]">
+                                <div class="w-2.5 h-2.5 rounded-full bg-[#ff5f57]"></div>
+                                <div class="w-2.5 h-2.5 rounded-full bg-[#febc2e]"></div>
+                                <div class="w-2.5 h-2.5 rounded-full bg-[#28c840]"></div>
+                                <div class="mr-3 text-[10px] text-[#444] font-mono">Griffin Replay Studio — XAUUSD H1 · 2024.03.15</div>
+                                <div class="mr-auto flex items-center gap-3">
+                                    <span class="text-[10px] text-[#0070f3] font-mono">▶ PLAYING</span>
+                                    <div class="w-16 h-1 bg-white/[0.06] rounded-full overflow-hidden">
+                                        <div class="w-[45%] h-full bg-[#0070f3] rounded-full"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- chart body -->
+                            <div class="bg-[#080808] p-5">
+                                <!-- toolbar -->
+                                <div class="flex items-center gap-2 mb-4 pb-4 border-b border-white/[0.05]">
+                                    <div class="flex gap-1">
+                                        <div class="text-[10px] text-[#0070f3] bg-[#0070f3]/10 border border-[#0070f3]/20 rounded px-2 py-0.5 font-mono">H1</div>
+                                        <div class="text-[10px] text-[#444] border border-white/[0.05] rounded px-2 py-0.5 font-mono">H4</div>
+                                        <div class="text-[10px] text-[#444] border border-white/[0.05] rounded px-2 py-0.5 font-mono">D1</div>
+                                    </div>
+                                    <div class="w-px h-4 bg-white/[0.05]"></div>
+                                    <div class="flex gap-1">
+                                        <div class="text-[10px] text-[#555] border border-white/[0.04] rounded px-2 py-0.5">BB</div>
+                                        <div class="text-[10px] text-[#555] border border-white/[0.04] rounded px-2 py-0.5">RSI</div>
+                                        <div class="text-[10px] text-[#555] border border-white/[0.04] rounded px-2 py-0.5">ATR</div>
+                                        <div class="text-[10px] text-[#555] border border-white/[0.04] rounded px-2 py-0.5">MACD</div>
+                                    </div>
+                                    <div class="mr-auto text-[10px] text-[#333] font-mono">XAUUSD · 2345.60</div>
+                                </div>
+
+                                <!-- SVG Chart -->
+                                <svg viewBox="0 0 900 260" class="w-full" xmlns="http://www.w3.org/2000/svg">
+                                    <!-- BB bands -->
+                                    <path d="M0,180 C60,170 120,155 180,145 C240,135 300,128 360,122 C420,116 480,112 540,108 C600,104 660,100 720,96 C780,92 840,88 900,85" fill="none" stroke="rgba(0,112,243,0.15)" stroke-width="1"/>
+                                    <path d="M0,80 C60,88 120,98 180,105 C240,112 300,118 360,122 C420,126 480,130 540,133 C600,136 660,139 720,142 C780,145 840,148 900,150" fill="none" stroke="rgba(0,112,243,0.15)" stroke-width="1"/>
+                                    <path d="M0,130 C60,128 120,126 180,125 C240,123 300,123 360,122 C420,121 480,121 540,120 C600,120 660,119 720,119 C780,118 840,118 900,117" fill="none" stroke="rgba(0,112,243,0.08)" stroke-width="1" stroke-dasharray="4,4"/>
+
+                                    <!-- Candles -->
+                                    <!-- green candles -->
+                                    <line x1="30" y1="160" x2="30" y2="185" stroke="#26A69A" stroke-width="1"/>
+                                    <rect x="23" y="160" width="14" height="18" rx="1" fill="#26A69A" opacity="0.9"/>
+
+                                    <line x1="60" y1="150" x2="60" y2="180" stroke="#26A69A" stroke-width="1"/>
+                                    <rect x="53" y="150" width="14" height="20" rx="1" fill="#26A69A" opacity="0.9"/>
+
+                                    <line x1="90" y1="148" x2="90" y2="175" stroke="#EF5350" stroke-width="1"/>
+                                    <rect x="83" y="155" width="14" height="15" rx="1" fill="#EF5350" opacity="0.9"/>
+
+                                    <line x1="120" y1="138" x2="120" y2="165" stroke="#26A69A" stroke-width="1"/>
+                                    <rect x="113" y="138" width="14" height="18" rx="1" fill="#26A69A" opacity="0.9"/>
+
+                                    <line x1="150" y1="130" x2="150" y2="160" stroke="#26A69A" stroke-width="1"/>
+                                    <rect x="143" y="130" width="14" height="22" rx="1" fill="#26A69A" opacity="0.9"/>
+
+                                    <line x1="180" y1="135" x2="180" y2="158" stroke="#EF5350" stroke-width="1"/>
+                                    <rect x="173" y="140" width="14" height="14" rx="1" fill="#EF5350" opacity="0.9"/>
+
+                                    <line x1="210" y1="125" x2="210" y2="155" stroke="#26A69A" stroke-width="1"/>
+                                    <rect x="203" y="125" width="14" height="20" rx="1" fill="#26A69A" opacity="0.9"/>
+
+                                    <line x1="240" y1="118" x2="240" y2="148" stroke="#26A69A" stroke-width="1"/>
+                                    <rect x="233" y="118" width="14" height="22" rx="1" fill="#26A69A" opacity="0.9"/>
+
+                                    <line x1="270" y1="122" x2="270" y2="145" stroke="#EF5350" stroke-width="1"/>
+                                    <rect x="263" y="128" width="14" height="12" rx="1" fill="#EF5350" opacity="0.9"/>
+
+                                    <line x1="300" y1="108" x2="300" y2="140" stroke="#26A69A" stroke-width="1"/>
+                                    <rect x="293" y="108" width="14" height="24" rx="1" fill="#26A69A" opacity="0.9"/>
+
+                                    <line x1="330" y1="100" x2="330" y2="132" stroke="#26A69A" stroke-width="1"/>
+                                    <rect x="323" y="100" width="14" height="24" rx="1" fill="#26A69A" opacity="0.9"/>
+
+                                    <line x1="360" y1="105" x2="360" y2="128" stroke="#EF5350" stroke-width="1"/>
+                                    <rect x="353" y="112" width="14" height="12" rx="1" fill="#EF5350" opacity="0.9"/>
+
+                                    <line x1="390" y1="95" x2="390" y2="125" stroke="#26A69A" stroke-width="1"/>
+                                    <rect x="383" y="95" width="14" height="22" rx="1" fill="#26A69A" opacity="0.9"/>
+
+                                    <line x1="420" y1="88" x2="420" y2="120" stroke="#26A69A" stroke-width="1"/>
+                                    <rect x="413" y="88" width="14" height="24" rx="1" fill="#26A69A" opacity="0.9"/>
+
+                                    <line x1="450" y1="92" x2="450" y2="118" stroke="#EF5350" stroke-width="1"/>
+                                    <rect x="443" y="98" width="14" height="14" rx="1" fill="#EF5350" opacity="0.9"/>
+
+                                    <!-- Current candle glow (forming) -->
+                                    <line x1="480" y1="82" x2="480" y2="115" stroke="#26A69A" stroke-width="1"/>
+                                    <rect x="473" y="82" width="14" height="26" rx="1" fill="#26A69A"/>
+                                    <rect x="473" y="82" width="14" height="26" rx="1" fill="none" stroke="#26A69A" stroke-width="1" opacity="0.6"/>
+
+                                    <!-- Future (dimmed/invisible) -->
+                                    <line x1="510" y1="80" x2="510" y2="112" stroke="#333" stroke-width="1"/>
+                                    <rect x="503" y="80" width="14" height="24" rx="1" fill="#222"/>
+                                    <line x1="540" y1="76" x2="540" y2="108" stroke="#2a2a2a" stroke-width="1"/>
+                                    <rect x="533" y="76" width="14" height="24" rx="1" fill="#1a1a1a"/>
+                                    <line x1="570" y1="78" x2="570" y2="104" stroke="#222" stroke-width="1"/>
+                                    <rect x="563" y="82" width="14" height="18" rx="1" fill="#191919"/>
+                                    <line x1="600" y1="72" x2="600" y2="100" stroke="#1e1e1e" stroke-width="1"/>
+                                    <rect x="593" y="72" width="14" height="22" rx="1" fill="#161616"/>
+
+                                    <!-- Vertical cursor line -->
+                                    <line x1="487" y1="0" x2="487" y2="260" stroke="rgba(0,112,243,0.3)" stroke-width="1" stroke-dasharray="4,4"/>
+
+                                    <!-- SL line -->
+                                    <line x1="0" y1="145" x2="900" y2="145" stroke="rgba(239,83,80,0.4)" stroke-width="1" stroke-dasharray="6,4"/>
+                                    <text x="10" y="141" font-size="9" fill="rgba(239,83,80,0.7)" font-family="monospace">SL 2338.40</text>
+
+                                    <!-- TP line -->
+                                    <line x1="0" y1="55" x2="900" y2="55" stroke="rgba(38,166,154,0.4)" stroke-width="1" stroke-dasharray="6,4"/>
+                                    <text x="10" y="51" font-size="9" fill="rgba(38,166,154,0.7)" font-family="monospace">TP 2365.80</text>
+
+                                    <!-- Price label -->
+                                    <rect x="840" y="78" width="58" height="16" rx="3" fill="#26A69A"/>
+                                    <text x="869" y="90" font-size="9" fill="white" text-anchor="middle" font-family="monospace">2345.60</text>
+                                </svg>
+
+                                <!-- Bottom indicators strip -->
+                                <div class="mt-3 pt-3 border-t border-white/[0.05] flex items-center justify-between">
+                                    <div class="flex items-center gap-4 text-[10px] font-mono">
+                                        <span class="text-[#26A69A]">RSI <span class="font-bold">62.4</span></span>
+                                        <span class="text-[#0070f3]">ATR <span class="font-bold">8.3</span></span>
+                                        <span class="text-[#FFA500]">SQZ <span class="font-bold">HIGH</span></span>
+                                        <span class="text-[#555]">MACD <span class="text-[#26A69A]">+2.1</span></span>
+                                    </div>
+                                    <div class="flex items-center gap-2 text-[10px] text-[#444] font-mono">
+                                        <span>⏮</span>
+                                        <span class="text-[#0070f3] text-[12px]">⏸</span>
+                                        <span>⏭</span>
+                                        <span class="text-[#333]">·</span>
+                                        <span>1x</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Stats -->
+                    <div class="mt-10 flex flex-wrap items-center justify-center gap-6 text-[13px]">
+                        <div class="flex items-center gap-2">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#06d6a0" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                            <span class="text-[#666]">بازپخش کندل به کندل</span>
+                        </div>
+                        <div class="w-px h-4 bg-white/[0.06]"></div>
+                        <div class="flex items-center gap-2">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#06d6a0" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                            <span class="text-[#666]">دسترسی نامحدود به داده</span>
+                        </div>
+                        <div class="w-px h-4 bg-white/[0.06]"></div>
+                        <div class="flex items-center gap-2">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#06d6a0" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+                            <span class="text-[#666]">چندتایم‌فریمی</span>
+                        </div>
+                        <div class="w-px h-4 bg-white/[0.06]"></div>
+                        <div class="flex items-center gap-2">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#06d6a0" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                            <span class="text-[#666]">کاملاً رایگان</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ══════════════════════ FEATURES ══════════════════════ -->
+        <section id="features" class="border-t border-white/[0.07]">
+            <div class="max-w-6xl mx-auto px-6 py-20">
+                <div class="text-[11px] font-bold tracking-[0.1em] uppercase text-[#06d6a0] mb-3">قابلیت‌ها</div>
+                <h2 class="text-[30px] md:text-[36px] font-bold tracking-tight mb-2">چرا Griffin Replay Studio؟</h2>
+                <p class="text-[#555] text-[15px] mb-12 max-w-md">ابزاری برای خودآگاهی معاملاتی، نه پیش‌بینی بازار.</p>
+
+                <div class="feat-grid">
+                    <!-- F1 -->
+                    <div class="feat-card p-7">
+                        <div class="feat-icon w-10 h-10 rounded-lg bg-white/[0.04] border border-white/[0.07] flex items-center justify-center mb-5">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0070f3" stroke-width="1.8">
+                                <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-[13px] font-semibold mb-2">بازپخش تعاملی</h3>
+                        <p class="text-[#444] text-[12px] leading-relaxed">داده‌های تاریخی را کندل به کندل مرور کنید. با Spacebar یا کلیک پیشروی کنید. کنترل کامل سرعت بازپخش.</p>
+                    </div>
+
+                    <!-- F2 -->
+                    <div class="feat-card p-7">
+                        <div class="feat-icon w-10 h-10 rounded-lg bg-white/[0.04] border border-white/[0.07] flex items-center justify-center mb-5">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0070f3" stroke-width="1.8">
+                                <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+                                <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-[13px] font-semibold mb-2">تحلیل چندتایم‌فریمی</h3>
+                        <p class="text-[#444] text-[12px] leading-relaxed">همزمان دو یا چند تایم‌فریم را ببینید. تصمیمات خود را در چارچوب گسترده‌تری ارزیابی کنید.</p>
+                    </div>
+
+                    <!-- F3 -->
+                    <div class="feat-card p-7">
+                        <div class="feat-icon w-10 h-10 rounded-lg bg-white/[0.04] border border-white/[0.07] flex items-center justify-center mb-5">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0070f3" stroke-width="1.8">
+                                <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-[13px] font-semibold mb-2">دسترسی نامحدود به داده</h3>
+                        <p class="text-[#444] text-[12px] leading-relaxed">تمام تاریخچه بازار در هر تایم‌فریمی بدون محدودیت. از M1 تا MN1 در دسترس شماست.</p>
+                    </div>
+
+                    <!-- F4 -->
+                    <div class="feat-card p-7">
+                        <div class="feat-icon w-10 h-10 rounded-lg bg-white/[0.04] border border-white/[0.07] flex items-center justify-center mb-5">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0070f3" stroke-width="1.8">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-[13px] font-semibold mb-2">مدیریت ریسک هوشمند</h3>
+                        <p class="text-[#444] text-[12px] leading-relaxed">SL/TP بر اساس ATR و تشخیص برخورد درون کندل. شبیه‌سازی واقع‌گرایانه از شرایط بازار.</p>
+                    </div>
+
+                    <!-- F5 -->
+                    <div class="feat-card p-7">
+                        <div class="feat-icon w-10 h-10 rounded-lg bg-white/[0.04] border border-white/[0.07] flex items-center justify-center mb-5">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0070f3" stroke-width="1.8">
+                                <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-[13px] font-semibold mb-2">ابزارهای نقاشی</h3>
+                        <p class="text-[#444] text-[12px] leading-relaxed">خط، مستطیل و حالت مغناطیسی برای نشانه‌گذاری الگوها و سطوح کلیدی روی چارت.</p>
+                    </div>
+
+                    <!-- F6 -->
+                    <div class="feat-card p-7">
+                        <div class="feat-icon w-10 h-10 rounded-lg bg-white/[0.04] border border-white/[0.07] flex items-center justify-center mb-5">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0070f3" stroke-width="1.8">
+                                <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-[13px] font-semibold mb-2">کاملاً رایگان</h3>
+                        <p class="text-[#444] text-[12px] leading-relaxed">بدون اشتراک، بدون محدودیت زمانی. ابزاری برای جامعه معامله‌گران که به یادگیری اهمیت می‌دهند.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ══════════════════════ INDICATORS ══════════════════════ -->
+        <section id="indicators" class="border-t border-white/[0.07] bg-[#050505]">
+            <div class="max-w-6xl mx-auto px-6 py-20">
+                <div class="flex flex-col md:flex-row items-start gap-16">
+
+                    <div class="flex-1 min-w-0">
+                        <div class="text-[11px] font-bold tracking-[0.1em] uppercase text-[#06d6a0] mb-3">اندیکاتورها</div>
+                        <h2 class="text-[28px] md:text-[34px] font-bold tracking-tight mb-4">تمام ابزارهای تکنیکال در یک‌جا</h2>
+                        <p class="text-[#555] text-[14px] leading-relaxed mb-8 max-w-md">
+                            Griffin Replay Studio با مجموعه کاملی از اندیکاتورهای تکنیکال همراه است. تمام آنچه برای تحلیل نیاز دارید بدون نیاز به نصب جداگانه.
+                        </p>
+
+                        <!-- indicator categories -->
+                        <div class="space-y-6">
+                            <div>
+                                <div class="text-[11px] text-[#444] mb-3 uppercase tracking-wider">نوسان‌سنج‌ها</div>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="ind-pill"><span class="w-1.5 h-1.5 rounded-full bg-[#0070f3]"></span>Bollinger Bands</span>
+                                    <span class="ind-pill"><span class="w-1.5 h-1.5 rounded-full bg-[#0070f3]"></span>ATR</span>
+                                    <span class="ind-pill"><span class="w-1.5 h-1.5 rounded-full bg-[#0070f3]"></span>BB Squeeze</span>
+                                    <span class="ind-pill"><span class="w-1.5 h-1.5 rounded-full bg-[#0070f3]"></span>Keltner Channel</span>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="text-[11px] text-[#444] mb-3 uppercase tracking-wider">مومنتوم</div>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="ind-pill"><span class="w-1.5 h-1.5 rounded-full bg-[#06d6a0]"></span>RSI</span>
+                                    <span class="ind-pill"><span class="w-1.5 h-1.5 rounded-full bg-[#06d6a0]"></span>MACD</span>
+                                    <span class="ind-pill"><span class="w-1.5 h-1.5 rounded-full bg-[#06d6a0]"></span>TTM Momentum</span>
+                                    <span class="ind-pill"><span class="w-1.5 h-1.5 rounded-full bg-[#06d6a0]"></span>Stochastic</span>
+                                    <span class="ind-pill"><span class="w-1.5 h-1.5 rounded-full bg-[#06d6a0]"></span>CCI</span>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="text-[11px] text-[#444] mb-3 uppercase tracking-wider">حجم و روند</div>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="ind-pill"><span class="w-1.5 h-1.5 rounded-full bg-[#FFA500]"></span>MFI</span>
+                                    <span class="ind-pill"><span class="w-1.5 h-1.5 rounded-full bg-[#FFA500]"></span>ADX</span>
+                                    <span class="ind-pill"><span class="w-1.5 h-1.5 rounded-full bg-[#FFA500]"></span>EMA</span>
+                                    <span class="ind-pill"><span class="w-1.5 h-1.5 rounded-full bg-[#FFA500]"></span>SMA</span>
+                                    <span class="ind-pill"><span class="w-1.5 h-1.5 rounded-full bg-[#FFA500]"></span>VWAP</span>
+                                    <span class="ind-pill"><span class="w-1.5 h-1.5 rounded-full bg-[#FFA500]"></span>OBV</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Visual card -->
+                    <div class="w-full md:w-[320px] flex-shrink-0">
+                        <div class="border border-white/[0.07] rounded-xl overflow-hidden bg-black">
+                            <div class="px-5 py-4 border-b border-white/[0.05] bg-[#0a0a0a]">
+                                <div class="text-[12px] font-semibold mb-0.5">سیگنال‌های ولاتیلیتی</div>
+                                <div class="text-[11px] text-[#444]">Bollinger Squeeze · TTM</div>
+                            </div>
+                            <div class="p-5 space-y-4">
+                                <!-- squeeze states -->
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-2 h-2 rounded-full bg-[#FFA500] shadow-[0_0_6px_#FFA500]"></div>
+                                        <span class="text-[12px]">Squeeze High</span>
+                                    </div>
+                                    <div class="flex gap-1">
+                                        <div class="w-2 h-4 rounded-sm bg-[#FFA500]"></div>
+                                        <div class="w-2 h-5 rounded-sm bg-[#FFA500]"></div>
+                                        <div class="w-2 h-6 rounded-sm bg-[#FFA500]"></div>
+                                        <div class="w-2 h-4 rounded-sm bg-[#FFA500]"></div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-2 h-2 rounded-full bg-[#FF4444] shadow-[0_0_6px_#FF4444]"></div>
+                                        <span class="text-[12px]">Squeeze Mid</span>
+                                    </div>
+                                    <div class="flex gap-1">
+                                        <div class="w-2 h-3 rounded-sm bg-[#FF4444]"></div>
+                                        <div class="w-2 h-4 rounded-sm bg-[#FF4444]"></div>
+                                        <div class="w-2 h-3 rounded-sm bg-[#FF4444]"></div>
+                                        <div class="w-2 h-2 rounded-sm bg-[#FF4444]"></div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-2 h-2 rounded-full bg-[#444]"></div>
+                                        <span class="text-[12px] text-[#555]">No Squeeze</span>
+                                    </div>
+                                    <div class="flex gap-1">
+                                        <div class="w-2 h-2 rounded-sm bg-[#333]"></div>
+                                        <div class="w-2 h-1 rounded-sm bg-[#333]"></div>
+                                        <div class="w-2 h-2 rounded-sm bg-[#333]"></div>
+                                        <div class="w-2 h-1 rounded-sm bg-[#333]"></div>
+                                    </div>
+                                </div>
+
+                                <div class="border-t border-white/[0.05] pt-4">
+                                    <div class="text-[11px] text-[#444] mb-3">وضعیت لحظه‌ای</div>
+                                    <div class="space-y-2">
+                                        <div class="flex justify-between text-[11px]">
+                                            <span class="text-[#555]">RSI</span>
+                                            <div class="flex items-center gap-2">
+                                                <div class="w-20 h-1 bg-white/[0.05] rounded-full overflow-hidden">
+                                                    <div class="h-full bg-[#26A69A] rounded-full" style="width:62%"></div>
+                                                </div>
+                                                <span class="text-[#26A69A] font-mono">62.4</span>
+                                            </div>
+                                        </div>
+                                        <div class="flex justify-between text-[11px]">
+                                            <span class="text-[#555]">ATR</span>
+                                            <span class="text-[#0070f3] font-mono">8.3 pts</span>
+                                        </div>
+                                        <div class="flex justify-between text-[11px]">
+                                            <span class="text-[#555]">ADX</span>
+                                            <div class="flex items-center gap-2">
+                                                <div class="w-20 h-1 bg-white/[0.05] rounded-full overflow-hidden">
+                                                    <div class="h-full bg-[#FFA500] rounded-full" style="width:71%"></div>
+                                                </div>
+                                                <span class="text-[#FFA500] font-mono">35.8</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ══════════════════════ UI SECTION ══════════════════════ -->
+        <section id="interface" class="border-t border-white/[0.07]">
+            <div class="max-w-6xl mx-auto px-6 py-20 text-center">
+                <div class="text-[11px] font-bold tracking-[0.1em] uppercase text-[#06d6a0] mb-3">رابط کاربری</div>
+                <h2 class="text-[30px] md:text-[36px] font-bold tracking-tight mb-3">تاریک، تمیز، بی‌هیاهو</h2>
+                <p class="text-[#555] text-[15px] mb-12 max-w-lg mx-auto leading-relaxed">
+                    طراحی‌شده برای تمرکز بر تحلیل. بدون حواس‌پرتی، بدون فریاد بازار — فقط چارت و داده.
+                </p>
+
+                <!-- UI mockup placeholder -->
+                <div class="border border-white/[0.07] rounded-xl overflow-hidden bg-[#050505]">
+                    <div class="flex items-center gap-2 px-4 py-3 border-b border-white/[0.05] bg-[#0a0a0a]">
+                        <div class="w-2.5 h-2.5 rounded-full bg-[#ff5f57]"></div>
+                        <div class="w-2.5 h-2.5 rounded-full bg-[#febc2e]"></div>
+                        <div class="w-2.5 h-2.5 rounded-full bg-[#28c840]"></div>
+                        <div class="mr-3 text-[10px] text-[#444] font-mono">Griffin Replay Studio v1.0</div>
+                    </div>
+                    <img src="./assets/griffin_sim.png" alt="رابط کاربری Griffin Replay Studio" class="w-full block"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                    <div class="hidden h-80 items-center justify-center flex-col gap-3 text-[#2a2a2a]">
+                        <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                        <span class="text-[13px]">تصویر نمایشی از Griffin Replay Studio</span>
+                        <span class="text-[11px] text-[#222]">برای مشاهده، یک اسکرین‌شات در assets قرار دهید</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ══════════════════════ CTA ══════════════════════ -->
+        <section class="border-t border-white/[0.07] cta-section">
+            <div class="max-w-6xl mx-auto px-6 py-24 text-center">
+
+                <div class="inline-flex items-center gap-2 border border-white/[0.08] rounded-full px-4 py-1.5 text-[12px] text-[#555] mb-8">
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#06d6a0] animate-pulse-dot"></span>
+                    رایگان — همیشه
+                </div>
+
+                <h2 class="text-[36px] md:text-[52px] font-extrabold tracking-tight mb-5">
+                    <span class="shimmer-text">آماده‌اید سفر خود را</span><br>
+                    <span class="cyan-text">آغاز کنید؟</span>
+                </h2>
+                <p class="text-[#555] text-[16px] max-w-md mx-auto mb-10 leading-relaxed">
+                    Griffin Replay Studio ابزاری برای خودآگاهی است، نه پیش‌بینی. به عقب برگردید تا آینده را بهتر ببینید.
+                </p>
+
+                <div class="flex flex-wrap items-center justify-center gap-3">
+                    <a href="https://github.com/daedalusfx/griffin-replay-studio" target="_blank"
+                       class="flex items-center gap-2 bg-white text-black text-[15px] font-bold px-8 py-3 rounded-lg no-underline hover:bg-white/90 transition-all shadow-[0_0_30px_rgba(255,255,255,0.1)]">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+                        شروع به کار کنید
+                    </a>
+                    <a href="#features"
+                       class="flex items-center gap-2 border border-white/[0.1] text-[#666] text-[14px] px-6 py-3 rounded-lg no-underline hover:text-white hover:border-white/20 transition-all">
+                        بیشتر بدانید
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ══════════════════════ FOOTER ══════════════════════ -->
+    <footer class="border-t border-white/[0.07]">
+        <div class="max-w-6xl mx-auto px-6 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-2.5 text-[13px] text-[#444]">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="#444" stroke-width="1.8" stroke-linejoin="round"/></svg>
+                <span>Griffin Replay Studio</span>
+                <span class="text-[#2a2a2a]">·</span>
+                <span>© ۲۰۲۵</span>
+            </div>
+            <p class="text-[#2a2a2a] text-[12px] text-center">این نرم‌افزار صرفاً برای آموزش طراحی شده و هیچ توصیه معاملاتی محسوب نمی‌شود.</p>
+            <div class="flex items-center gap-5">
+                <a href="#features" class="text-[#444] hover:text-white text-[12px] no-underline transition-colors">ویژگی‌ها</a>
+                <a href="#indicators" class="text-[#444] hover:text-white text-[12px] no-underline transition-colors">اندیکاتورها</a>
+                <a href="https://github.com/daedalusfx/griffin-replay-studio" target="_blank" class="text-[#444] hover:text-white text-[12px] no-underline transition-colors">GitHub</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // scroll reveal
+        const io = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.style.opacity = '1';
+                    e.target.style.transform = 'translateY(0)';
+                    io.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.08 });
+
+        document.querySelectorAll('.feat-card, .ind-pill').forEach((el, i) => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(12px)';
+            el.style.transition = `opacity 0.5s ${i * 0.05}s ease, transform 0.5s ${i * 0.05}s ease`;
+            io.observe(el);
+        });
+    </script>
 </body>
 </html>
-

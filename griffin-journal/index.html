@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Griffin AI Analyst | دستیار هوشمند تحلیل معاملات</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { vazir: ['Vazirmatn', 'sans-serif'] },
+                    animation: {
+                        'fade-up': 'fadeUp 0.6s ease both',
+                        'pulse-dot': 'pulseDot 2s ease infinite',
+                        'spin-slow': 'spin 8s linear infinite',
+                    },
+                    keyframes: {
+                        fadeUp: {
+                            '0%': { opacity: '0', transform: 'translateY(18px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        pulseDot: {
+                            '0%,100%': { opacity: '1' },
+                            '50%': { opacity: '0.25' },
+                        },
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: 'Vazirmatn', sans-serif; background: #000; color: #fff; }
+
+        /* noise overlay */
+        body::before {
+            content: '';
+            position: fixed; inset: 0; pointer-events: none; z-index: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+            opacity: 0.45;
+        }
+
+        /* hero grid */
+        .hero-grid {
+            background-image:
+                linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+            background-size: 64px 64px;
+        }
+
+        /* gradient texts */
+        .shimmer-text {
+            background: linear-gradient(135deg, #fff 0%, #ccc 60%, #fff 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .ai-text {
+            background: linear-gradient(90deg, #a78bfa, #60a5fa, #34d399);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .purple-text {
+            background: linear-gradient(90deg, #a78bfa, #818cf8);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+
+        /* card border */
+        .grad-border-purple {
+            background: linear-gradient(#0a0a0a, #0a0a0a) padding-box,
+                        linear-gradient(135deg, rgba(167,139,250,0.4), rgba(255,255,255,0.05) 50%, rgba(96,165,250,0.2)) border-box;
+            border: 1px solid transparent;
+        }
+
+        /* feat grid */
+        .feat-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 14px;
+            overflow: hidden;
+        }
+        @media (min-width: 1024px) { .feat-grid { grid-template-columns: repeat(3, 1fr); } }
+
+        .feat-card {
+            border-left: 1px solid rgba(255,255,255,0.07);
+            border-bottom: 1px solid rgba(255,255,255,0.07);
+            transition: background 0.2s;
+        }
+        .feat-card:hover { background: rgba(167,139,250,0.04); }
+        .feat-card:hover .f-icon { border-color: rgba(167,139,250,0.35); }
+
+        .f-icon { transition: border-color 0.2s; }
+
+        /* nav link */
+        .nav-link { transition: color 0.15s; }
+        .nav-link:hover { color: #fff; }
+
+        /* dl card */
+        .dl-row {
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 10px;
+            transition: all 0.15s;
+        }
+        .dl-row:hover {
+            border-color: rgba(167,139,250,0.3);
+            background: rgba(167,139,250,0.03);
+        }
+
+        /* step line */
+        .step-line::after {
+            content: '';
+            position: absolute;
+            top: 24px; left: calc(50% + 40px);
+            width: calc(100% - 80px);
+            height: 1px;
+            background: linear-gradient(90deg, rgba(167,139,250,0.3), transparent);
+        }
+
+        html { scroll-behavior: smooth; }
+        #mobile-menu { display: none; }
+        #mobile-menu.open { display: block; }
+
+        /* AI glow ring */
+        .ai-ring {
+            box-shadow: 0 0 0 1px rgba(167,139,250,0.2), 0 0 30px rgba(167,139,250,0.08);
+        }
+    </style>
+</head>
+<body class="font-vazir relative">
+
+    <!-- ══════════════ HEADER ══════════════ -->
+    <header class="sticky top-0 z-50 border-b border-white/[0.07] bg-black/80 backdrop-blur-xl">
+        <nav class="max-w-6xl mx-auto px-6 h-[60px] flex items-center gap-6">
+
+            <a href="#" class="flex items-center gap-2.5 font-semibold text-[15px] text-white no-underline flex-shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 1 0 7.5 7.5h-7.5V6Z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0 0 13.5 3v7.5Z"/>
+                </svg>
+                <span>Griffin AI Analyst</span>
+            </a>
+
+            <ul class="hidden md:flex items-center gap-0.5 flex-1 list-none m-0 p-0">
+                <li><a href="#features" class="nav-link text-[#999] text-[13px] px-3 py-1.5 rounded-md no-underline">ویژگی‌ها</a></li>
+                <li><a href="#how-it-works" class="nav-link text-[#999] text-[13px] px-3 py-1.5 rounded-md no-underline">نحوه کار</a></li>
+                <li><a href="#ai-analyst" class="nav-link text-[#999] text-[13px] px-3 py-1.5 rounded-md no-underline">هوش مصنوعی</a></li>
+                <li><a href="#download" class="nav-link text-[#999] text-[13px] px-3 py-1.5 rounded-md no-underline">دانلود</a></li>
+            </ul>
+
+            <div class="hidden md:flex items-center gap-2 flex-shrink-0">
+                <a href="https://t.me/Griffin_License_bot" target="_blank"
+                   class="flex items-center gap-1.5 bg-white text-black text-[13px] font-semibold px-4 py-1.5 rounded-md no-underline hover:bg-white/90 transition-colors">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    دانلود رایگان
+                </a>
+            </div>
+
+            <button class="md:hidden flex flex-col gap-1.5 cursor-pointer p-1 mr-auto border-0 bg-transparent"
+                    onclick="document.getElementById('mobile-menu').classList.toggle('open')">
+                <div class="w-5 h-px bg-[#777]"></div>
+                <div class="w-5 h-px bg-[#777]"></div>
+                <div class="w-5 h-px bg-[#777]"></div>
+            </button>
+        </nav>
+        <div id="mobile-menu" class="border-t border-white/[0.07] bg-black/95 px-6 py-4 space-y-1 md:hidden">
+            <a href="#features" class="block text-[#999] text-sm py-2 no-underline">ویژگی‌ها</a>
+            <a href="#how-it-works" class="block text-[#999] text-sm py-2 no-underline">نحوه کار</a>
+            <a href="#ai-analyst" class="block text-[#999] text-sm py-2 no-underline">هوش مصنوعی</a>
+            <a href="#download" class="block text-[#999] text-sm py-2 no-underline">دانلود</a>
+        </div>
+    </header>
+
+    <main class="relative z-10">
+
+        <!-- ══════════════ HERO ══════════════ -->
+        <section class="hero-grid relative overflow-hidden">
+            <div class="absolute inset-0 pointer-events-none overflow-hidden">
+                <div class="absolute top-[-80px] left-1/2 -translate-x-1/2 w-[900px] h-[700px] rounded-full"
+                     style="background: radial-gradient(ellipse, rgba(139,92,246,0.09) 0%, transparent 65%);"></div>
+                <div class="absolute top-[20%] left-[-10%] w-[500px] h-[500px] rounded-full"
+                     style="background: radial-gradient(ellipse, rgba(96,165,250,0.04) 0%, transparent 65%);"></div>
+            </div>
+
+            <div class="relative max-w-6xl mx-auto px-6 pt-24 pb-20 text-center">
+
+                <!-- Badge -->
+                <div class="animate-fade-up inline-flex items-center gap-2.5 border border-white/[0.1] rounded-full px-4 py-1.5 text-[12px] text-[#999] mb-8">
+                    <span class="w-1.5 h-1.5 rounded-full bg-violet-400 shadow-[0_0_8px_#a78bfa] animate-pulse-dot"></span>
+                    دستیار هوشمند تحلیل معاملات — رایگان
+                    <span class="w-px h-3 bg-white/[0.1]"></span>
+                    <span class="text-violet-400">AI Powered</span>
+                </div>
+
+                <!-- H1 -->
+                <h1 class="animate-fade-up text-[46px] md:text-[70px] font-extrabold tracking-[-0.03em] leading-[1.07] mb-5"
+                    style="animation-delay:0.1s">
+                    <span class="shimmer-text">فراتر از یک ژورنال،</span><br>
+                    <span class="ai-text">آینه هوشمند شما</span>
+                </h1>
+
+                <!-- Subtitle -->
+                <p class="animate-fade-up text-[#aaa] text-[17px] max-w-[580px] mx-auto leading-[1.85] mb-10"
+                   style="animation-delay:0.2s">
+                    با Griffin، داده‌های خام معاملاتی خود را به استراتژی‌های برنده تبدیل کنید. الگوهای پنهان را کشف کرده، نقاط ضعف روانشناسی خود را بشناسید.
+                </p>
+
+                <!-- CTAs -->
+                <div class="animate-fade-up flex flex-wrap items-center justify-center gap-3 mb-16"
+                     style="animation-delay:0.3s">
+                    <a href="https://t.me/Griffin_License_bot" target="_blank"
+                       class="flex items-center gap-2 bg-white text-black text-[14px] font-semibold px-6 py-2.5 rounded-lg no-underline hover:bg-white/90 transition-all shadow-[0_0_24px_rgba(255,255,255,0.12)]">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        شروع کنید (کاملاً رایگان)
+                    </a>
+                    <a href="#features"
+                       class="flex items-center gap-2 border border-white/[0.12] text-[#ddd] text-[14px] font-medium px-6 py-2.5 rounded-lg no-underline hover:bg-white/[0.04] hover:border-white/20 transition-all">
+                        آشنایی با ویژگی‌ها
+                    </a>
+                </div>
+
+                <!-- Dashboard preview -->
+                <div class="animate-fade-up grad-border-purple rounded-xl overflow-hidden"
+                     style="animation-delay:0.4s">
+                    <div class="flex items-center gap-2 px-4 py-3 border-b border-white/[0.05] bg-[#0c0c0c]">
+                        <div class="w-2.5 h-2.5 rounded-full bg-[#ff5f57]"></div>
+                        <div class="w-2.5 h-2.5 rounded-full bg-[#febc2e]"></div>
+                        <div class="w-2.5 h-2.5 rounded-full bg-[#28c840]"></div>
+                        <div class="mr-3 text-[10px] text-[#444] font-mono">Griffin AI Analyst — Dashboard</div>
+                        <div class="mr-auto flex items-center gap-1.5">
+                            <div class="w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse-dot"></div>
+                            <span class="text-[10px] text-violet-400 font-mono">AI ANALYZING</span>
+                        </div>
+                    </div>
+                    <img src="./assests/allpreview.png" alt="داشبورد Griffin AI" class="w-full block"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                    <!-- Fallback mockup -->
+                    <div class="hidden bg-[#080808] p-6" id="fallback-hero">
+                        <div class="grid grid-cols-4 gap-3 mb-5">
+                            <div class="bg-[#111] border border-white/[0.06] rounded-lg p-4">
+                                <div class="text-[10px] text-[#555] mb-1">Win Rate</div>
+                                <div class="text-[20px] font-bold text-[#34d399]">67.4%</div>
+                                <div class="text-[10px] text-[#34d399]">↑ +3.2%</div>
+                            </div>
+                            <div class="bg-[#111] border border-white/[0.06] rounded-lg p-4">
+                                <div class="text-[10px] text-[#555] mb-1">Profit Factor</div>
+                                <div class="text-[20px] font-bold text-white">2.34</div>
+                                <div class="text-[10px] text-[#34d399]">↑ خوب</div>
+                            </div>
+                            <div class="bg-[#111] border border-white/[0.06] rounded-lg p-4">
+                                <div class="text-[10px] text-[#555] mb-1">Avg R:R</div>
+                                <div class="text-[20px] font-bold text-white">1.8</div>
+                                <div class="text-[10px] text-[#888]">معاملات ۴۵ روز</div>
+                            </div>
+                            <div class="bg-[#111] border border-white/[0.06] rounded-lg p-4">
+                                <div class="text-[10px] text-[#555] mb-1">Max DD</div>
+                                <div class="text-[20px] font-bold text-[#f87171]">-4.2%</div>
+                                <div class="text-[10px] text-[#f87171]">کنترل شده</div>
+                            </div>
+                        </div>
+                        <!-- equity curve fake -->
+                        <svg viewBox="0 0 800 120" class="w-full" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="eq" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stop-color="#a78bfa" stop-opacity="0.15"/>
+                                    <stop offset="100%" stop-color="#a78bfa" stop-opacity="0"/>
+                                </linearGradient>
+                            </defs>
+                            <path d="M0,90 C50,85 100,80 150,72 C200,64 220,75 270,65 C320,55 370,45 420,38 C470,31 510,40 560,30 C610,20 660,15 720,10 C750,8 780,6 800,5" fill="url(#eq)" stroke="none"/>
+                            <path d="M0,90 C50,85 100,80 150,72 C200,64 220,75 270,65 C320,55 370,45 420,38 C470,31 510,40 560,30 C610,20 660,15 720,10 C750,8 780,6 800,5" fill="none" stroke="#a78bfa" stroke-width="2"/>
+                        </svg>
+                        <div class="mt-2 text-[10px] text-[#444] text-center font-mono">Equity Curve — 45 Days</div>
+                    </div>
+                </div>
+
+                <!-- Stats strip -->
+                <div class="mt-10 flex flex-wrap items-center justify-center gap-6 text-[13px]">
+                    <div class="flex items-center gap-2">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2"><path d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/></svg>
+                        <span class="text-[#bbb]">تحلیل هوش مصنوعی</span>
+                    </div>
+                    <div class="w-px h-4 bg-white/[0.06]"></div>
+                    <div class="flex items-center gap-2">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2"><path d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/></svg>
+                        <span class="text-[#bbb]">ژورنال هوشمند</span>
+                    </div>
+                    <div class="w-px h-4 bg-white/[0.06]"></div>
+                    <div class="flex items-center gap-2">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2"><path d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5"/></svg>
+                        <span class="text-[#bbb]">تحلیل روانشناسی</span>
+                    </div>
+                    <div class="w-px h-4 bg-white/[0.06]"></div>
+                    <div class="flex items-center gap-2">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                        <span class="text-[#bbb]">کاملاً رایگان</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ══════════════ FEATURES ══════════════ -->
+        <section id="features" class="border-t border-white/[0.07]">
+            <div class="max-w-6xl mx-auto px-6 py-20">
+                <div class="text-[11px] font-bold tracking-[0.1em] uppercase text-violet-400 mb-3">ابزارها</div>
+                <h2 class="text-[30px] md:text-[36px] font-bold tracking-tight mb-2 text-white">ابزارهایی که برای موفقیت نیاز دارید</h2>
+                <p class="text-[#999] text-[15px] mb-12 max-w-md">از ثبت ساده معاملات تا تحلیل‌های عمیق مبتنی بر هوش مصنوعی.</p>
+
+                <div class="feat-grid">
+                    <div class="feat-card p-7">
+                        <div class="f-icon w-10 h-10 rounded-lg bg-white/[0.04] border border-white/[0.07] flex items-center justify-center mb-5">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="1.8">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-[14px] font-semibold mb-2 text-white">ژورنال هوشمند و کامل</h3>
+                        <p class="text-[#777] text-[12px] leading-relaxed">وارد کردن خودکار از MT5، ثبت دستی، یادداشت، برچسب، استراتژی و ضمیمه تصویر برای هر معامله.</p>
+                    </div>
+                    <div class="feat-card p-7">
+                        <div class="f-icon w-10 h-10 rounded-lg bg-white/[0.04] border border-white/[0.07] flex items-center justify-center mb-5">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="1.8">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-[14px] font-semibold mb-2 text-white">دستیار هوش مصنوعی</h3>
+                        <p class="text-[#777] text-[12px] leading-relaxed">با Machine Learning الگوهای سودآور و زیان‌ده را کشف کنید. تأثیر روانشناسی و کلمات کلیدی موفقیت را بیابید.</p>
+                    </div>
+                    <div class="feat-card p-7">
+                        <div class="f-icon w-10 h-10 rounded-lg bg-white/[0.04] border border-white/[0.07] flex items-center justify-center mb-5">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="1.8">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-[14px] font-semibold mb-2 text-white">تحلیل جامع عملکرد</h3>
+                        <p class="text-[#777] text-[12px] leading-relaxed">Equity Curve، نقشه حرارتی و ده‌ها نمودار بر اساس نماد، استراتژی، احساسات و سشن معاملاتی.</p>
+                    </div>
+                    <div class="feat-card p-7">
+                        <div class="f-icon w-10 h-10 rounded-lg bg-white/[0.04] border border-white/[0.07] flex items-center justify-center mb-5">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="1.8">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-[14px] font-semibold mb-2 text-white">گزارش روانشناسی</h3>
+                        <p class="text-[#777] text-[12px] leading-relaxed">هر روز وضعیت ذهنی، تمرکز و پایبندی به قوانین را ثبت کنید. ارتباط ذهنیت و نتایج را ببینید.</p>
+                    </div>
+                    <div class="feat-card p-7">
+                        <div class="f-icon w-10 h-10 rounded-lg bg-white/[0.04] border border-white/[0.07] flex items-center justify-center mb-5">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="1.8">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 14.5"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-[14px] font-semibold mb-2 text-white">شبیه‌سازی «چه می‌شد اگر»</h3>
+                        <p class="text-[#777] text-[12px] leading-relaxed">اگر حد سودها را 20% بیشتر می‌گذاشتم چه می‌شد؟ تأثیر هر تصمیم را روی کارنامه واقعی‌تان ببینید.</p>
+                    </div>
+                    <div class="feat-card p-7">
+                        <div class="f-icon w-10 h-10 rounded-lg bg-white/[0.04] border border-white/[0.07] flex items-center justify-center mb-5">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="1.8">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-[14px] font-semibold mb-2 text-white">تکنولوژی پیشرفته</h3>
+                        <p class="text-[#777] text-[12px] leading-relaxed">موتور تحلیلی قدرتمند با الگوریتم‌های AI، رابط کاربری مدرن و عملکرد سریع و نیتیو.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ══════════════ HOW IT WORKS ══════════════ -->
+        <section id="how-it-works" class="border-t border-white/[0.07] bg-[#050505]">
+            <div class="max-w-6xl mx-auto px-6 py-20">
+                <div class="text-[11px] font-bold tracking-[0.1em] uppercase text-violet-400 mb-3">فرآیند</div>
+                <h2 class="text-[30px] md:text-[36px] font-bold tracking-tight mb-12 text-white">تنها در ۳ مرحله ساده</h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Step 1 -->
+                    <div class="border border-white/[0.07] rounded-xl p-7 bg-black relative overflow-hidden">
+                        <div class="absolute top-0 left-0 right-0 h-[2px]"
+                             style="background: linear-gradient(90deg, #a78bfa, transparent);"></div>
+                        <div class="w-8 h-8 rounded-full border border-violet-400/30 bg-violet-400/10 flex items-center justify-center text-[13px] font-bold text-violet-400 mb-6">۱</div>
+                        <h3 class="text-[15px] font-semibold mb-3 text-white">ثبت معاملات</h3>
+                        <p class="text-[#777] text-[12px] leading-relaxed">تاریخچه معاملات خود را از MetaTrader 5 وارد کنید یا معاملات جدید را با جزئیات کامل ثبت نمایید.</p>
+                        <div class="mt-6 flex items-center gap-2 text-[11px] text-[#555]">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.3h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8a16 16 0 0 0 6 6l.94-.94a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 16z"/></svg>
+                            MT5 Import
+                            <span class="text-[#333]">·</span>
+                            ثبت دستی
+                        </div>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="border border-white/[0.07] rounded-xl p-7 bg-black relative overflow-hidden">
+                        <div class="absolute top-0 left-0 right-0 h-[2px]"
+                             style="background: linear-gradient(90deg, #818cf8, #a78bfa);"></div>
+                        <div class="w-8 h-8 rounded-full border border-violet-400/30 bg-violet-400/10 flex items-center justify-center text-[13px] font-bold text-violet-400 mb-6">۲</div>
+                        <h3 class="text-[15px] font-semibold mb-3 text-white">تحلیل با هوش مصنوعی</h3>
+                        <p class="text-[#777] text-[12px] leading-relaxed">دستیار هوشمند گریفین داده‌های شما را پردازش کرده، الگوها، همبستگی‌ها و نقاط بهبود را آشکار می‌سازد.</p>
+                        <div class="mt-6 flex items-center gap-2 text-[11px] text-[#555]">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                            Machine Learning
+                            <span class="text-[#333]">·</span>
+                            Pattern Recognition
+                        </div>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="border border-white/[0.07] rounded-xl p-7 bg-black relative overflow-hidden">
+                        <div class="absolute top-0 left-0 right-0 h-[2px]"
+                             style="background: linear-gradient(90deg, #60a5fa, #818cf8);"></div>
+                        <div class="w-8 h-8 rounded-full border border-violet-400/30 bg-violet-400/10 flex items-center justify-center text-[13px] font-bold text-violet-400 mb-6">۳</div>
+                        <h3 class="text-[15px] font-semibold mb-3 text-white">بهینه‌سازی استراتژی</h3>
+                        <p class="text-[#777] text-[12px] leading-relaxed">از گزارش‌های دقیق گریفین برای اصلاح استراتژی، کنترل احساسات و تصمیم‌گیری هوشمندانه‌تر استفاده کنید.</p>
+                        <div class="mt-6 flex items-center gap-2 text-[11px] text-[#555]">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                            Performance Reports
+                            <span class="text-[#333]">·</span>
+                            Insights
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ══════════════ AI DEEP DIVE ══════════════ -->
+        <section id="ai-analyst" class="border-t border-white/[0.07]">
+            <div class="max-w-6xl mx-auto px-6 py-20">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
+
+                    <!-- Text side -->
+                    <div>
+                        <div class="text-[11px] font-bold tracking-[0.1em] uppercase text-violet-400 mb-3">Griffin AI</div>
+                        <h2 class="text-[28px] md:text-[36px] font-bold tracking-tight mb-4 text-white">هوش مصنوعی، مربی شخصی شما</h2>
+                        <p class="text-[#999] text-[14px] leading-relaxed mb-8">
+                            دستیار هوشمند گریفین فقط داده‌ها را نمایش نمی‌دهد، آن‌ها را برای شما «ترجمه» می‌کند. با تحلیل چندبعدی، به سوالاتی پاسخ می‌دهد که شاید هرگز به فکرتان نرسیده باشد:
+                        </p>
+
+                        <div class="space-y-4">
+                            <div class="flex items-start gap-4 p-4 border border-white/[0.06] rounded-xl bg-white/[0.02] hover:border-violet-400/20 transition-colors">
+                                <div class="w-8 h-8 rounded-lg bg-violet-400/10 border border-violet-400/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                                </div>
+                                <div>
+                                    <div class="text-[13px] font-semibold text-white mb-1">کشف الگو</div>
+                                    <div class="text-[12px] text-[#777] leading-relaxed">کدام ترکیب از نماد، تایم‌فریم و احساسات، بیشترین سودآوری را برای شما داشته است؟</div>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start gap-4 p-4 border border-white/[0.06] rounded-xl bg-white/[0.02] hover:border-violet-400/20 transition-colors">
+                                <div class="w-8 h-8 rounded-lg bg-violet-400/10 border border-violet-400/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                                </div>
+                                <div>
+                                    <div class="text-[13px] font-semibold text-white mb-1">تحلیل روانشناسی</div>
+                                    <div class="text-[12px] text-[#777] leading-relaxed">هزینه مالی معاملات هیجانی شما چقدر است؟ پایبندی به قوانین چه تأثیری بر سودآوری دارد؟</div>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start gap-4 p-4 border border-white/[0.06] rounded-xl bg-white/[0.02] hover:border-violet-400/20 transition-colors">
+                                <div class="w-8 h-8 rounded-lg bg-violet-400/10 border border-violet-400/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                                </div>
+                                <div>
+                                    <div class="text-[13px] font-semibold text-white mb-1">تحلیل یادداشت‌ها</div>
+                                    <div class="text-[12px] text-[#777] leading-relaxed">چه کلماتی در یادداشت‌های معاملات برنده بیشتر تکرار می‌شوند؟ در معاملات بازنده چطور؟</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Image side -->
+                    <div class="border border-white/[0.07] rounded-xl overflow-hidden bg-[#050505]">
+                        <div class="flex items-center gap-2 px-4 py-3 border-b border-white/[0.05] bg-[#0a0a0a]">
+                            <div class="w-2.5 h-2.5 rounded-full bg-[#ff5f57]"></div>
+                            <div class="w-2.5 h-2.5 rounded-full bg-[#febc2e]"></div>
+                            <div class="w-2.5 h-2.5 rounded-full bg-[#28c840]"></div>
+                            <div class="mr-3 text-[10px] text-[#444] font-mono">AI Analyst Report</div>
+                        </div>
+                        <img src="./assests/aipreview.png" alt="AI Analysis" class="w-full block"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                        <div class="hidden p-6 space-y-4">
+                            <!-- fake AI output -->
+                            <div class="text-[11px] text-[#444] mb-2 uppercase tracking-wider">AI Insights</div>
+                            <div class="flex items-start gap-3 p-3 bg-violet-400/[0.04] border border-violet-400/[0.1] rounded-lg">
+                                <div class="w-1.5 h-1.5 rounded-full bg-violet-400 mt-1.5 flex-shrink-0"></div>
+                                <p class="text-[12px] text-[#bbb]">بهترین عملکرد شما در جفت <span class="text-violet-400 font-mono">XAUUSD</span> در سشن لندن با احساس «متمرکز» بوده است.</p>
+                            </div>
+                            <div class="flex items-start gap-3 p-3 bg-violet-400/[0.04] border border-violet-400/[0.1] rounded-lg">
+                                <div class="w-1.5 h-1.5 rounded-full bg-violet-400 mt-1.5 flex-shrink-0"></div>
+                                <p class="text-[12px] text-[#bbb]">معاملات هیجانی <span class="text-red-400 font-mono">-$342</span> ضرر اضافی در ماه گذشته داشته‌اند.</p>
+                            </div>
+                            <div class="flex items-start gap-3 p-3 bg-violet-400/[0.04] border border-violet-400/[0.1] rounded-lg">
+                                <div class="w-1.5 h-1.5 rounded-full bg-violet-400 mt-1.5 flex-shrink-0"></div>
+                                <p class="text-[12px] text-[#bbb]">کلمه «پلن» در <span class="text-green-400 font-mono">89%</span> یادداشت‌های معاملات برنده تکرار شده.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ══════════════ DOWNLOAD ══════════════ -->
+        <section id="download" class="border-t border-white/[0.07] bg-[#050505]">
+            <div class="max-w-6xl mx-auto px-6 py-20">
+                <div class="text-[11px] font-bold tracking-[0.1em] uppercase text-violet-400 mb-3">دانلود</div>
+                <h2 class="text-[30px] md:text-[36px] font-bold tracking-tight mb-3 text-white">نسخه مناسب خود را دانلود کنید</h2>
+                <p class="text-[#999] text-[15px] mb-12 max-w-md">کاملاً رایگان. سیستم‌عامل مورد نظر خود را انتخاب کنید.</p>
+
+                <div class="space-y-3 max-w-2xl">
+
+                    <!-- Windows -->
+                    <div class="dl-row flex items-center gap-4 p-5 bg-black">
+                        <div class="w-10 h-10 rounded-lg bg-white/[0.04] border border-white/[0.07] flex items-center justify-center flex-shrink-0">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="#a78bfa"><path d="M3 12V6.75l6-1.32v6.57H3zm17-9v8.75h-7V2.08L20 3zM3 13h6v6.43l-6-1.29V13zm17 .25V22l-7-1.23V13.25H20z"/></svg>
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-[14px] font-semibold text-white">ویندوز</div>
+                            <div class="text-[12px] text-[#555]">نسخه ۶۴ بیتی — Windows 10/11</div>
+                        </div>
+                        <a href="https://t.me/Griffin_License_bot" target="_blank"
+                           class="flex items-center gap-2 bg-white/[0.06] hover:bg-white/[0.1] border border-white/[0.08] hover:border-white/[0.16] text-white text-[12px] font-medium px-4 py-2 rounded-lg no-underline transition-all">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                            دانلود .exe
+                        </a>
+                    </div>
+
+                    <!-- Linux -->
+                    <div class="dl-row flex items-center gap-4 p-5 bg-black">
+                        <div class="w-10 h-10 rounded-lg bg-white/[0.04] border border-white/[0.07] flex items-center justify-center flex-shrink-0">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="#a78bfa"><path d="M12.504 0c-.155 0-.315.008-.480.021C7.32.154 4.6 2.656 3.17 6.04c-.9 2.112-1.15 4.37-.77 6.61.12.71.32 1.4.59 2.06-.78 1.28-1.21 2.74-1.21 4.29 0 4.41 3.59 8 8 8s8-3.59 8-8c0-1.55-.44-3.01-1.21-4.29.27-.66.47-1.35.59-2.06.38-2.24.13-4.5-.77-6.61C15.4 2.656 12.68.154 12.985.021A3.93 3.93 0 0 0 12.504 0zM12 4c.39 0 .77.04 1.13.11-1.27 1.8-2.06 4.06-2.13 6.5-.3-.28-.6-.57-.87-.88a12.5 12.5 0 0 1-.13-5.73C10.6 4.12 11.3 4 12 4zm0 14c-2.21 0-4-1.79-4-4 0-.55.11-1.07.31-1.55.51.93 1.08 1.82 1.69 2.55v3h4v-3c.61-.73 1.18-1.62 1.69-2.55.2.48.31 1 .31 1.55 0 2.21-1.79 4-4 4z"/></svg>
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-[14px] font-semibold text-white">لینوکس</div>
+                            <div class="text-[12px] text-[#555]">دبیان / اوبونتو / AppImage</div>
+                        </div>
+                        <div class="flex gap-2">
+                            <a href="https://t.me/Griffin_License_bot" target="_blank"
+                               class="flex items-center gap-1.5 bg-white/[0.06] hover:bg-white/[0.1] border border-white/[0.08] text-white text-[11px] font-medium px-3 py-2 rounded-lg no-underline transition-all">
+                                .deb
+                            </a>
+                            <a href="https://t.me/Griffin_License_bot" target="_blank"
+                               class="flex items-center gap-1.5 bg-white/[0.06] hover:bg-white/[0.1] border border-white/[0.08] text-white text-[11px] font-medium px-3 py-2 rounded-lg no-underline transition-all">
+                                .AppImage
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- macOS -->
+                    <div class="dl-row flex items-center gap-4 p-5 bg-black">
+                        <div class="w-10 h-10 rounded-lg bg-white/[0.04] border border-white/[0.07] flex items-center justify-center flex-shrink-0">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="#a78bfa"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-[14px] font-semibold text-white">macOS</div>
+                            <div class="text-[12px] text-[#555]">اپل سیلیکون و اینتل</div>
+                        </div>
+                        <a href="https://t.me/Griffin_License_bot" target="_blank"
+                           class="flex items-center gap-2 bg-white/[0.06] hover:bg-white/[0.1] border border-white/[0.08] hover:border-white/[0.16] text-white text-[12px] font-medium px-4 py-2 rounded-lg no-underline transition-all">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                            دانلود .dmg
+                        </a>
+                    </div>
+
+                    <!-- Web (coming soon) -->
+                    <div class="border border-white/[0.05] rounded-xl flex items-center gap-4 p-5 opacity-50">
+                        <div class="w-10 h-10 rounded-lg bg-white/[0.03] border border-white/[0.05] flex items-center justify-center flex-shrink-0">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-[14px] font-semibold text-[#555]">نسخه وب</div>
+                            <div class="text-[12px] text-[#444]">دسترسی از طریق مرورگر</div>
+                        </div>
+                        <span class="text-[11px] font-medium px-3 py-1 bg-yellow-400/10 border border-yellow-400/20 text-yellow-400 rounded-full">به زودی</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ══════════════ CTA ══════════════ -->
+        <section class="border-t border-white/[0.07]" style="background: radial-gradient(ellipse at 50% 0%, rgba(139,92,246,0.07) 0%, transparent 70%);">
+            <div class="max-w-6xl mx-auto px-6 py-24 text-center">
+                <div class="inline-flex items-center gap-2 border border-white/[0.08] rounded-full px-4 py-1.5 text-[12px] text-[#777] mb-8">
+                    <span class="w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse-dot"></span>
+                    رایگان — همیشه
+                </div>
+                <h2 class="text-[36px] md:text-[54px] font-extrabold tracking-tight mb-5">
+                    <span class="shimmer-text">آماده‌اید معاملات</span><br>
+                    <span class="ai-text">خود را متحول کنید؟</span>
+                </h2>
+                <p class="text-[#888] text-[16px] max-w-md mx-auto mb-10 leading-relaxed">
+                    کنترل کامل عملکرد معاملاتی خود را به دست بگیرید و با دیدی جدید به بازار نگاه کنید.
+                </p>
+                <div class="flex flex-wrap items-center justify-center gap-3">
+                    <a href="https://t.me/Griffin_License_bot" target="_blank"
+                       class="flex items-center gap-2 bg-white text-black text-[15px] font-bold px-8 py-3 rounded-lg no-underline hover:bg-white/90 transition-all shadow-[0_0_30px_rgba(255,255,255,0.1)]">
+                        گریفین را همین امروز رایگان دریافت کنید
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    </a>
+                    <a href="#features"
+                       class="flex items-center gap-2 border border-white/[0.1] text-[#aaa] text-[14px] px-6 py-3 rounded-lg no-underline hover:text-white hover:border-white/20 transition-all">
+                        بیشتر بدانید
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ══════════════ FOOTER ══════════════ -->
+    <footer class="border-t border-white/[0.07]">
+        <div class="max-w-6xl mx-auto px-6 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-2.5 text-[13px] text-[#444]">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="#444">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 1 0 7.5 7.5h-7.5V6Z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0 0 13.5 3v7.5Z"/>
+                </svg>
+                <span>Griffin AI Analyst</span>
+                <span class="text-[#222]">·</span>
+                <span>© 2025</span>
+            </div>
+            <p class="text-[#2a2a2a] text-[12px] text-center">طراحی شده برای ارائه ابزار تحلیلی قدرتمند به جامعه معامله‌گران</p>
+            <div class="flex items-center gap-5">
+                <a href="#features" class="text-[#444] hover:text-white text-[12px] no-underline transition-colors">ویژگی‌ها</a>
+                <a href="#ai-analyst" class="text-[#444] hover:text-white text-[12px] no-underline transition-colors">هوش مصنوعی</a>
+                <a href="#download" class="text-[#444] hover:text-white text-[12px] no-underline transition-colors">دانلود</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const io = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.style.opacity = '1';
+                    e.target.style.transform = 'translateY(0)';
+                    io.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.08 });
+
+        document.querySelectorAll('.feat-card, .dl-row').forEach((el, i) => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(12px)';
+            el.style.transition = `opacity 0.5s ${i * 0.06}s ease, transform 0.5s ${i * 0.06}s ease`;
+            io.observe(el);
+        });
+    </script>
+</body>
+</html>
