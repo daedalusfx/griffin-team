@@ -1,454 +1,137 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Griffin Tab Manager</title>
-    
-    <!-- Framer Motion (for animations) -->
-    <script src="https://unpkg.com/framer-motion@11.0.3/dist/framer-motion.js"></script>
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Vazirmatn Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700&display=swap" rel="stylesheet">
-    
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Vazirmatn', 'sans-serif']
-                    }
-                }
-            },
-            darkMode: 'class'
-        }
-    </script>
-
-    <style>
-        body {
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            transition: all 0.3s ease;
-        }
-        .language-selector {
-            background-color: #1f2937;
-            border: 1px solid #374151;
-            padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
-            font-size: 0.875rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .language-selector:hover {
-            background-color: #374151;
-            transform: translateY(-2px); /* Add subtle hover animation */
-        }
-        .language-dropdown {
-            background-color: #1f2937;
-            border: 1px solid #374151;
-            border-radius: 0.5rem;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
-            margin-top: 0.5rem;
-            min-width: 160px;
-            z-index: 50; /* Ensure dropdown is above other elements */
-        }
-        .language-option {
-            padding: 0.75rem 1rem;
-            text-align: right;
-            width: 100%;
-            text-align: start;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        .language-option:hover {
-            background-color: #374151;
-        }
-        .mock-tab {
-            transition: all 0.2s ease;
-        }
-        .mock-tab:hover {
-            background-color: #374151;
-        }
-        .active-tab {
-            background-color: #fbbf24;
-            color: #1f2937;
-        }
-        .feature-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease; /* Added transition for smoother hover */
-        }
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
-        }
-        .code-block {
-            direction: ltr;
-            text-align: left;
-            background-color: #111827;
-            border-radius: 0.5rem;
-            padding: 1.5rem;
-            overflow-x: auto;
-        }
-        .code-comment { color: #6b7280; }
-        .code-keyword { color: #3b82f6; }
-        .code-string { color: #10b981; }
-        .code-boolean { color: #ef4444; }
-        .rtl-content {
-            direction: rtl;
-            text-align: right;
-        }
-        .ltr-content {
-            direction: ltr;
-            text-align: left;
-        }
-
-        /* --- OS Detection Styles --- */
-        /* Default styles for download buttons (Windows) */
-        .download-btn {
-            transition: all 0.3s ease;
-            /* Maintain original Tailwind classes */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.75rem;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
-            font-weight: 600;
-            text-decoration: none;
-        }
-
-        /* Windows user - Highlight Windows button */
-        .os-windows .download-windows {
-            color: #1f2937; /* text-gray-900 */
-            background-color: #fbbf24; /* bg-yellow-400 */
-            box-shadow: 0 4px 6px rgba(251, 191, 36, 0.3); /* Subtle yellow shadow */
-        }
-        .os-windows .download-windows:hover {
-            background-color: #fcd34d; /* hover:bg-yellow-300 */
-            transform: translateY(-2px);
-            box-shadow: 0 6px 10px rgba(251, 191, 36, 0.4);
-        }
-        .os-windows .download-linux {
-            color: #d1d5db; /* text-gray-400 */
-            background-color: #374151; /* bg-gray-700 */
-        }
-        .os-windows .download-linux:hover {
-            background-color: #4b5563; /* hover:bg-gray-600 */
-        }
-
-        /* Linux user - Highlight Linux button */
-        .os-linux .download-linux {
-            color: white; /* text-white */
-            background-color: #4f46e5; /* bg-indigo-600 */
-            box-shadow: 0 4px 6px rgba(79, 70, 229, 0.3); /* Subtle indigo shadow */
-        }
-        .os-linux .download-linux:hover {
-            background-color: #4338ca; /* hover:bg-indigo-700 */
-            transform: translateY(-2px);
-            box-shadow: 0 6px 10px rgba(79, 70, 229, 0.4);
-        }
-        .os-linux .download-windows {
-            color: #d1d5db; /* text-gray-400 */
-            background-color: #374151; /* bg-gray-700 */
-        }
-        .os-linux .download-windows:hover {
-            background-color: #4b5563; /* hover:bg-gray-600 */
-        }
-
-        /* Mac user - Highlight Mac button (or treat similarly to Linux if no Mac-specific) */
-        .os-mac .download-windows {
-            color: #d1d5db; /* text-gray-400 */
-            background-color: #374151; /* bg-gray-700 */
-        }
-        .os-mac .download-windows:hover {
-            background-color: #4b5563; /* hover:bg-gray-600 */
-        }
-        .os-mac .download-linux {
-            color: white; /* text-white */
-            background-color: #4f46e5; /* bg-indigo-600 */
-            box-shadow: 0 4px 6px rgba(79, 70, 229, 0.3); /* Subtle indigo shadow */
-        }
-        .os-mac .download-linux:hover {
-            background-color: #4338ca; /* hover:bg-indigo-700 */
-            transform: translateY(-2px);
-            box-shadow: 0 6px 10px rgba(79, 70, 229, 0.4);
-        }
-
-        /* Other OS or undetected */
-        .os-other .download-windows {
-            color: #1f2937; /* text-gray-900 */
-            background-color: #fbbf24; /* bg-yellow-400 */
-        }
-        .os-other .download-windows:hover {
-            background-color: #fcd34d; /* hover:bg-yellow-300 */
-        }
-        .os-other .download-linux {
-            color: white; /* text-white */
-            background-color: #4f46e5; /* bg-indigo-600 */
-        }
-        .os-other .download-linux:hover {
-            background-color: #4338ca; /* hover:bg-indigo-700 */
-        }
-
-        /* Animation classes */
-        .animate-fade-in-up {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        .animate-fade-in-scale {
-            opacity: 0;
-            transform: scale(0.95);
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080d18">
+<meta name="description" content="Griffin Tab Manager — professional chart tab management without limits.">
+<title>Griffin Tab Manager</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+:root{--bg:#080d18;--panel:#101a2b;--panel2:#142238;--line:rgba(164,190,225,.13);--text:#f4f7fb;--muted:#9aabc2;--gold:#f7c65b;--gold2:#ffe29a;--blue:#6c8cff;--mint:#5ee0b5;--radius:22px;--shadow:0 24px 80px rgba(0,0,0,.34)}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:90px}body{margin:0;background:var(--bg);color:var(--text);font-family:Vazirmatn,system-ui,sans-serif;line-height:1.75;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-2;background:radial-gradient(ellipse at 12% 8%,rgba(72,104,190,.19),transparent 34%),radial-gradient(ellipse at 88% 20%,rgba(247,198,91,.11),transparent 28%),linear-gradient(180deg,#0a1120 0%,#080d18 58%,#0b1220 100%)}
+a{color:inherit;text-decoration:none}.container{width:min(1160px,calc(100% - 44px));margin:auto}
+header{position:sticky;top:0;z-index:30;background:rgba(8,13,24,.78);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
+.nav{height:78px;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{display:flex;align-items:center;gap:12px;font-size:1.2rem;font-weight:900;letter-spacing:-.4px}.brand-mark{width:42px;height:42px;display:grid;place-items:center;border-radius:14px;color:#101827;background:linear-gradient(145deg,#ffe6a2,#e7a92f);box-shadow:0 8px 28px #f7c65b35;font-size:1.15rem}
+.nav-actions{display:flex;align-items:center;gap:12px}.nav-link,.lang-btn,.theme-btn{border:1px solid var(--line);background:rgba(255,255,255,.035);color:var(--text);border-radius:12px;padding:10px 14px;font:inherit;font-size:.9rem;cursor:pointer;transition:.25s}.nav-link:hover,.lang-btn:hover,.theme-btn:hover{border-color:#f7c65b80;background:#ffffff0b;transform:translateY(-2px)}
+.lang-wrap{position:relative}.lang-menu{position:absolute;top:calc(100% + 10px);inset-inline-end:0;min-width:170px;padding:7px;background:#111d30;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}.lang-menu button{display:block;width:100%;text-align:start;padding:9px 12px;border:0;border-radius:9px;background:none;color:var(--text);font:inherit;cursor:pointer}.lang-menu button:hover{background:#ffffff10}.hidden{display:none!important}
+.hero{position:relative;padding:92px 0 78px;text-align:center}.eyebrow{display:inline-flex;align-items:center;gap:9px;padding:7px 13px;border:1px solid #f7c65b3d;border-radius:99px;color:var(--gold2);background:#f7c65b0c;font-size:.82rem;font-weight:700}.pulse{width:7px;height:7px;border-radius:50%;background:var(--mint);box-shadow:0 0 0 5px #5ee0b51c}
+h1{max-width:900px;margin:24px auto 18px;font-size:clamp(2.5rem,6vw,5rem);line-height:1.16;letter-spacing:-2px;font-weight:900}.gradient{background:linear-gradient(100deg,#fff1c9 5%,#f7c65b 46%,#8ca6ff 95%);-webkit-background-clip:text;background-clip:text;color:transparent}.hero-copy{max-width:690px;margin:0 auto;color:var(--muted);font-size:clamp(1rem,2vw,1.18rem)}
+.ctas{display:flex;justify-content:center;gap:13px;flex-wrap:wrap;margin:32px 0 16px}.btn{display:inline-flex;align-items:center;justify-content:center;gap:11px;padding:13px 21px;border-radius:14px;font-weight:800;transition:transform .25s,box-shadow .25s,background .25s}.btn:hover{transform:translateY(-3px)}.btn-primary{background:linear-gradient(135deg,#ffe29a,#efb83f);color:#151b27;box-shadow:0 12px 32px #e9b74625}.btn-primary:hover{box-shadow:0 16px 38px #e9b74645}.btn-secondary{border:1px solid var(--line);background:#ffffff08;color:var(--text)}.btn-secondary:hover{background:#ffffff12}
+.microcopy{font-size:.82rem;color:#74869f}.product-window{max-width:970px;margin:62px auto 0;padding:12px;border:1px solid #9eb8df30;border-radius:25px;background:linear-gradient(145deg,#18263c,#0e1728);box-shadow:0 35px 100px #0008,0 0 0 1px #ffffff08;transform:perspective(1200px) rotateX(2deg);transition:transform .5s}.product-window:hover{transform:perspective(1200px) rotateX(0) translateY(-5px)}.window-inner{overflow:hidden;border-radius:16px;background:#0c1422;border:1px solid #ffffff10}.window-bar{height:51px;display:flex;align-items:center;gap:8px;padding:0 16px;background:#111d30;border-bottom:1px solid var(--line)}.dot{width:9px;height:9px;border-radius:50%}.window-title{margin-inline-start:auto;color:#8294ad;font-size:.75rem}.mock-tabs{display:flex;gap:6px;padding:10px 12px;background:#0f1a2b;border-bottom:1px solid var(--line);overflow:auto}.mock-tab{white-space:nowrap;border:1px solid transparent;border-radius:9px;padding:7px 13px;background:#ffffff06;color:#91a1b8;font:inherit;font-size:.78rem;cursor:pointer}.mock-tab.active{color:#ffe3a1;background:#f7c65b16;border-color:#f7c65b40}.chart-area{position:relative;min-height:285px;padding:20px;background:linear-gradient(#0d1727,#0a1321)}.chart-head{display:flex;justify-content:space-between;align-items:center;gap:10px;color:#a9b9cf;font-size:.78rem}.chart-price{color:var(--mint);font-weight:700}.chart-grid{position:absolute;inset:62px 20px 24px;background-image:linear-gradient(#8ca6ff12 1px,transparent 1px),linear-gradient(90deg,#8ca6ff12 1px,transparent 1px);background-size:58px 48px;border-radius:8px}.chart-svg{position:absolute;inset:65px 22px 25px;width:calc(100% - 44px);height:calc(100% - 90px);overflow:visible}.chart-svg path{fill:none;stroke:#69d9b3;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 7px #5ee0b566)}.chart-svg .area{fill:url(#areaFill);stroke:none}.chart-label{position:absolute;bottom:12px;inset-inline-end:20px;color:#6f829d;font-size:.7rem}
+.section{padding:88px 0}.section.alt{background:linear-gradient(180deg,#0d1727aa,#111d2d88);border-block:1px solid var(--line)}.section-heading{text-align:center;max-width:700px;margin:0 auto 42px}.kicker{color:var(--gold);font-size:.82rem;font-weight:800;letter-spacing:.5px}.section-heading h2{font-size:clamp(1.9rem,4vw,2.8rem);line-height:1.25;margin:10px 0}.section-heading p{color:var(--muted);margin:0}
+.features{display:grid;grid-template-columns:repeat(3,1fr);gap:17px}.feature{position:relative;overflow:hidden;padding:25px;border:1px solid var(--line);border-radius:19px;background:linear-gradient(145deg,#16243aab,#101a2aeb);transition:.3s}.feature:after{content:"";position:absolute;width:130px;height:130px;inset-inline-end:-75px;bottom:-85px;border-radius:50%;background:#f7c65b13;filter:blur(3px);transition:.3s}.feature:hover{transform:translateY(-7px);border-color:#f7c65b55;box-shadow:0 20px 50px #0003}.feature:hover:after{transform:scale(1.6)}.feature-icon{width:49px;height:49px;display:grid;place-items:center;border-radius:15px;color:var(--gold2);background:linear-gradient(145deg,#f7c65b24,#6c8cff18);border:1px solid #f7c65b25;font-size:1.15rem}.feature h3{margin:17px 0 7px;font-size:1.08rem}.feature p{margin:0;color:var(--muted);font-size:.91rem}
+.stealth{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:50px}.stealth h2{font-size:clamp(1.8rem,4vw,2.7rem);line-height:1.3;margin:12px 0}.stealth p{color:var(--muted)}.code-card{overflow:hidden;border:1px solid var(--line);border-radius:18px;background:#080f1c;box-shadow:var(--shadow)}.code-top{display:flex;align-items:center;gap:7px;padding:13px 16px;border-bottom:1px solid var(--line);color:#8da0ba;font-size:.75rem}.code-card pre{margin:0;padding:24px;overflow:auto;color:#c4d2e5;font: .82rem/1.9 ui-monospace,SFMono-Regular,Consolas,monospace;direction:ltr;text-align:left}.code-muted{color:#667b99}.code-blue{color:#8ca6ff}.code-green{color:#7ee0b8}.license-panel{padding:55px 25px;text-align:center;border:1px solid #f7c65b2b;border-radius:25px;background:radial-gradient(ellipse at 50% 0%,#f7c65b14,transparent 60%),#111d2c}.license-panel h2{font-size:clamp(1.8rem,4vw,2.6rem);margin:0 0 12px}.license-panel p{max-width:700px;margin:0 auto;color:var(--muted)}.license-panel a.inline{color:var(--gold2);text-decoration:underline;text-underline-offset:4px}
+footer{padding:30px 0;color:#788ba5;text-align:center;font-size:.85rem}footer p{margin:4px}
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}.reveal.visible{opacity:1;transform:none}
+@media(max-width:800px){.features{grid-template-columns:repeat(2,1fr)}.stealth{grid-template-columns:1fr;gap:25px}.hero{padding-top:68px}.product-window{margin-top:45px}.section{padding:68px 0}}
+@media(max-width:560px){.container{width:min(100% - 28px,1160px)}.nav{height:68px}.brand{font-size:1rem}.brand-mark{width:37px;height:37px}.nav-link span{display:none}.nav-link{padding:10px 12px}.lang-btn{padding:9px 10px}.hero{padding:55px 0 55px}h1{letter-spacing:-1px}.features{grid-template-columns:1fr}.product-window{padding:7px;border-radius:18px}.window-bar{height:42px}.chart-area{min-height:225px;padding:14px}.ctas{flex-direction:column;align-items:stretch;margin-inline:12px}.btn{width:100%}.section{padding:58px 0}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}.reveal{opacity:1;transform:none}}
+</style>
 </head>
-<body class="bg-gray-950 text-gray-100 font-sans leading-7">
-    <script>
-        // Initialize Framer Motion scope (optional, for complex interactions)
-        const scope = { current: null };
-    </script>
-
-    <!-- ==== Header ==== -->
-    <header class="container mx-auto px-6 py-6">
-        <nav class="flex justify-between items-center">
-            <div class="text-2xl font-bold text-yellow-400">
-                Griffin Manager
-            </div>
-            
-            <div class="flex items-center gap-4">
-                <!-- Language Selector -->
-                <div class="relative" id="languageSelectorContainer">
-                    <button id="languageButton" class="language-selector">
-                        <span id="currentLanguageName">English</span>
-                        <i class="fas fa-chevron-down text-xs"></i>
-                    </button>
-                    <div id="languageDropdown" class="language-dropdown absolute hidden">
-                        <button class="language-option" data-lang="en">English</button>
-                        <button class="language-option" data-lang="fa">فارسی</button>
-                        <button class="language-option" data-lang="ckb">کوردی</button>
-                        <button class="language-option" data-lang="ar">العربية</button>
-                        <button class="language-option" data-lang="az">Azərbaycanca</button>
-                        <button class="language-option" data-lang="tr">Türkçe</button>
-                    </div>
-                </div>
-
-                <a href="https://github.com/daedalusfx/griffin-tab-manager" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-800 transition-colors">
-                    <i class="fa-brands fa-github fa-lg"></i>
-                    <span id="githubText">View on GitHub</span>
-                </a>
-            </div>
-        </nav>
-    </header>
-
-    <!-- ==== Hero Section ==== -->
-    <main class="container mx-auto px-6 pt-24 pb-16 text-center">
-        <h1 class="text-4xl md:text-6xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-500 mb-6 animate-fade-in-up" id="heroTitle" style="opacity: 0;">
-            Professional Chart Management.<br>Without Limits.
-        </h1>
-        <p class="mt-6 text-lg md:text-xl max-w-2xl mx-auto text-gray-300 mb-10 animate-fade-in-up" id="heroDescription" style="opacity: 0; transition-delay: 0.1s;">
-            Griffin is a free and open-source (GPLv3) Electron-based tool that allows you to permanently manage chart tabs (like TradingView).
-        </p>
-        
-        <!-- Download Buttons -->
-        <div class="mt-4 flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="https://github.com/daedalusfx/griffin-tab-manager/releases" target="_blank" class="download-btn download-windows px-6 py-3 rounded-lg font-semibold text-gray-900 bg-yellow-400 shadow-lg mb-4 sm:mb-0" id="downloadWindows">
-                <i class="fa-brands fa-windows fa-lg"></i>
-                <span id="downloadWindowsText">Download for Windows</span>
-            </a>
-            <a href="https://github.com/daedalusfx/griffin-tab-manager/releases" target="_blank" class="download-btn download-linux px-6 py-3 rounded-lg font-semibold text-white bg-gray-800" id="downloadLinux">
-                <i class="fa-brands fa-linux fa-lg"></i>
-                <span id="downloadLinuxText">Download for Linux</span>
-            </a>
+<body>
+<header>
+  <div class="container nav">
+    <a class="brand" href="#"><span class="brand-mark"><i class="fa-solid fa-feather-pointed"></i></span><span>GRIFFIN <span style="color:var(--gold)">MANAGER</span></span></a>
+    <div class="nav-actions">
+      <div class="lang-wrap" id="languageSelectorContainer">
+        <button class="lang-btn" id="languageButton" aria-expanded="false"><i class="fa-solid fa-globe"></i> <span id="currentLanguageName">English</span> <i class="fa-solid fa-chevron-down" style="font-size:.65rem"></i></button>
+        <div class="lang-menu hidden" id="languageDropdown">
+          <button data-lang="en">English</button><button data-lang="fa">فارسی</button><button data-lang="ckb">کوردی</button><button data-lang="ar">العربية</button><button data-lang="az">Azərbaycanca</button><button data-lang="tr">Türkçe</button>
         </div>
-
-        <!-- Mock UI -->
-        <div class="mt-20 max-w-4xl mx-auto animate-fade-in-scale" style="opacity: 0; transition-delay: 0.2s;">
-            <div class="w-full h-auto rounded-xl shadow-2xl bg-gray-900 border border-gray-700">
-                <div class="h-12 flex items-center px-4 border-b border-gray-700">
-                    <div class="flex gap-2">
-                        <div class="w-3 h-3 rounded-full bg-red-500"></div>
-                        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
-                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
-                    </div>
-                    <div class="flex-1 flex items-end h-full px-4 gap-1">
-                        <div class="mock-tab px-4 py-2 h-full flex items-center text-sm font-medium active-tab rounded-t-lg">
-                            <i class="fa-solid fa-chart-line ml-2"></i>
-                            <span id="chartEur">EUR/USD Chart</span>
-                        </div>
-                        <div class="mock-tab px-4 py-2 h-[85%] flex items-center text-sm text-gray-400 hover:bg-gray-800 rounded-t-lg">
-                            <i class="fa-solid fa-chart-line ml-2"></i>
-                            <span id="chartBtc">BTC/USDT Chart</span>
-                        </div>
-                        <div class="mock-tab px-4 py-2 h-[85%] flex items-center text-sm text-gray-400 hover:bg-gray-800 rounded-t-lg">
-                            <i class="fa-solid fa-plus"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="h-64 md:h-96 flex items-center justify-center">
-                    <p class="text-gray-500" id="chartPlaceholder">
-                        [Your chart content loads here]
-                    </p>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <!-- ==== Features Section ==== -->
-    <section class="py-20 bg-gray-900">
-        <div class="container mx-auto px-6">
-            <h2 class="text-3xl font-bold text-center mb-12 animate-fade-in-up" id="featuresTitle" style="opacity: 0;">
-                Key Features
-            </h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Feature 1 -->
-                <div class="feature-card bg-gray-800 p-6 rounded-lg shadow-lg animate-fade-in-up" style="opacity: 0; transition-delay: 0.1s;">
-                    <div class="w-12 h-12 flex items-center justify-center rounded-full bg-yellow-400 text-gray-900 mb-4">
-                        <i class="fa-solid fa-layer-group fa-xl"></i>
-                    </div>
-                    <h3 class="text-xl font-semibold mb-2" id="feature1Title">
-                        Persistent Tab Management
-                    </h3>
-                    <p class="text-gray-300" id="feature1Desc">
-                        Tabs and their order are saved in memory and fully restored when reopening the application.
-                    </p>
-                </div>
-                <!-- Feature 2 -->
-                <div class="feature-card bg-gray-800 p-6 rounded-lg shadow-lg animate-fade-in-up" style="opacity: 0; transition-delay: 0.2s;">
-                    <div class="w-12 h-12 flex items-center justify-center rounded-full bg-yellow-400 text-gray-900 mb-4">
-                        <i class="fa-solid fa-list-check fa-xl"></i>
-                    </div>
-                    <h3 class="text-xl font-semibold mb-2" id="feature2Title">
-                        Saved Charts List
-                    </h3>
-                    <p class="text-gray-300" id="feature2Desc">
-                        Save, edit, and manage your favorite charts (with title and URL) in the sidebar.
-                    </p>
-                </div>
-                <!-- Feature 3 -->
-                <div class="feature-card bg-gray-800 p-6 rounded-lg shadow-lg animate-fade-in-up" style="opacity: 0; transition-delay: 0.3s;">
-                    <div class="w-12 h-12 flex items-center justify-center rounded-full bg-yellow-400 text-gray-900 mb-4">
-                        <i class="fa-solid fa-trash-can-arrow-up fa-xl"></i>
-                    </div>
-                    <h3 class="text-xl font-semibold mb-2" id="feature3Title">
-                        Trash and Recovery
-                    </h3>
-                    <p class="text-gray-300" id="feature3Desc">
-                        Closed tabs are moved to the trash and can be restored at any time.
-                    </p>
-                </div>
-
-
-
-
-    <div class="feature-card bg-gray-800 p-6 rounded-lg shadow-lg animate-fade-in-up" style="opacity: 0; transition-delay: 0.4s;">
-        <div class="w-12 h-12 flex items-center justify-center rounded-full bg-yellow-400 text-gray-900 mb-4">
-            <i class="fa-solid fa-microchip fa-xl"></i>
-        </div>
-        <h3 class="text-xl font-semibold mb-2" id="feature4Title">
-            Smart Memory Saver
-        </h3>
-        <p class="text-gray-300" id="feature4Desc">
-            Auto-hibernation releases RAM from inactive tabs, keeping your PC fast even with 50+ charts.
-        </p>
+      </div>
+      <a class="nav-link" href="https://github.com/daedalusfx/griffin-tab-manager" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-github"></i> <span id="githubText">View on GitHub</span></a>
     </div>
-
-    <div class="feature-card bg-gray-800 p-6 rounded-lg shadow-lg animate-fade-in-up" style="opacity: 0; transition-delay: 0.5s;">
-        <div class="w-12 h-12 flex items-center justify-center rounded-full bg-yellow-400 text-gray-900 mb-4">
-            <i class="fa-solid fa-table-columns fa-xl"></i>
-        </div>
-        <h3 class="text-xl font-semibold mb-2" id="feature5Title">
-            Multi-View Dashboard
-        </h3>
-        <p class="text-gray-300" id="feature5Desc">
-            Monitor multiple markets simultaneously in a single tab with a customizable grid layout.
-        </p>
+  </div>
+</header>
+<main>
+<section class="container hero">
+  <span class="eyebrow"><span class="pulse"></span> OPEN SOURCE · GPLv3</span>
+  <h1 id="heroTitle"><span class="gradient">Professional Chart Management.</span><br>Without Limits.</h1>
+  <p class="hero-copy" id="heroDescription">Griffin is a free and open-source (GPLv3) Electron-based tool that allows you to permanently manage chart tabs (like TradingView).</p>
+  <div class="ctas">
+    <a class="btn btn-primary" href="https://github.com/daedalusfx/griffin-tab-manager/releases" target="_blank" id="downloadWindows"><i class="fa-brands fa-windows"></i><span id="downloadWindowsText">Download for Windows</span><i class="fa-solid fa-arrow-up-right-from-square" style="font-size:.75rem"></i></a>
+    <a class="btn btn-secondary" href="https://github.com/daedalusfx/griffin-tab-manager/releases" target="_blank" id="downloadLinux"><i class="fa-brands fa-linux"></i><span id="downloadLinuxText">Download for Linux</span><i class="fa-solid fa-arrow-up-right-from-square" style="font-size:.75rem"></i></a>
+  </div>
+  <div class="microcopy">Free forever <span style="color:var(--gold)">✦</span> No subscriptions <span style="color:var(--gold)">✦</span> Community-driven</div>
+  <div class="product-window reveal">
+    <div class="window-inner">
+      <div class="window-bar"><span class="dot" style="background:#ff6b6b"></span><span class="dot" style="background:#f7c65b"></span><span class="dot" style="background:#5ee0b5"></span><span class="window-title">Griffin Workspace</span></div>
+      <div class="mock-tabs">
+        <button class="mock-tab active" data-chart="eur"><i class="fa-solid fa-chart-line"></i> <span id="chartEur">EUR/USD Chart</span></button>
+        <button class="mock-tab" data-chart="btc"><i class="fa-brands fa-bitcoin"></i> <span id="chartBtc">BTC/USDT Chart</span></button>
+        <button class="mock-tab" data-chart="add"><i class="fa-solid fa-plus"></i></button>
+      </div>
+      <div class="chart-area">
+        <div class="chart-head"><span id="chartName">EUR/USD · 1H</span><span class="chart-price" id="chartPrice">1.0842&nbsp; +1.28%</span></div>
+        <div class="chart-grid"></div>
+        <svg class="chart-svg" viewBox="0 0 900 230" preserveAspectRatio="none" aria-label="Decorative market chart">
+          <defs><linearGradient id="areaFill" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#5ee0b5" stop-opacity=".22"/><stop offset="1" stop-color="#5ee0b5" stop-opacity="0"/></linearGradient></defs>
+          <path class="area" d="M0 170 L55 150 100 162 145 120 190 139 235 98 280 116 325 82 370 102 415 70 460 88 505 48 550 75 595 55 640 82 685 38 730 60 775 25 820 42 900 12 L900 230 L0 230 Z"/>
+          <path d="M0 170 L55 150 100 162 145 120 190 139 235 98 280 116 325 82 370 102 415 70 460 88 505 48 550 75 595 55 640 82 685 38 730 60 775 25 820 42 900 12"/>
+        </svg>
+        <span class="chart-label" id="chartPlaceholder">Live workspace preview</span>
+      </div>
     </div>
+  </div>
+</section>
 
-    <div class="feature-card bg-gray-800 p-6 rounded-lg shadow-lg animate-fade-in-up" style="opacity: 0; transition-delay: 0.6s;">
-        <div class="w-12 h-12 flex items-center justify-center rounded-full bg-yellow-400 text-gray-900 mb-4">
-            <i class="fa-solid fa-palette fa-xl"></i>
-        </div>
-        <h3 class="text-xl font-semibold mb-2" id="feature6Title">
-            Advanced Organization
-        </h3>
-        <p class="text-gray-300" id="feature6Desc">
-            Group tabs by color, bulk import URLs, and manage your workspace via the settings tab.
-        </p>
+<section class="section alt" id="features">
+  <div class="container">
+    <div class="section-heading reveal"><span class="kicker">BUILT FOR YOUR WORKFLOW</span><h2 id="featuresTitle">Key Features</h2><p>Everything you need to keep your charts organized, accessible, and running smoothly.</p></div>
+    <div class="features">
+      <article class="feature reveal"><div class="feature-icon"><i class="fa-solid fa-layer-group"></i></div><h3 id="feature1Title">Persistent Tab Management</h3><p id="feature1Desc">Tabs and their order are saved in memory and fully restored when reopening the application.</p></article>
+      <article class="feature reveal"><div class="feature-icon"><i class="fa-solid fa-list-check"></i></div><h3 id="feature2Title">Saved Charts List</h3><p id="feature2Desc">Save, edit, and manage your favorite charts (with title and URL) in the sidebar.</p></article>
+      <article class="feature reveal"><div class="feature-icon"><i class="fa-solid fa-trash-can-arrow-up"></i></div><h3 id="feature3Title">Trash and Recovery</h3><p id="feature3Desc">Closed tabs are moved to the trash and can be restored at any time.</p></article>
+      <article class="feature reveal"><div class="feature-icon"><i class="fa-solid fa-microchip"></i></div><h3 id="feature4Title">Smart Memory Saver</h3><p id="feature4Desc">Auto-hibernation releases RAM from inactive tabs, keeping your PC fast even with 50+ charts.</p></article>
+      <article class="feature reveal"><div class="feature-icon"><i class="fa-solid fa-table-columns"></i></div><h3 id="feature5Title">Multi-View Dashboard</h3><p id="feature5Desc">Monitor multiple markets simultaneously in a single tab with a customizable grid layout.</p></article>
+      <article class="feature reveal"><div class="feature-icon"><i class="fa-solid fa-swatchbook"></i></div><h3 id="feature6Title">Advanced Organization</h3><p id="feature6Desc">Group tabs by color, bulk import URLs, and manage your workspace via the settings tab.</p></article>
     </div>
-            </div>
-        </div>
-    </section>
+  </div>
+</section>
 
-    <!-- ==== Stealth Mode Section ==== -->
-    <section class="py-24">
-        <div class="container mx-auto px-6">
-            <div class="text-center max-w-3xl mx-auto">
-                <span class="text-sm font-semibold text-yellow-400 uppercase animate-fade-in-up" id="stealthTag" style="opacity: 0;">
-                    Exclusive Feature
-                </span>
-                <h2 class="text-3xl md:text-4xl font-bold text-white mt-2 animate-fade-in-up" id="stealthTitle" style="opacity: 0; transition-delay: 0.1s;">
-                    Introducing Stealth Mode: Bypass Restrictions
-                </h2>
-                <p class="text-lg text-gray-300 mt-4 animate-fade-in-up" id="stealthDesc" style="opacity: 0; transition-delay: 0.2s;">
-                    Many websites (like TradingView) block Electron-based tools. Griffin is designed to appear like a standard Chrome browser.
-                </p>
-            </div>
-            <div class="mt-12 bg-gray-900 rounded-lg p-6 border border-gray-700 max-w-2xl mx-auto shadow-xl animate-fade-in-scale" style="opacity: 0; transition-delay: 0.3s;">
-                <pre class="code-block">
-<span class="code-comment">// lib/preload/preload.ts (Stealth Patch)</span>
-
-<span class="code-keyword">if</span> (navigator.webdriver) {
-  Object.defineProperty(navigator, <span class="code-string">'webdriver'</span>, {
-    <span class="code-keyword">get</span>: () => <span class="code-boolean">false</span>,
+<section class="section">
+  <div class="container stealth">
+    <div class="reveal">
+      <span class="kicker" id="stealthTag">EXCLUSIVE FEATURE</span>
+      <h2 id="stealthTitle">Introducing Stealth Mode: Bypass Restrictions</h2>
+      <p id="stealthDesc">Many websites (like TradingView) block Electron-based tools. Griffin is designed to appear like a standard Chrome browser.</p>
+      <a class="btn btn-secondary" href="https://github.com/daedalusfx/griffin-tab-manager" target="_blank"><i class="fa-brands fa-github"></i> Explore the source code</a>
+    </div>
+    <div class="code-card reveal">
+      <div class="code-top"><span class="dot" style="background:#ff6b6b"></span><span class="dot" style="background:#f7c65b"></span><span class="dot" style="background:#5ee0b5"></span><span style="margin-inline-start:8px">stealth-patch.ts</span></div>
+      <pre><span class="code-muted">// Browser identity patch</span>
+<span class="code-blue">if</span> (navigator.webdriver) {
+  Object.defineProperty(navigator, <span class="code-green">'webdriver'</span>, {
+    <span class="code-blue">get</span>: () =&gt; <span class="code-blue">false</span>,
   });
-  <span class="code-comment">// Stealth: navigator.webdriver patched.</span>
 }
 
-<span class="code-comment">// lib/main/app.ts (User-Agent Spoofing)</span>
-<span class="code-comment">// ... Electron's User-Agent is replaced with Chrome's ...</span>
-details.requestHeaders[<span class="code-string">'User-Agent'</span>] = selectedIdentity.ua;
-</pre>
-            </div>
-        </div>
-    </section>
+<span class="code-muted">// User-Agent configuration</span>
+details.requestHeaders[<span class="code-green">'User-Agent'</span>] =
+  selectedIdentity.ua;</pre>
+    </div>
+  </div>
+</section>
 
-    <!-- ==== License & CTA Section ==== -->
-    <section class="py-20 bg-gray-900">
-        <div class="container mx-auto px-6 text-center">
-            <h2 class="text-3xl font-bold text-white animate-fade-in-up" id="licenseTitle" style="opacity: 0;">
-                Free, Open Source, and Ready for You.
-            </h2>
-            <p class="text-lg text-gray-300 mt-4 max-w-xl mx-auto animate-fade-in-up" id="licenseDesc" style="opacity: 0; transition-delay: 0.1s;">
-                This project is released under the powerful <a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank" class="text-yellow-400 font-medium underline hover:text-yellow-300">GPLv3</a> license. This means it will always remain free, and you are free to contribute, modify, and distribute it.
-            </p>
-            <a href="https://github.com/daedalusfx/griffin-tab-manager/releases" target="_blank" class="mt-8 inline-block px-8 py-4 rounded-lg text-lg font-semibold text-gray-900 bg-yellow-400 hover:bg-yellow-300 transition-colors shadow-lg animate-fade-in-scale" id="viewReleases" style="opacity: 0; transition-delay: 0.2s;">
-                <i class="fa-solid fa-download mr-2"></i>
-                <span id="viewReleasesText">View All Releases</span>
-            </a>
-        </div>
-    </section>
-
-    <!-- ==== Footer ==== -->
-    <footer class="container mx-auto px-6 py-8 text-center text-gray-500">
-        <p id="footerText1" class="animate-fade-in-up" style="opacity: 0; transition-delay: 0.3s;">
-            Made with ❤️ and love for the open-source world.
-        </p>
-        <p class="mt-2 text-sm" id="footerText2" class="animate-fade-in-up" style="opacity: 0; transition-delay: 0.4s;">
-            License: GNU General Public License v3.0
-        </p>
-    </footer>
-
-    <script>
-        // Translation data (same as before)
-
-        const translations = {
+<section class="section alt">
+  <div class="container">
+    <div class="license-panel reveal">
+      <span class="kicker">MADE FOR THE COMMUNITY</span>
+      <h2 id="licenseTitle">Free, Open Source, and Ready for You.</h2>
+      <p id="licenseDesc">This project is released under the powerful <a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank" class="inline">GPLv3</a> license. This means it will always remain free, and you are free to contribute, modify, and distribute it.</p>
+      <a class="btn btn-primary" style="margin-top:27px" href="https://github.com/daedalusfx/griffin-tab-manager/releases" target="_blank" id="viewReleases"><i class="fa-solid fa-download"></i><span id="viewReleasesText">View All Releases</span></a>
+    </div>
+  </div>
+</section>
+</main>
+<footer><div class="container"><p id="footerText1">Made with ❤️ and love for the open-source world.</p><p id="footerText2">License: GNU General Public License v3.0</p></div></footer>
+<script>
+const translations = {
     en: {
         currentLanguageName: "English",
         githubText: "View on GitHub",
@@ -642,170 +325,40 @@ details.requestHeaders[<span class="code-string">'User-Agent'</span>] = selected
         footerText2: "الترخيص: رخصة جنو العمومية العامة الإصدار 3.0"
     }
 };
+const textIds = [
+'currentLanguageName','githubText','heroTitle','heroDescription','downloadWindowsText','downloadLinuxText',
+'chartEur','chartBtc','chartPlaceholder','featuresTitle','feature1Title','feature1Desc','feature2Title','feature2Desc',
+'feature3Title','feature3Desc','feature4Title','feature4Desc','feature5Title','feature5Desc','feature6Title','feature6Desc',
+'stealthTag','stealthTitle','stealthDesc','licenseTitle','licenseDesc','viewReleasesText','footerText1','footerText2'
+];
+let currentLang='en';
+const rtlLangs=['fa','ar','ckb'];
+function detectBrowserLanguage(){const l=(navigator.language||'en').split('-')[0];return translations[l]?l:'en'}
+function updateLanguage(lang){
+  if(!translations[lang]) return;
+  currentLang=lang; localStorage.setItem('griffinLang',lang);
+  document.documentElement.lang=lang;
+  document.documentElement.dir=rtlLangs.includes(lang)?'rtl':'ltr';
+  textIds.forEach(id=>{const el=document.getElementById(id);if(el&&translations[lang][id]!==undefined)el.innerHTML=translations[lang][id]});
+  document.getElementById('languageDropdown').classList.add('hidden');
+  document.getElementById('languageButton').setAttribute('aria-expanded','false');
+}
+const langButton=document.getElementById('languageButton');
+const langDropdown=document.getElementById('languageDropdown');
+langButton.addEventListener('click',e=>{e.stopPropagation();langDropdown.classList.toggle('hidden');langButton.setAttribute('aria-expanded',String(!langDropdown.classList.contains('hidden')))});
+document.querySelectorAll('[data-lang]').forEach(b=>b.addEventListener('click',()=>updateLanguage(b.dataset.lang)));
+document.addEventListener('click',e=>{if(!e.target.closest('#languageSelectorContainer')){langDropdown.classList.add('hidden');langButton.setAttribute('aria-expanded','false')}});
+updateLanguage(localStorage.getItem('griffinLang')||detectBrowserLanguage());
 
-        // DOM elements for translations
-        const elements = {
-            currentLanguageName: document.getElementById('currentLanguageName'),
-            githubText: document.getElementById('githubText'),
-            heroTitle: document.getElementById('heroTitle'),
-            heroDescription: document.getElementById('heroDescription'),
-            downloadWindowsText: document.getElementById('downloadWindowsText'),
-            downloadLinuxText: document.getElementById('downloadLinuxText'),
-            chartEur: document.getElementById('chartEur'),
-            chartBtc: document.getElementById('chartBtc'),
-            chartPlaceholder: document.getElementById('chartPlaceholder'),
-            featuresTitle: document.getElementById('featuresTitle'),
-            feature1Title: document.getElementById('feature1Title'),
-            feature1Desc: document.getElementById('feature1Desc'),
-            feature2Title: document.getElementById('feature2Title'),
-            feature2Desc: document.getElementById('feature2Desc'),
-            feature3Title: document.getElementById('feature3Title'),
-            feature3Desc: document.getElementById('feature3Desc'),
-            stealthTag: document.getElementById('stealthTag'),
-            stealthTitle: document.getElementById('stealthTitle'),
-            stealthDesc: document.getElementById('stealthDesc'),
-            licenseTitle: document.getElementById('licenseTitle'),
-            licenseDesc: document.getElementById('licenseDesc'),
-            viewReleasesText: document.getElementById('viewReleasesText'),
-            footerText1: document.getElementById('footerText1'),
-            footerText2: document.getElementById('footerText2'),
-            feature4Title: document.getElementById('feature4Title'),
-            feature4Desc: document.getElementById('feature4Desc'),
-            feature5Title: document.getElementById('feature5Title'),
-            feature5Desc: document.getElementById('feature5Desc'),
-            feature6Title: document.getElementById('feature6Title'),
-            feature6Desc: document.getElementById('feature6Desc'),
-            // -------------------------
-        };
-
-        let currentLang = 'en';
-
-        // Detect browser language and set default
-        function detectBrowserLanguage() {
-            const userLang = (navigator.language || navigator.userLanguage).split('-')[0];
-            const supportedLangs = ['en', 'fa', 'ckb', 'ar', 'az', 'tr'];
-            return supportedLangs.includes(userLang) ? userLang : 'en';
-        }
-
-        // Initialize language
-        function initLanguage() {
-            const savedLang = localStorage.getItem('griffinLang');
-            currentLang = savedLang || detectBrowserLanguage();
-            updateLanguage(currentLang);
-        }
-
-        // Update language
-        function updateLanguage(lang) {
-            currentLang = lang;
-            localStorage.setItem('griffinLang', lang);
-            
-            // Update all text elements
-            Object.keys(elements).forEach(key => {
-                if (translations[lang][key]) {
-                    elements[key].innerHTML = translations[lang][key];
-                }
-            });
-            
-            // Update direction
-            const html = document.documentElement;
-            if (['fa', 'ar', 'ckb'].includes(lang)) {
-                html.setAttribute('lang', lang);
-                html.setAttribute('dir', 'rtl');
-                document.body.classList.add('rtl-content');
-                document.body.classList.remove('ltr-content');
-                
-                // Move language selector to right in RTL
-                const container = document.getElementById('languageSelectorContainer');
-                container.parentElement.style.justifyContent = 'flex-end';
-            } else {
-                html.setAttribute('lang', lang);
-                html.setAttribute('dir', 'ltr');
-                document.body.classList.add('ltr-content');
-                document.body.classList.remove('rtl-content');
-                
-                // Keep language selector on left in LTR
-                const container = document.getElementById('languageSelectorContainer');
-                container.parentElement.style.justifyContent = 'flex-start';
-            }
-            
-            // Close dropdown
-            document.getElementById('languageDropdown').classList.add('hidden');
-        }
-
-        // Toggle dropdown
-        document.getElementById('languageButton').addEventListener('click', () => {
-            const dropdown = document.getElementById('languageDropdown');
-            dropdown.classList.toggle('hidden');
-        });
-
-        // Handle language selection
-        document.querySelectorAll('.language-option').forEach(button => {
-            button.addEventListener('click', () => {
-                const lang = button.getAttribute('data-lang');
-                updateLanguage(lang);
-            });
-        });
-
-        // Close dropdown on outside click
-        document.addEventListener('click', (e) => {
-            const button = document.getElementById('languageButton');
-            const dropdown = document.getElementById('languageDropdown');
-            if (!button.contains(e.target) && !dropdown.contains(e.target)) {
-                dropdown.classList.add('hidden');
-            }
-        });
-
-        // --- OS Detection ---
-        function detectOS() {
-            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-
-            if (userAgent.indexOf("Win") !== -1) {
-                return "windows";
-            }
-            if (userAgent.indexOf("Linux") !== -1) {
-                return "linux";
-            }
-            if (userAgent.indexOf("Mac") !== -1) {
-                return "mac";
-            }
-            return "other";
-        }
-
-        function applyOSClass() {
-            const os = detectOS();
-            const body = document.body;
-            body.classList.remove("os-windows", "os-linux", "os-mac", "os-other");
-            body.classList.add(`os-${os}`);
-            console.log("OS Detected:", os); // For debugging
-        }
-
-        // --- Animation Trigger ---
-        function triggerAnimations() {
-            // Select all elements with animation classes
-            const animatedElements = document.querySelectorAll('.animate-fade-in-up, .animate-fade-in-scale');
-            animatedElements.forEach(el => {
-                // Calculate delay from style attribute
-                const delay = parseFloat(el.style.transitionDelay || 0) * 1000; // Convert to milliseconds
-
-                // Trigger the animation after a delay
-                setTimeout(() => {
-                    // Remove the initial hidden state
-                    el.style.opacity = '1';
-                    el.style.transform = 'none'; // Reset transform
-                    // Add the animation class from Tailwind/Framer Motion if needed
-                    // For simplicity, CSS handles the animation via transition
-                }, delay);
-            });
-        }
-
-        // Initialize everything when the DOM is loaded
-        document.addEventListener('DOMContentLoaded', () => {
-            initLanguage();
-            applyOSClass();
-            triggerAnimations(); // Trigger animations after everything is set up
-        });
-
-    </script>
+const chartTabs=document.querySelectorAll('.mock-tab[data-chart]');
+chartTabs.forEach(tab=>tab.addEventListener('click',()=>{
+  chartTabs.forEach(t=>t.classList.remove('active'));tab.classList.add('active');
+  const isBtc=tab.dataset.chart==='btc';
+  document.getElementById('chartName').textContent=isBtc?'BTC/USDT · 1H':tab.dataset.chart==='add'?'New workspace':'EUR/USD · 1H';
+  document.getElementById('chartPrice').textContent=isBtc?'67,420  +2.14%':tab.dataset.chart==='add'?'Workspace ready':'1.0842  +1.28%';
+}));
+const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('visible');observer.unobserve(entry.target)}}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+</script>
 </body>
 </html>
-
